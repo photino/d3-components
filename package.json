@@ -32,12 +32,12 @@
     "linux"
   ],
   "devDependencies": {
-    "gulp": "*",
-    "gulp-concat": "*",
-    "gulp-header": "*",
-    "gulp-jshint": "*",
-    "gulp-pug": "*",
-    "gulp-rename": "*",
-    "gulp-uglify": "*"
+    "gulp": "3.9.1",
+    "gulp-concat": "2.6.0",
+    "gulp-gh-pages": "0.5.4",
+    "gulp-header": "1.8.8",
+    "gulp-pug": "3.1.0",
+    "gulp-rename": "1.2.2",
+    "gulp-uglify": "2.0.0"
   }
 }

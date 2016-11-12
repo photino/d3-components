@@ -6,8 +6,8 @@ var gulp = require('gulp');
 var header = require('gulp-header');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
-var jshint = require('gulp-jshint');
 var uglifyJS = require('gulp-uglify');
+var ghPages = require('gulp-gh-pages');
 var pug = require('gulp-pug');
 
 var pkg = require('./package.json');
@@ -15,20 +15,11 @@ var version = pkg.version;
 var banner = '/*! D3 Components v<%= version %> | (c) 2016 Zan Pan | MIT license */\n';
 
 gulp.task('default', [
-  'jshint',
   'concat-js',
   'minify-js',
   'compile-docs',
   'watch'
 ]);
-
-gulp.task('jshint', function () {
-  gulp.src([
-      'src/js/*.js'
-    ])
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'));
-});
 
 gulp.task('concat-js', function () {
   gulp.src([
@@ -47,7 +38,8 @@ gulp.task('minify-js', ['concat-js'], function () {
       version : version
     }))
     .pipe(rename('d3-components-' + version + '.min.js'))
-    .pipe(gulp.dest('dist/'));
+    .pipe(gulp.dest('dist/'))
+    .pipe(gulp.dest('docs/dist/'));
 });
 
 gulp.task('compile-docs', function () {
@@ -60,7 +52,6 @@ gulp.task('compile-docs', function () {
 
 gulp.task('watch', function () {
   gulp.watch('src/js/*.js', [
-    'jshint',
     'concat-js',
     'minify-js'
   ]);
@@ -68,4 +59,9 @@ gulp.task('watch', function () {
   gulp.watch('src/docs/{*,*/}*.pug', [
     'compile-docs'
   ]);
+});
+
+gulp.task('publish', function() {
+  return gulp.src('./docs/**/*')
+    .pipe(ghPages());
 });
