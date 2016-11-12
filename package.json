@@ -1,0 +1,43 @@
+{
+  "name": "d3-components",
+  "version": "0.0.1",
+  "description": "D3-based visualization components",
+  "keywords": [
+    "d3",
+    "d3-module",
+    "svg",
+    "canvas",
+    "graphics"
+  ],
+  "homepage": "https://photino.github.io/d3-components/",
+  "author": {
+    "name": "Zan Pan",
+    "email": "panzan89@gmail.com"
+  },
+  "scripts": {
+    "build": "gulp default"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/photino/d3-components"
+  },
+  "bugs": {
+    "url": "https://github.com/photino/d3-components/issues"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": "7.0.0"
+  },
+  "os": [
+    "linux"
+  ],
+  "devDependencies": {
+    "gulp": "*",
+    "gulp-concat": "*",
+    "gulp-header": "*",
+    "gulp-jshint": "*",
+    "gulp-pug": "*",
+    "gulp-rename": "*",
+    "gulp-uglify": "*"
+  }
+}

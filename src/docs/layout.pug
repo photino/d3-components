@@ -1,0 +1,65 @@
+
+block variables
+
+- var locale = 'en'
+- var version = '0.0.1'
+- var appTitle = 'D3 Components'
+- var appKeywords = 'UI, Schema, HTML, CSS, JS, JavaScript, front-end, framework, web development'
+- var appDescription = 'D3-based visualization components'
+- var appRoot = '..' + (pageID || '').replace(/[^\/]/g, '').replace(/\//g, '/..')
+- var appDocs = appRoot + '/docs'
+
+doctype html
+
+html(id=pageID lang=locale)
+  head
+    block head
+      meta(charset='utf-8')
+      title= (pageTitle ? pageTitle + ' | ' : '') + appTitle
+      meta(http-equiv='X-UA-Compatible' content='IE=edge')
+      meta(name='keywords' content= pageKeywords || appKeywords)
+      meta(name='description' content=pageDescription || appDescription)
+      meta(name='viewport' content='width=device-width, initial-scale=1')
+      link(rel='stylesheet' href=appRoot + '/dist/ui-schema-0.4.3.min.css' media='all')
+      if prism
+        link(rel='stylesheet' href=appRoot + '/dist/prism-1.4.1.min.css' media='all')
+  if minimal
+    block body
+  else
+    body
+      header.ui-header-navbar.ui-container-fluid.ui-container-grid
+        block header
+          .ui-navbar-brand
+            h2: a(href=appDocs + '/index.html' accesskey='h')= appTitle
+          nav.ui-navbar-nav
+            ul
+              li
+                a(href=appDocs + '/references.html') References
+              li
+                a(href=appDocs + '/gallery.html') Gallery
+              li
+                a(href='https://github.com/photino/d3-components' rel='external' target='_blank') GitHub
+      main.ui-container-fluid.ui-container-grid
+        if standalone
+          block main
+        else
+          aside.ui-grid-25.ui-mobile-expand.ui-sticky-top
+            block aside
+          article.ui-grid-75.ui-mobile-expand
+            block article
+      footer.ui-container-fluid
+        block footer
+          address.ui-text-muted.ui-mobile-expand
+            span &copy; 2016 Zan Pan &nbsp;
+            span Code licensed under
+              a(href='https://github.com/photino/d3-components/blob/master/LICENSE' rel='external' target='_blank') MIT
+              | , documentation under
+              a(href='http://creativecommons.org/licenses/by-sa/4.0' rel='external' target='_blank') CC BY-SA 4.0
+              | .
+      block foot
+        script(src=appRoot + '/dist/jquery-3.1.1.min.js')
+        if prism
+          script(src=appRoot + '/dist/prism-1.4.1.min.js')
+        script(src=appRoot + '/dist/ui-schema-0.4.3.min.js')
+        script(src=appRoot + '/dist/d3-4.3.0.min.js')
+        script(src=appRoot + '/dist/d3-components-' + version + '.min.js')
