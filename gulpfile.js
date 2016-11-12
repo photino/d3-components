@@ -63,5 +63,8 @@ gulp.task('watch', function () {
 
 gulp.task('publish', function() {
   return gulp.src('./docs/**/*')
-    .pipe(ghPages());
+    .pipe(ghPages({
+      branch: 'gh-pages',
+      message: 'Update version ' + version
+    }));
 });
