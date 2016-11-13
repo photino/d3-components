@@ -1,0 +1,61 @@
+
+extends components
+
+block variables
+  - var pageID = 'api/pie-chart'
+  - var pageTitle = 'Pie Chart'
+  - var prism = true
+
+block article
+  h3.ui-header-primary= pageTitle
+  .ui-container-grid
+    .ui-grid-50.ui-mobile-expand
+      #simple-pie-chart-svg
+    .ui-grid-50.ui-mobile-expand
+      #simple-pie-chart-canvas
+  div
+    pre: code.language-markup.
+      &lt;div id="simple-pie-chart-svg"&gt;&lt;/div&gt;
+      &lt;div id="simple-pie-chart-canvas"&gt;&lt;/div&gt;
+
+      &lt;script&gt;
+        var data = [
+          { name: 'Chrome', value: 0.4707 },
+          { name: 'Firefox', value: 0.1543 },
+          { name: 'Internet Explorer', value: 0.1106 },
+          { name: 'Opera', value: 0.0217 },
+          { name: 'Others', value: 0.0380 },
+          { name: 'Safari', value: 0.2047 }
+        ];
+        d3.pieChart(data, { id: 'simple-pie-chart-svg' });
+        d3.pieChart(data, {
+          id: 'simple-pie-chart-canvas',
+          renderer: 'canvas',
+          innerRadius: 100,
+          sort: function (a, b) {
+            return b.value - a.value;
+          },
+          stroke: '#fff'
+        });
+      &lt;/script&gt;
+
+block append foot
+  script.
+    var data = [
+      { name: 'Chrome', value: 0.4707 },
+      { name: 'Firefox', value: 0.1543 },
+      { name: 'Internet Explorer', value: 0.1106 },
+      { name: 'Opera', value: 0.0217 },
+      { name: 'Others', value: 0.0380 },
+      { name: 'Safari', value: 0.2047 }
+    ];
+    d3.pieChart(data, { id: 'simple-pie-chart-svg' });
+    d3.pieChart(data, {
+      id: 'simple-pie-chart-canvas',
+      renderer: 'canvas',
+      innerRadius: 100,
+      sort: function (a, b) {
+        return b.value - a.value;
+      },
+      stroke: '#fff'
+    });

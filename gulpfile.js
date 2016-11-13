@@ -23,6 +23,7 @@ gulp.task('default', [
 
 gulp.task('concat-js', function () {
   gulp.src([
+      'src/js/core.js',
       'src/js/bar-chart.js',
       'src/js/bubble-chart.js',
       'src/js/pie-chart.js',
@@ -48,6 +49,12 @@ gulp.task('compile-docs', function () {
       pretty: true
     }))
     .pipe(gulp.dest('docs/'));
+
+  gulp.src('src/docs/api/!(components).pug')
+    .pipe(pug({
+      pretty: true
+    }))
+    .pipe(gulp.dest('docs/api/'));
 });
 
 gulp.task('watch', function () {
