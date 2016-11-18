@@ -48,21 +48,21 @@
 
 &lt;script&gt;
   var data = [
-    { name: 'Chrome', value: 0.4707 },
-    { name: 'Firefox', value: 0.1543 },
-    { name: 'Internet Explorer', value: 0.1106 },
-    { name: 'Opera', value: 0.0217 },
-    { name: 'Others', value: 0.0380 },
-    { name: 'Safari', value: 0.2047 }
+    { browser: 'Chrome', percentage: 0.4707 },
+    { browser: 'Firefox', percentage: 0.1543 },
+    { browser: 'IE', percentage: 0.1106 },
+    { browser: 'Opera', percentage: 0.0217 },
+    { browser: 'Others', percentage: 0.0380 },
+    { browser: 'Safari', percentage: 0.2047 }
   ];
   d3.pieChart(data, { id: 'simple-pie-chart-svg' });
   d3.pieChart(data, {
     id: 'simple-pie-chart-canvas',
     renderer: 'canvas',
-    innerRadius: 100,
     sort: function (a, b) {
-      return b.value - a.value;
+      return d3.descending(a.percentage, b.percentage);
     },
+    innerRadius: 100,
     stroke: '#fff'
   });
 &lt;/script&gt;
@@ -80,21 +80,21 @@
     <script src="./../dist/d3-components-0.0.2.min.js"></script>
     <script>
       var data = [
-        { name: 'Chrome', value: 0.4707 },
-        { name: 'Firefox', value: 0.1543 },
-        { name: 'Internet Explorer', value: 0.1106 },
-        { name: 'Opera', value: 0.0217 },
-        { name: 'Others', value: 0.0380 },
-        { name: 'Safari', value: 0.2047 }
+        { browser: 'Chrome', percentage: 0.4707 },
+        { browser: 'Firefox', percentage: 0.1543 },
+        { browser: 'IE', percentage: 0.1106 },
+        { browser: 'Opera', percentage: 0.0217 },
+        { browser: 'Others', percentage: 0.0380 },
+        { browser: 'Safari', percentage: 0.2047 }
       ];
       d3.pieChart(data, { id: 'simple-pie-chart-svg' });
       d3.pieChart(data, {
         id: 'simple-pie-chart-canvas',
         renderer: 'canvas',
-        innerRadius: 100,
         sort: function (a, b) {
-          return b.value - a.value;
+          return d3.descending(a.percentage, b.percentage);
         },
+        innerRadius: 100,
         stroke: '#fff'
       });
     </script>

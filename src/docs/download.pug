@@ -3,6 +3,14 @@ extends links
 
 block variables
   - var pageID = 'download'
+  - var pageTitle = 'Download'
 
 block article
-  h3.ui-header-primary Overview
+  h3.ui-header-primary= pageTitle
+  ul
+    - var archive = 'https://github.com/photino/d3-components/archive'
+    - var release = '0.0.1'
+    - var latest = '0.0.2'
+    li: a(href=archive + '/master.zip') Latest development version from GitHub
+    li: a(href=archive + '/' + release + '.zip') D3 Components production version #{release}
+    li: a(href=appDist + '/d3-components-' + latest + '.js') Source code of unreleased d3-components.js

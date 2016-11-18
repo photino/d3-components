@@ -29,7 +29,8 @@ gulp.task('concat-js', function () {
       'src/js/pie-chart.js',
     ])
     .pipe(concat('d3-components-' + version + '.js'))
-    .pipe(gulp.dest('dist/'));
+    .pipe(gulp.dest('dist/'))
+    .pipe(gulp.dest('docs/dist/'));
 });
 
 gulp.task('minify-js', ['concat-js'], function () {
