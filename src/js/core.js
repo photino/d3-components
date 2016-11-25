@@ -218,6 +218,19 @@ d3.parseValue = function (value, context) {
       if (context.hasOwnProperty('width')) {
         value = Number(value.replace('%', '')) * context.width / 100;
       }
+    } else if (/^(a|de)scending\(\w+\)$/.test(value)) {
+      var parts = value.split(/\W/);
+      var order = parts[0];
+      var key = parts[1];
+      value = function (a, b) {
+        if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
+          return d3[order](a[key], b[key]);
+        }
+        if (a.data && b.data) {
+          return d3[order](a.data[key], b.data[key]);
+        }
+        return 0;
+      };
     }
   }
   return value;

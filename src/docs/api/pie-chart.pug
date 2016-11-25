@@ -31,10 +31,8 @@ block article
         d3.pieChart(data, {
           id: 'simple-pie-chart-canvas',
           renderer: 'canvas',
-          sort: function (a, b) {
-            return d3.descending(a.percentage, b.percentage);
-          },
-          innerRadius: 80,
+          sort: 'descending(percentage)',
+          donutRatio: 0.5,
           stroke: '#fff'
         });
       &lt;/script&gt;
@@ -53,9 +51,7 @@ block append foot
     d3.pieChart(data, {
       id: 'simple-pie-chart-canvas',
       renderer: 'canvas',
-      sort: function (a, b) {
-        return d3.descending(a.percentage, b.percentage);
-      },
-      innerRadius: 80,
+      sort: 'descending(percentage)',
+      donutRatio: 0.5,
       stroke: '#fff'
     });
