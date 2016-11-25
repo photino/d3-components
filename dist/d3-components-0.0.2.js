@@ -218,6 +218,19 @@ d3.parseValue = function (value, context) {
       if (context.hasOwnProperty('width')) {
         value = Number(value.replace('%', '')) * context.width / 100;
       }
+    } else if (/^(a|de)scending\(\w+\)$/.test(value)) {
+      var parts = value.split(/\W/);
+      var order = parts[0];
+      var key = parts[1];
+      value = function (a, b) {
+        if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
+          return d3[order](a[key], b[key]);
+        }
+        if (a.data && b.data) {
+          return d3[order](a.data[key], b.data[key]);
+        }
+        return 0;
+      };
     }
   }
   return value;
@@ -293,6 +306,7 @@ d3.components.pieChart = {
   },
   sort: null,
   maxRatio: 0.8,
+  donutRatio: 0,
   innerRadius: 0,
   labels: {
     show: false,
@@ -341,8 +355,9 @@ d3.pieChart = function (data, options) {
   var fontSize = options.fontSize;
   var lineHeight = options.lineHeight;
   var maxRatio = options.maxRatio;
-  var innerRadius = options.innerRadius;
+  var donutRatio = options.donutRatio;
   var outerRadius = options.outerRadius || Math.min(innerWidth, innerHeight) / 2;
+  var innerRadius = options.innerRadius || outerRadius * donutRatio;
   if (d3.type(innerRadius) === 'number' && d3.type(outerRadius) === 'number') {
     innerRadius = Math.min(innerRadius, outerRadius * maxRatio);
   }
@@ -470,15 +485,13 @@ d3.pieChart = function (data, options) {
     var tooltip = options.tooltip;
     if (tooltip.show) {
       var t = d3.select('#' + tooltip.id);
-      g.style('cursor', 'pointer')
-       .selectAll('.arc')
+      g.selectAll('.arc')
        .on('mouseover', function (d) {
          var position = d3.mouse(chart);
          d3.select(this)
            .select('path')
            .attr('fill', d3.color(color(d.data.label)).darker());
-         t.transition()
-          .attr('class', 'tooltip')
+         t.attr('class', 'tooltip')
           .style('display', 'block');
          t.html(tooltip.html(d))
           .style('left', position[0] + 'px')
@@ -495,8 +508,7 @@ d3.pieChart = function (data, options) {
          d3.select(this)
            .select('path')
            .attr('fill', colorFunction);
-         t.transition()
-          .style('display', 'none');
+         t.style('display', 'none');
        });
     }
 
