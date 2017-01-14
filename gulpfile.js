@@ -12,7 +12,7 @@ var pug = require('gulp-pug');
 
 var pkg = require('./package.json');
 var version = pkg.version;
-var banner = '/*! D3 Components v<%= version %> | (c) 2016 Zan Pan | MIT license */\n';
+var banner = '/*! D3 Components v<%= version %> | (c) 2017 Zan Pan | MIT license */\n';
 
 gulp.task('default', [
   'concat-js',
@@ -27,6 +27,8 @@ gulp.task('concat-js', function () {
       'src/js/bar-chart.js',
       'src/js/bubble-chart.js',
       'src/js/pie-chart.js',
+      'src/js/sunburst-chart.js',
+      'src/js/choropleth-map.js'
     ])
     .pipe(concat('d3-components-' + version + '.js'))
     .pipe(gulp.dest('dist/'))

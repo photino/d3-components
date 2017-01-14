@@ -85,9 +85,8 @@ d3.pieChart = function (data, options) {
   }
 
   // Shape and arcs
-  var sort = options.sort;
   var arcs = d3.pie()
-              .sort(sort)
+              .sort(options.sort)
               .value(function (d) {
                 return d.disabled ? 0 : d.value;
               })(data);
@@ -140,7 +139,7 @@ d3.pieChart = function (data, options) {
        .attr('text-anchor', 'middle')
        .attr('fill', labels.fill)
        .text(labels.text)
-       .style('opacity', function (d) {
+       .attr('opacity', function (d) {
          var angle = d.endAngle - d.startAngle;
          return angle >= labels.minAngle ? 1 : 0;
        });
@@ -158,7 +157,7 @@ d3.pieChart = function (data, options) {
       var item = svg.append('g')
                     .attr('class', 'legend')
                     .attr('transform', legendPosition)
-                    .style('cursor', 'pointer')
+                    .attr('cursor', 'pointer')
                     .selectAll('.legend-item')
                     .data(arcs)
                     .enter()

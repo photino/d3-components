@@ -30,6 +30,7 @@ d3.defaultOptions = {
       backgroundColor: '#fff',
       border: '1px solid #999',
       borderRadius: '0.2em',
+      fontSize: '85%',
       opacity: 0.8
     }
   }
@@ -37,6 +38,9 @@ d3.defaultOptions = {
 
 // Parse plotting data
 d3.parseData = function (plot, data) {
+  var component = d3.components[plot];
+  var schema = component.schema || {};
+  var hierarchy = schema.hierarchy;
   if (Array.isArray(data)) {
     // Normalize data structure
     data = data.filter(function (d) {
@@ -55,8 +59,6 @@ d3.parseData = function (plot, data) {
     });
 
     // Set up field mapping
-    var component = d3.components[plot];
-    var schema = component.schema || {};
     if (schema.type === 'object') {
       var entries = schema.entries;
       data = data.map(function (d) {
@@ -66,8 +68,11 @@ d3.parseData = function (plot, data) {
           var type = entry.type;
           if (!d.hasOwnProperty(key)) {
             var mapping = null;
-            entry.mappings.some(function (m) {
-              if (keys.indexOf(m) !== -1) {
+            var mappings = entry.mappings || [];
+            mappings.some(function (m) {
+              var i = keys.indexOf(m);
+              if (i !== -1) {
+                keys.splice(i, 1);
                 mapping = m;
                 return true;
               }
@@ -84,19 +89,26 @@ d3.parseData = function (plot, data) {
             }
             if (mapping) {
               var value = d[mapping];
-              if (type === 'number') {
+              if (type === 'string') {
+                value = String(value);
+              } else if (type === 'number') {
                 value = Number(value);
               } else if (type === 'date') {
                 value = new Date(value);
               }
               d[key] = value;
             }
+          } else if (key === hierarchy && type === 'array') {
+            d[hierarchy] = d3.parseData(plot, d[hierarchy]);
           }
         });
         return d;
       });
     }
+  } else {
+    data = d3.parseData(plot, [data])[0];
   }
+
   return data;
 };
 
@@ -195,6 +207,13 @@ d3.parseOptions = function (plot, options) {
     }
   }
 
+  // Parse map config
+  if (options.hasOwnProperty('map')) {
+    var map = options.map || {};
+    var mapName = map.name || 'world';
+    options.map = d3.extend(d3.maps[mapName], map);
+  }
+
   return options;
 };
 
@@ -272,4 +291,70 @@ d3.extend = function (object1, object2) {
 // Generate a translation transform
 d3.translate = function (dx, dy) {
   return 'translate(' + dx + ',' + dy + ')';
+};
+
+// Set an axis
+d3.setAxis = function (scale, options) {
+  var axis = d3.axisBottom(scale);
+  var orient = options.orient;
+  if (orient === 'top') {
+    axis = d3.axisTop(scale);
+  } else if (orient === 'left') {
+    axis = d3.axisLeft(scale);
+  } else if (orient === 'right') {
+    axis = d3.axisRight(scale);
+  }
+  axis.ticks(options.ticks)
+      .tickSizeInner(options.tickSizeInner)
+      .tickSizeOuter(options.tickSizeOuter)
+      .tickPadding(options.tickPadding);
+  if (options.tickFormat !== '') {
+    axis.tickFormat(d3.format(options.tickFormat));
+  } else {
+    axis.tickFormat('');
+  }
+  return axis;
+};
+
+// Get map features
+d3.getMapFeatures = function (map, callback) {
+  // Normalize callback
+  callback = (typeof callback === 'function') ? callback : function () {};
+
+  // Set data type
+  var data = map.data;
+  var type = d3.type(data);
+  if (type === 'object') {
+    return callback(data.features);
+  }
+  if (type === 'string') {
+    if (/(geo|topo)\.?json$/.test(data)) {
+      type = 'json';
+    }
+  }
+  if (type === 'json') {
+    d3.json(data, function (json) {
+      if (window.topojson && map.object) {
+        json = topojson.feature(json, json.objects[map.object]);
+      }
+      return callback(json.features.map(function (feature, index) {
+        if (!feature.hasOwnProperty('id')) {
+          feature.id = String(feature.properties.id || index);
+        }
+        return feature;
+      }));
+    });
+  }
+};
+
+// Built-in map data
+d3.maps = {
+  world: {
+    center: [0, 30],
+    scale: 0.18
+  },
+  china: {
+    center: [103.3886, 35.5636],
+    scale: 1.0
+  }
 };

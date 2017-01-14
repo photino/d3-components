@@ -1,0 +1,65 @@
+
+extends components
+
+block variables
+  - var pageID = 'api/sunburst-chart'
+  - var pageTitle = 'Sunburst Chart'
+  - var prism = true
+
+block article
+  h3.ui-header-primary= pageTitle
+  .ui-container-grid
+    .ui-grid-50.ui-mobile-expand
+      #sunburst-chart-default
+    .ui-grid-50.ui-mobile-expand
+      #sunburst-chart-sorted
+  div
+    pre: code.language-markup.
+      &lt;div id="sunburst-chart-default"&gt;&lt;/div&gt;
+      &lt;div id="sunburst-chart-sorted"&gt;&lt;/div&gt;
+
+      &lt;script&gt;
+        d3.json('../data/arxiv-categories.json', function (data) {
+          d3.sunburstChart(data, { id: 'sunburst-chart-default' });
+          d3.sunburstChart(data, {
+            id: 'sunburst-chart-sorted',
+            sort: 'descending(count)',
+            donut: true,
+            partition: {
+              round: true
+            },
+            tooltip: {
+              html: function (d) {
+                var category = d.data.category;
+                var count = d.data.count;
+                var total = (d.parent || d).data.count;
+                var percent = (100 * count / total).toPrecision(3) + '%';
+                return category + ': ' + count + ' (' + percent + ')';
+              }
+            }
+          });
+        });
+      &lt;/script&gt;
+
+block append foot
+  script.
+    d3.json('../data/arxiv-categories.json', function (data) {
+      d3.sunburstChart(data, { id: 'sunburst-chart-default' });
+      d3.sunburstChart(data, {
+        id: 'sunburst-chart-sorted',
+        sort: 'descending(count)',
+        donut: true,
+        partition: {
+          round: true
+        },
+        tooltip: {
+          html: function (d) {
+            var category = d.data.category;
+            var count = d.data.count;
+            var total = (d.parent || d).data.count;
+            var percent = (100 * count / total).toPrecision(3) + '%';
+            return category + ': ' + count + ' (' + percent + ')';
+          }
+        }
+      });
+    });

@@ -1,0 +1,58 @@
+
+extends components
+
+block variables
+  - var pageID = 'api/choropleth-map'
+  - var pageTitle = 'Choropleth Map'
+  - var prism = true
+
+block article
+  h3.ui-header-primary= pageTitle
+  .ui-container-grid
+    .ui-grid-50.ui-mobile-expand
+      #choropleth-map-geojson
+    .ui-grid-50.ui-mobile-expand
+      #choropleth-map-topojson
+  div
+    pre: code.language-markup.
+      &lt;div id="choropleth-map-geojson"&gt;&lt;/div&gt;
+      &lt;div id="choropleth-map-topojson"&gt;&lt;/div&gt;
+
+      &lt;script&gt;
+        var data = [];
+        d3.choroplethMap(data, {
+          id: 'choropleth-map-geojson',
+          map: {
+            name: 'china',
+            data: '../dist/maps/china.geo.json'
+          }
+        });
+        d3.choroplethMap(data, {
+          id: 'choropleth-map-topojson',
+          map: {
+            name: 'china',
+            data: '../dist/maps/china.topo.json',
+            object: 'china.geo'
+          }
+        });
+      &lt;/script&gt;
+
+block append foot
+  script(src='../dist/topojson-2.2.0.min.js')
+  script.
+    var data = [];
+    d3.choroplethMap(data, {
+      id: 'choropleth-map-geojson',
+      map: {
+        name: 'world',
+        data: '../dist/maps/world.geo.json'
+      }
+    });
+    d3.choroplethMap(data, {
+      id: 'choropleth-map-topojson',
+      map: {
+        name: 'china',
+        data: '../dist/maps/china.topo.json',
+        object: 'china.geo'
+      }
+    });

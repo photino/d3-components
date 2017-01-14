@@ -30,6 +30,7 @@ d3.defaultOptions = {
       backgroundColor: '#fff',
       border: '1px solid #999',
       borderRadius: '0.2em',
+      fontSize: '85%',
       opacity: 0.8
     }
   }
@@ -37,6 +38,9 @@ d3.defaultOptions = {
 
 // Parse plotting data
 d3.parseData = function (plot, data) {
+  var component = d3.components[plot];
+  var schema = component.schema || {};
+  var hierarchy = schema.hierarchy;
   if (Array.isArray(data)) {
     // Normalize data structure
     data = data.filter(function (d) {
@@ -55,8 +59,6 @@ d3.parseData = function (plot, data) {
     });
 
     // Set up field mapping
-    var component = d3.components[plot];
-    var schema = component.schema || {};
     if (schema.type === 'object') {
       var entries = schema.entries;
       data = data.map(function (d) {
@@ -66,8 +68,11 @@ d3.parseData = function (plot, data) {
           var type = entry.type;
           if (!d.hasOwnProperty(key)) {
             var mapping = null;
-            entry.mappings.some(function (m) {
-              if (keys.indexOf(m) !== -1) {
+            var mappings = entry.mappings || [];
+            mappings.some(function (m) {
+              var i = keys.indexOf(m);
+              if (i !== -1) {
+                keys.splice(i, 1);
                 mapping = m;
                 return true;
               }
@@ -84,19 +89,26 @@ d3.parseData = function (plot, data) {
             }
             if (mapping) {
               var value = d[mapping];
-              if (type === 'number') {
+              if (type === 'string') {
+                value = String(value);
+              } else if (type === 'number') {
                 value = Number(value);
               } else if (type === 'date') {
                 value = new Date(value);
               }
               d[key] = value;
             }
+          } else if (key === hierarchy && type === 'array') {
+            d[hierarchy] = d3.parseData(plot, d[hierarchy]);
           }
         });
         return d;
       });
     }
+  } else {
+    data = d3.parseData(plot, [data])[0];
   }
+
   return data;
 };
 
@@ -195,6 +207,13 @@ d3.parseOptions = function (plot, options) {
     }
   }
 
+  // Parse map config
+  if (options.hasOwnProperty('map')) {
+    var map = options.map || {};
+    var mapName = map.name || 'world';
+    options.map = d3.extend(d3.maps[mapName], map);
+  }
+
   return options;
 };
 
@@ -274,7 +293,466 @@ d3.translate = function (dx, dy) {
   return 'translate(' + dx + ',' + dy + ')';
 };
 
+// Set an axis
+d3.setAxis = function (scale, options) {
+  var axis = d3.axisBottom(scale);
+  var orient = options.orient;
+  if (orient === 'top') {
+    axis = d3.axisTop(scale);
+  } else if (orient === 'left') {
+    axis = d3.axisLeft(scale);
+  } else if (orient === 'right') {
+    axis = d3.axisRight(scale);
+  }
+  axis.ticks(options.ticks)
+      .tickSizeInner(options.tickSizeInner)
+      .tickSizeOuter(options.tickSizeOuter)
+      .tickPadding(options.tickPadding);
+  if (options.tickFormat !== '') {
+    axis.tickFormat(d3.format(options.tickFormat));
+  } else {
+    axis.tickFormat('');
+  }
+  return axis;
+};
 
+// Get map features
+d3.getMapFeatures = function (map, callback) {
+  // Normalize callback
+  callback = (typeof callback === 'function') ? callback : function () {};
+
+  // Set data type
+  var data = map.data;
+  var type = d3.type(data);
+  if (type === 'object') {
+    return callback(data.features);
+  }
+  if (type === 'string') {
+    if (/(geo|topo)\.?json$/.test(data)) {
+      type = 'json';
+    }
+  }
+  if (type === 'json') {
+    d3.json(data, function (json) {
+      if (window.topojson && map.object) {
+        json = topojson.feature(json, json.objects[map.object]);
+      }
+      return callback(json.features.map(function (feature, index) {
+        if (!feature.hasOwnProperty('id')) {
+          feature.id = String(feature.properties.id || index);
+        }
+        return feature;
+      }));
+    });
+  }
+};
+
+// Built-in map data
+d3.maps = {
+  world: {
+    center: [0, 30],
+    scale: 0.18
+  },
+  china: {
+    center: [103.3886, 35.5636],
+    scale: 1.0
+  }
+};
+
+/*!
+ * Bar Chart
+ */
+
+// Register a chart type
+d3.components.barChart = {
+  type: 'bar chart',
+  schema: {
+    type: 'object',
+    entries: [
+      {
+        key: 'label',
+        type: 'string',
+        mappings: [
+          'category',
+          'name'
+        ]
+      },
+      {
+        key: 'value',
+        type: 'number',
+        mappings: [
+          'count',
+          'percentage'
+        ]
+      }
+    ]
+  },
+  sort: null,
+  labels: {
+    show: false
+  },
+  tooltip: {
+    show: true,
+    html: function (d, i) {
+      return 'Datum ' + i;
+    }
+  }
+};
+
+// Bar chart
+d3.barChart = function (data, options) {
+  // Parse plotting data and options
+  data = d3.parseData('barChart', data);
+  options = d3.parseOptions('barChart', options);
+
+  // Use the options
+  var chart = options.chart;
+  var renderer = options.renderer;
+  var context = options.context;
+  var width = options.width;
+  var height = options.height;
+  var innerWidth = options.innerWidth;
+  var innerHeight = options.innerHeight;
+  var stroke = options.stroke;
+  var strokeWidth = options.strokeWidth;
+  var colorScheme = options.colorScheme;
+  var fontSize = options.fontSize;
+  var lineHeight = options.lineHeight;
+
+  if (renderer === 'svg') {
+    // Create the `svg` element
+    var svg = d3.select(chart)
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+    // Create the `g` elements
+    var transform = options.position || d3.translate(width / 2, height / 2);
+    var g = svg.append('g')
+               .attr('class', 'bar')
+               .attr('transform', transform)
+               .attr('stroke', stroke)
+               .attr('stroke-width', strokeWidth);
+
+    // Create the `path` elements
+    var color = d3.scaleOrdinal(colorScheme);
+
+  } else if (renderer === 'canvas') {
+
+  }
+};
+
+/*!
+ * Bubble Chart
+ */
+
+// Register a chart type
+d3.components.bubbleChart = {
+  type: 'bubble chart',
+  schema: {
+    type: 'object',
+    entries: [
+      {
+        key: 'x',
+        type: 'number',
+        mappings: [
+          'category',
+          'name',
+          'year'
+        ]
+      },
+      {
+        key: 'y',
+        type: 'number',
+        mappings: [
+          'count'
+        ]
+      },
+      {
+        key: 'z',
+        type: 'number',
+        mappings: []
+      }
+    ]
+  },
+  offsetX: [0.5, 0.5],
+  offsetY: [0, 0],
+  framed: false,
+  axisX: {
+    orient: 'bottom',
+    ticks: 8,
+    tickSizeInner: 6,
+    tickSizeOuter: 0,
+    tickPadding: 4,
+    tickFormat: 'd'
+  },
+  axisY: {
+    orient: 'left',
+    ticks: 6,
+    tickSizeInner: 6,
+    tickSizeOuter: 0,
+    tickPadding: 4,
+    tickFormat: 'd'
+  },
+  gridX: {
+    show: false,
+    stroke: '#999',
+    strokeDash: [6, 4]
+  },
+  gridY: {
+    show: true,
+    stroke: '#999',
+    strokeDash: [6, 4]
+  },
+  labelX: {
+    show: false,
+    text: 'X'
+  },
+  labelY: {
+    show: false,
+    text: 'Y'
+  },
+  dots: {
+    scale: 12,
+    minRadius: 4,
+    stroke: '#fff',
+    opacity: 0.8,
+    gradient: false,
+    hue: 160,
+    saturation: 0.8,
+    lightness: 0.6
+  },
+  tooltip: {
+    show: true,
+    html: function (d) {
+      return 'x = ' + d.x + '<br/>y = ' + d.y + '<br/>z = ' + d.z;
+    }
+  }
+};
+
+// Bubble chart
+d3.bubbleChart = function (data, options) {
+  // Parse plotting data and options
+  data = d3.parseData('bubbleChart', data);
+  options = d3.parseOptions('bubbleChart', options);
+
+  // Use the options
+  var chart = options.chart;
+  var renderer = options.renderer;
+  var context = options.context;
+  var width = options.width;
+  var height = options.height;
+  var innerWidth = options.innerWidth;
+  var innerHeight = options.innerHeight;
+  var margin = options.margin;
+  var stroke = options.stroke;
+  var strokeWidth = options.strokeWidth;
+  var colorScheme = options.colorScheme;
+  var fontSize = options.fontSize;
+  var lineHeight = options.lineHeight;
+
+  // Coordinates and scales
+  var offsetX = options.offsetX;
+  var offsetY = options.offsetY;
+  var xs = data.map(function (d) { return d.x; });
+  var ys = data.map(function (d) { return d.y; });
+  var zs = data.map(function (d) { return d.z; });
+  var xmin = d3.min(xs);
+  var xmax = d3.max(xs);
+  var ymin = d3.min(ys);
+  var ymax = d3.max(ys);
+  var zmin = d3.min(zs);
+  var zmax = d3.max(zs);
+  var x = d3.scaleLinear()
+            .domain(options.domainX || [xmin - offsetX[0], xmax + offsetX[1]])
+            .range(options.rangeX || [0, innerWidth]);
+  var y = d3.scaleLinear()
+            .domain(options.domainY || [ymin - offsetY[0], ymax + offsetY[1]])
+            .range(options.rangeY || [innerHeight, 0]);
+
+  if (renderer === 'svg') {
+    // Create the `svg` element
+    var svg = d3.select(chart)
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+    // Create the `g` elements
+    var g = svg.append('g')
+               .attr('class', 'bubble')
+               .attr('transform', d3.translate(margin.left, margin.top))
+               .attr('stroke', stroke)
+               .attr('stroke-width', strokeWidth);
+
+    // Set axes
+    var axisX = options.axisX;
+    var axisY = options.axisY;
+    var orientX = axisX.orient;
+    var orientY = axisY.orient;
+    var gx = d3.setAxis(x, axisX);
+    var gy = d3.setAxis(y, axisY);
+    if (options.framed) {
+      g.append('g')
+       .attr('class', 'axis axis-x')
+       .attr('transform', d3.translate(0, innerHeight))
+       .call(gx);
+      g.append('g')
+       .attr('class', 'axis axis-y')
+       .call(gy);
+      g.append('g')
+       .attr('class', 'axis axis-x')
+       .call(gx.tickFormat(''));
+      g.append('g')
+       .attr('class', 'axis axis-y')
+       .attr('transform', d3.translate(innerWidth, 0))
+       .call(gy.tickFormat(''));
+    } else {
+      var ax = g.append('g')
+                .attr('class', 'axis axis-x')
+                .call(gx);
+      var ay = g.append('g')
+                .attr('class', 'axis axis-y')
+                .call(gy);
+      if (orientX === 'bottom') {
+        ax.attr('transform', d3.translate(0, innerHeight));
+      }
+      if (orientY === 'right') {
+        ay.attr('transform', d3.translate(innerWidth, 0));
+      }
+    }
+    g.selectAll('.axis')
+     .attr('font-size', fontSize);
+
+    // Add grid lines
+    var gridX = options.gridX;
+    var gridY = options.gridY;
+    if (gridX.show) {
+      g.append('g')
+       .attr('class', 'grid grid-x')
+       .attr('stroke-dasharray', gridX.strokeDash.join())
+       .attr('transform', d3.translate(0, innerHeight))
+       .call(gx.tickSize(-innerHeight, 0).tickFormat(''));
+      g.select('.grid-x')
+       .select('.domain')
+       .attr('stroke-width', 0);
+      g.select('.grid-x')
+       .selectAll('.tick')
+       .select('line')
+       .attr('stroke', gridX.stroke);
+    }
+    if (gridY.show) {
+      g.append('g')
+       .attr('class', 'grid grid-y')
+       .attr('stroke-dasharray', gridY.strokeDash.join())
+       .call(gy.tickSize(-innerWidth, 0).tickFormat(''));
+      g.select('.grid-y')
+       .select('.domain')
+       .attr('stroke-width', 0);
+      g.select('.grid-y')
+       .selectAll('.tick')
+       .select('line')
+       .attr('stroke', gridY.stroke);
+    }
+
+    // Set labels
+    var labelX = options.labelX;
+    var labelY = options.labelY;
+    if (labelX.show) {
+      g.append('text')
+       .attr('class', 'label label-x')
+       .attr('text-anchor', 'end')
+       .attr('x', innerWidth)
+       .attr('y', innerHeight)
+       .attr('dy', '3em')
+       .text(labelX.text);
+    }
+    if (labelY.show) {
+      g.append('text')
+       .attr('class', 'label label-y')
+       .attr('text-anchor', 'end')
+       .attr('y', 0)
+       .attr('dy', '-3em')
+       .attr('transform', 'rotate(-90)')
+       .text(labelY.text);
+    }
+
+    // Add dots
+    var color = d3.scaleOrdinal(colorScheme);
+    var dots = options.dots;
+    var opacity = dots.opacity;
+    var hue = dots.hue;
+    var saturation = dots.saturation;
+    var lightness = dots.lightness;
+    var dot = g.selectAll('.dot')
+               .data(data)
+               .enter()
+               .append('circle')
+               .attr('class', 'dot')
+               .attr('cx', function (d) {
+                 return x(d.x);
+               })
+               .attr('cy', function (d) {
+                 return y(d.y);
+               })
+               .attr('r', function (d) {
+                 return Math.sqrt(d.z / zmax) * dots.scale + dots.minRadius;
+               })
+               .attr('opacity', opacity)
+               .attr('stroke', dots.stroke)
+               .attr('fill', function (d) {
+                 if (typeof dots.color === 'function') {
+                   return dots.color(d);
+                 }
+                 if (dots.gradient) {
+                   var h = hue * (1 - d.y / ymax) + (180 - hue);
+                   var s = saturation * (d.y - ymin) / ((ymax - ymin) || 1) + (1 - saturation);
+                   var l = lightness - (1 - lightness) * (d.x - xmin) / ((xmax - xmin) || 1);
+                   return d3.hsl(h, s, l);
+                 }
+                 return color(d.x);
+               })
+               .sort(function (a, b) {
+                 // Defines a sort order so that the smallest dots are drawn on top
+                 return b.z - a.z;
+               });
+
+     if (dots.onclick) {
+       dot.attr('cursor', 'pointer')
+          .on('click', function (d) {
+            if (typeof dots.onclick === 'function') {
+              dots.onclick(d);
+            }
+          });
+     }
+
+     // Create the tooltip
+     var tooltip = options.tooltip;
+     if (tooltip.show) {
+       var t = d3.select('#' + tooltip.id);
+       dot.on('mouseover', function (d) {
+         var position = d3.mouse(chart);
+         t.attr('class', 'tooltip')
+          .style('display', 'block');
+         t.html(tooltip.html(d))
+          .style('left', position[0] + 'px')
+          .style('top', position[1] + 'px');
+       })
+       .on('mousemove', function (d) {
+         var position = d3.mouse(chart);
+         var offsetX = parseInt(t.style('width')) / 2;
+         var offsetY = parseInt(t.style('height')) + lineHeight / 6;
+         t.style('left', (position[0] - offsetX) + 'px')
+          .style('top', (position[1] - offsetY) + 'px');
+       })
+       .on('mouseout', function () {
+         t.style('display', 'none');
+       });
+     }
+
+  } else if (renderer === 'canvas') {
+
+  }
+};
 
 /*!
  * Pie Chart
@@ -363,9 +841,8 @@ d3.pieChart = function (data, options) {
   }
 
   // Shape and arcs
-  var sort = options.sort;
   var arcs = d3.pie()
-              .sort(sort)
+              .sort(options.sort)
               .value(function (d) {
                 return d.disabled ? 0 : d.value;
               })(data);
@@ -418,7 +895,7 @@ d3.pieChart = function (data, options) {
        .attr('text-anchor', 'middle')
        .attr('fill', labels.fill)
        .text(labels.text)
-       .style('opacity', function (d) {
+       .attr('opacity', function (d) {
          var angle = d.endAngle - d.startAngle;
          return angle >= labels.minAngle ? 1 : 0;
        });
@@ -436,7 +913,7 @@ d3.pieChart = function (data, options) {
       var item = svg.append('g')
                     .attr('class', 'legend')
                     .attr('transform', legendPosition)
-                    .style('cursor', 'pointer')
+                    .attr('cursor', 'pointer')
                     .selectAll('.legend-item')
                     .data(arcs)
                     .enter()
@@ -530,5 +1007,270 @@ d3.pieChart = function (data, options) {
       context.stroke();
       context.closePath();
     }
+  }
+};
+
+/*!
+ * Sunburst Chart
+ */
+
+// Register a chart type
+d3.components.sunburstChart = {
+  type: 'sunburst chart',
+  schema: {
+    type: 'object',
+    hierarchy: 'children',
+    entries: [
+      {
+        key: 'label',
+        type: 'string',
+        mappings: [
+          'category',
+          'name'
+        ]
+      },
+      {
+        key: 'value',
+        type: 'number',
+        mappings: [
+          'count'
+        ]
+      },
+      {
+        key: 'children',
+        type: 'array'
+      }
+    ]
+  },
+  sort: null,
+  partition: {
+    padding: 0,
+    round: false
+  },
+  donut: false,
+  stroke: '#fff',
+  colorScheme: d3.schemeCategory20c,
+  labels: {
+    show: false
+  },
+  tooltip: {
+    show: true,
+    html: function (d) {
+      return d.data.label + ': ' + d.data.value;
+    }
+  }
+};
+
+// Sunburst chart
+d3.sunburstChart = function (data, options) {
+  // Parse plotting data and options
+  data = d3.parseData('sunburstChart', data);
+  options = d3.parseOptions('sunburstChart', options);
+
+  // Use the options
+  var chart = options.chart;
+  var renderer = options.renderer;
+  var context = options.context;
+  var width = options.width;
+  var height = options.height;
+  var innerWidth = options.innerWidth;
+  var innerHeight = options.innerHeight;
+  var stroke = options.stroke;
+  var strokeWidth = options.strokeWidth;
+  var colorScheme = options.colorScheme;
+  var fontSize = options.fontSize;
+  var lineHeight = options.lineHeight;
+
+  // Layout and arcs
+  var partition = options.partition;
+  var radius = Math.min(width, height) / 2;
+  var x = d3.scaleLinear()
+            .domain([0, radius])
+            .range([0, 2 * Math.PI])
+            .clamp(true);
+  var root = d3.hierarchy(data, function (d) {
+                  return d.children;
+               })
+               .sum(function (d) {
+                 return d.children ? 0 : d.value;
+               });
+  if (typeof options.sort === 'function') {
+    root.sort(options.sort);
+  }
+  d3.partition()
+    .size(partition.size || [radius, radius])
+    .padding(partition.padding)
+    .round(partition.round)(root);
+
+  // Arcs
+  var arc = d3.arc()
+              .startAngle(function (d) {
+                return x(d.x0);
+              })
+              .endAngle(function (d) {
+                return x(d.x1);
+              })
+              .innerRadius(function (d) {
+                return d.y0;
+              })
+              .outerRadius(function (d) {
+                return d.y1;
+              })
+              .context(context);
+
+  if (renderer === 'svg') {
+    // Create the `svg` element
+    var svg = d3.select(chart)
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+    // Create the `g` elements
+    var transform = options.position || d3.translate(width / 2, height / 2);
+    var g = svg.append('g')
+               .attr('class', 'sunburst')
+               .attr('transform', transform)
+               .attr('stroke', stroke)
+               .attr('stroke-width', strokeWidth);
+
+    // Create the `path` elements
+    var color = d3.scaleOrdinal(colorScheme);
+    var donut = options.donut;
+    var path = g.selectAll('.arc')
+                .data(root.descendants())
+                .enter()
+                .append('g')
+                .attr('class', 'arc')
+                .append('path')
+                .attr('d', arc)
+                .attr('display', function (d) {
+                  return donut && d.parent === null ? 'none' : null;
+                })
+                .attr('fill', function (d) {
+                  return color((d.children ? d : d.parent).data.label);
+                });
+
+    // Create the tooltip
+    var tooltip = options.tooltip;
+    if (tooltip.show) {
+      var t = d3.select('#' + tooltip.id);
+      path.on('mouseover', function (d) {
+        var position = d3.mouse(chart);
+        t.attr('class', 'tooltip')
+         .style('display', 'block');
+        t.html(tooltip.html(d))
+         .style('left', position[0] + 'px')
+         .style('top', position[1] + 'px');
+      })
+      .on('mousemove', function (d) {
+        var position = d3.mouse(chart);
+        var offsetX = parseInt(t.style('width')) / 2;
+        var offsetY = parseInt(t.style('height')) + lineHeight / 6;
+        t.style('left', (position[0] - offsetX) + 'px')
+         .style('top', (position[1] - offsetY) + 'px');
+      })
+      .on('mouseout', function () {
+        t.style('display', 'none');
+      });
+    }
+
+  } else if (renderer === 'canvas') {
+
+  }
+};
+
+/*!
+ * Choropleth Map
+ */
+
+// Register a chart type
+d3.components.choroplethMap = {
+  type: 'choropleth map',
+  schema: {
+    type: 'object',
+    entries: [
+      {
+        key: 'id',
+        type: 'string',
+        mappings: [
+          'name',
+          'code'
+        ]
+      },
+      {
+        key: 'value',
+        type: 'number',
+        mappings: [
+          'count'
+        ]
+      }
+    ]
+  },
+  stroke: '#333',
+  fill: '#ccc'
+};
+
+// Choropleth map
+d3.choroplethMap = function (data, options) {
+  // Parse plotting data and options
+  data = d3.parseData('choroplethMap', data);
+  options = d3.parseOptions('choroplethMap', options);
+
+  // Use the options
+  var chart = options.chart;
+  var id = options.id;
+  var renderer = options.renderer;
+  var context = options.context;
+  var width = options.width;
+  var height = options.height;
+  var innerWidth = options.innerWidth;
+  var innerHeight = options.innerHeight;
+  var stroke = options.stroke;
+  var fill = options.fill;
+  var strokeWidth = options.strokeWidth;
+  var colorScheme = options.colorScheme;
+  var fontSize = options.fontSize;
+  var lineHeight = options.lineHeight;
+
+  // Create geo projection
+  var map = options.map;
+  var projection = d3.geoMercator()
+                     .translate([width / 2, height / 2])
+                     .center(map.center)
+                     .scale(height * map.scale);
+
+  // Create geo path
+  var path = d3.geoPath()
+               .projection(projection);
+
+  if (renderer === 'svg') {
+    // Create the `svg` element
+    var svg = d3.select(chart)
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+    // Create the `g` elements
+    var transform = options.position || d3.translate(0, 0);
+    var g = svg.append('g')
+               .attr('class', 'map')
+               .attr('transform', transform)
+               .attr('stroke', stroke)
+               .attr('stroke-width', strokeWidth)
+               .attr('fill', fill);
+
+    d3.getMapFeatures(map, function (features) {
+      g.selectAll('path')
+       .data(features)
+       .enter()
+       .append('path')
+       .attr('d', path)
+       .attr('id', function (d) {
+         return id + '-' + d.id;
+       });
+    });
+
+  } else if (renderer === 'canvas') {
+
   }
 };

@@ -7,7 +7,7 @@
     <meta name="keywords" content="UI, Schema, HTML, CSS, JS, JavaScript, front-end, framework, web development">
     <meta name="description" content="D3-based visualization components">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="./../dist/ui-schema-0.4.3.min.css" media="all">
+    <link rel="stylesheet" href="./../dist/ui-schema-0.4.4.min.css" media="all">
     <link rel="stylesheet" href="./../dist/prism-1.4.1.min.css" media="all">
   </head>
   <body>
@@ -30,19 +30,109 @@
           <li><a href="./../api/bar-chart.html">Bar Chart</a></li>
           <li class="ui-state-active"><a href="./../api/bubble-chart.html">Bubble Chart</a></li>
           <li><a href="./../api/pie-chart.html">Pie Chart</a></li>
+          <li><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
+          <li><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
         </ul>
       </aside>
       <article class="ui-grid-75 ui-mobile-expand">
         <h3 class="ui-header-primary">Bubble Chart</h3>
+        <div class="ui-container-grid">
+          <div class="ui-grid-50 ui-mobile-expand">
+            <div id="bubble-chart-default"></div>
+          </div>
+          <div class="ui-grid-50 ui-mobile-expand">
+            <div id="bubble-chart-gradient"></div>
+          </div>
+        </div>
+        <div>
+          <pre><code class="language-markup">&lt;div id="bubble-chart-default"&gt;&lt;/div&gt;
+&lt;div id="bubble-chart-gradient"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  d3.json('../data/arxiv-keywords.json', function (data) {
+    d3.bubbleChart(data, { id: 'bubble-chart-default' });
+    d3.bubbleChart(data, {
+      id: 'bubble-chart-gradient',
+      domainX: [2003, 2017],
+      domainY: [0, 600],
+      framed: true,
+      gridX: {
+        show: true
+      },
+      labelX: {
+        show: true,
+        text: 'Published year'
+      },
+      labelY: {
+        show: true,
+        text: 'Article counts'
+      },
+      dots: {
+        gradient: true,
+        onclick: function (d) {
+          window.open('http://arxitics.com/search?q="topological+insulator"&amp;published=' + d.year);
+        }
+      },
+      tooltip: {
+        html: function (d) {
+          var year = d.year;
+          var count = d.count;
+          var authors = d.authors;
+          return authors + ' author' + (authors &gt; 1 ? 's' : '') + ' published ' +
+            count + ' article' + (count &gt; 1 ? 's' : '') + ' in ' + year;
+        }
+      }
+    });
+  });
+&lt;/script&gt;
+</code></pre>
+        </div>
       </article>
     </main>
     <footer class="ui-container-fluid">
-      <address class="ui-text-muted ui-mobile-expand"><span>&copy; 2016 Zan Pan &nbsp;</span><span>Code licensed under <a href="https://github.com/photino/d3-components/blob/master/LICENSE" rel="external" target="_blank">MIT</a>, documentation under <a href="http://creativecommons.org/licenses/by-sa/4.0" rel="external" target="_blank">CC BY-SA 4.0</a>.</span></address>
+      <address class="ui-text-muted ui-mobile-expand"><span>&copy; 2016&ndash;2017 Zan Pan &nbsp;</span><span>Code licensed under <a href="https://github.com/photino/d3-components/blob/master/LICENSE" rel="external" target="_blank">MIT</a>, documentation under <a href="http://creativecommons.org/licenses/by-sa/4.0" rel="external" target="_blank">CC BY-SA 4.0</a>.</span></address>
     </footer>
     <script src="./../dist/jquery-3.1.1.min.js"></script>
     <script src="./../dist/prism-1.4.1.min.js"></script>
-    <script src="./../dist/ui-schema-0.4.3.min.js"></script>
-    <script src="./../dist/d3-4.3.0.min.js"></script>
+    <script src="./../dist/ui-schema-0.4.4.min.js"></script>
+    <script src="./../dist/d3-4.4.1.min.js"></script>
     <script src="./../dist/d3-components-0.0.2.min.js"></script>
+    <script>
+      d3.json('../data/arxiv-keywords.json', function (data) {
+        d3.bubbleChart(data, { id: 'bubble-chart-default' });
+        d3.bubbleChart(data, {
+          id: 'bubble-chart-gradient',
+          domainX: [2003, 2017],
+          domainY: [0, 600],
+          framed: true,
+          gridX: {
+            show: true
+          },
+          labelX: {
+            show: true,
+            text: 'Published year'
+          },
+          labelY: {
+            show: true,
+            text: 'Article counts'
+          },
+          dots: {
+            gradient: true,
+            onclick: function (d) {
+              window.open('http://arxitics.com/search?q="topological+insulator"&amp;published=' + d.year);
+            }
+          },
+          tooltip: {
+            html: function (d) {
+              var year = d.year;
+              var count = d.count;
+              var authors = d.authors;
+              return authors + ' author' + (authors > 1 ? 's' : '') + ' published ' +
+                count + ' article' + (count > 1 ? 's' : '') + ' in ' + year;
+            }
+          }
+        });
+      });
+    </script>
   </body>
 </html>
