@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html id="api/bar-chart" lang="en">
+<html id="api/choropleth-map" lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Bar Chart | D3 Components</title>
+    <title>Choropleth Map | D3 Components</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="keywords" content="UI, Schema, HTML, CSS, JS, JavaScript, front-end, framework, web development">
     <meta name="description" content="D3-based visualization components">
@@ -27,33 +27,43 @@
       <aside class="ui-grid-25 ui-mobile-expand ui-sticky-top">
         <h3 class="ui-header-primary">Components</h3>
         <ul class="ui-list-group ui-block-fluid ui-zoom-large ui-text-capitalize">
-          <li class="ui-state-active"><a href="./../api/bar-chart.html">Bar Chart</a></li>
+          <li><a href="./../api/bar-chart.html">Bar Chart</a></li>
           <li><a href="./../api/bubble-chart.html">Bubble Chart</a></li>
           <li><a href="./../api/pie-chart.html">Pie Chart</a></li>
           <li><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
-          <li><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
+          <li class="ui-state-active"><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
         </ul>
       </aside>
       <article class="ui-grid-75 ui-mobile-expand">
-        <h3 class="ui-header-primary">Bar Chart</h3>
+        <h3 class="ui-header-primary">Choropleth Map</h3>
         <div class="ui-container-grid">
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="simple-bar-chart-svg"></div>
+            <div id="choropleth-map-geojson"></div>
           </div>
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="simple-bar-chart-canvas"></div>
+            <div id="choropleth-map-topojson"></div>
           </div>
         </div>
         <div>
-          <pre><code class="language-markup">&lt;div id="simple-bar-chart-svg"&gt;&lt;/div&gt;
-&lt;div id="simple-bar-chart-canvas"&gt;&lt;/div&gt;
+          <pre><code class="language-markup">&lt;div id="choropleth-map-geojson"&gt;&lt;/div&gt;
+&lt;div id="choropleth-map-topojson"&gt;&lt;/div&gt;
 
 &lt;script&gt;
   var data = [];
-  d3.barChart(data, { id: 'simple-bar-chart-svg' });
-  d3.barChart(data, {
-    id: 'simple-bar-chart-canvas',
-    renderer: 'canvas'
+  d3.choroplethMap(data, {
+    id: 'choropleth-map-geojson',
+    map: {
+      name: 'china',
+      data: '../dist/maps/china.geo.json'
+    }
+  });
+  d3.choroplethMap(data, {
+    id: 'choropleth-map-topojson',
+    map: {
+      name: 'china',
+      data: '../dist/maps/china.topo.json',
+      object: 'china.geo'
+    }
   });
 &lt;/script&gt;
 </code></pre>
@@ -68,12 +78,23 @@
     <script src="./../dist/ui-schema-0.4.4.min.js"></script>
     <script src="./../dist/d3-4.4.1.min.js"></script>
     <script src="./../dist/d3-components-0.0.2.min.js"></script>
+    <script src="../dist/topojson-2.2.0.min.js"></script>
     <script>
       var data = [];
-      d3.barChart(data, { id: 'simple-bar-chart-svg' });
-      d3.barChart(data, {
-        id: 'simple-bar-chart-canvas',
-        renderer: 'canvas'
+      d3.choroplethMap(data, {
+        id: 'choropleth-map-geojson',
+        map: {
+          name: 'world',
+          data: '../dist/maps/world.geo.json'
+        }
+      });
+      d3.choroplethMap(data, {
+        id: 'choropleth-map-topojson',
+        map: {
+          name: 'china',
+          data: '../dist/maps/china.topo.json',
+          object: 'china.geo'
+        }
       });
     </script>
   </body>
