@@ -1,0 +1,37 @@
+
+extends components
+
+block variables
+  - var pageID = 'api/line-chart'
+  - var pageTitle = 'Line Chart'
+  - var prism = true
+
+block article
+  h3.ui-header-primary= pageTitle
+  .ui-container-grid
+    .ui-grid-50.ui-mobile-expand
+      #simple-line-chart-svg
+    .ui-grid-50.ui-mobile-expand
+      #simple-line-chart-canvas
+  div
+    pre: code.language-markup.
+      &lt;div id="simple-line-chart-svg"&gt;&lt;/div&gt;
+      &lt;div id="simple-line-chart-canvas"&gt;&lt;/div&gt;
+
+      &lt;script&gt;
+        var data = [];
+        d3.lineChart(data, { id: 'simple-line-chart-svg' });
+        d3.lineChart(data, {
+          id: 'simple-line-chart-canvas',
+          renderer: 'canvas'
+        });
+      &lt;/script&gt;
+
+block append foot
+  script.
+    var data = [];
+    d3.lineChart(data, { id: 'simple-line-chart-svg' });
+    d3.lineChart(data, {
+      id: 'simple-line-chart-canvas',
+      renderer: 'canvas'
+    });

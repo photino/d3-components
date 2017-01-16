@@ -1,5 +1,6 @@
 /*!
  * Sunburst Chart
+ * Reference: http://bl.ocks.org/maybelinot/5552606564ef37b5de7e47ed2b7dc099
  */
 
 // Register a chart type
@@ -31,13 +32,12 @@ d3.components.sunburstChart = {
     ]
   },
   sort: null,
-  partition: {
-    padding: 0,
-    round: false
+  donut: {
+    show: false,
+    ratio: 0.2,
+    radius: 20
   },
-  donut: false,
-  stroke: '#fff',
-  colorScheme: d3.schemeCategory20c,
+  zoomable: true,
   labels: {
     show: false
   },
@@ -46,7 +46,9 @@ d3.components.sunburstChart = {
     html: function (d) {
       return d.data.label + ': ' + d.data.value;
     }
-  }
+  },
+  stroke: '#fff',
+  colorScheme: d3.schemeCategory20c
 };
 
 // Sunburst chart
@@ -70,12 +72,11 @@ d3.sunburstChart = function (data, options) {
   var lineHeight = options.lineHeight;
 
   // Layout and arcs
-  var partition = options.partition;
   var radius = Math.min(width, height) / 2;
   var x = d3.scaleLinear()
-            .domain([0, radius])
-            .range([0, 2 * Math.PI])
-            .clamp(true);
+            .range([0, 2 * Math.PI]);
+  var y = d3.scaleSqrt()
+            .range([0, radius]);
   var root = d3.hierarchy(data, function (d) {
                   return d.children;
                })
@@ -85,24 +86,21 @@ d3.sunburstChart = function (data, options) {
   if (typeof options.sort === 'function') {
     root.sort(options.sort);
   }
-  d3.partition()
-    .size(partition.size || [radius, radius])
-    .padding(partition.padding)
-    .round(partition.round)(root);
+  d3.partition()(root);
 
   // Arcs
   var arc = d3.arc()
               .startAngle(function (d) {
-                return x(d.x0);
+                return Math.max(0, Math.min(2 * Math.PI, x(d.x0)));
               })
               .endAngle(function (d) {
-                return x(d.x1);
+                return Math.max(0, Math.min(2 * Math.PI, x(d.x1)));
               })
               .innerRadius(function (d) {
-                return d.y0;
+                return Math.max(0, y(d.y0));
               })
               .outerRadius(function (d) {
-                return d.y1;
+                return Math.max(0, y(d.y1));
               })
               .context(context);
 
@@ -131,12 +129,33 @@ d3.sunburstChart = function (data, options) {
                 .attr('class', 'arc')
                 .append('path')
                 .attr('d', arc)
-                .attr('display', function (d) {
-                  return donut && d.parent === null ? 'none' : null;
+                .attr('opacity', function (d) {
+                  return donut.show && d.parent === null ? 0 : null;
                 })
                 .attr('fill', function (d) {
                   return color((d.children ? d : d.parent).data.label);
                 });
+    if (options.zoomable) {
+      path.attr('cursor', 'pointer')
+          .on('click', function (d) {
+            var donutRadius = radius * donut.ratio || donut.radius;
+            g.transition()
+             .tween('scale', function() {
+               var xd = d3.interpolate(x.domain(), [d.x0, d.x1]);
+               var yd = d3.interpolate(y.domain(), [d.y0, 1]);
+               var yr = d3.interpolate(y.range(), [d.y0 ? donutRadius : 0, radius]);
+               return function (t) {
+                 x.domain(xd(t));
+                 y.domain(yd(t))
+                  .range(yr(t));
+               };
+             })
+             .selectAll('path')
+             .attrTween('d', function (d) {
+               return function() { return arc(d); };
+             });
+          });
+    }
 
     // Create the tooltip
     var tooltip = options.tooltip;

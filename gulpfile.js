@@ -1,3 +1,4 @@
+
 /**
  * Gulpfile for d3-components
  */
@@ -25,8 +26,9 @@ gulp.task('concat-js', function () {
   gulp.src([
       'src/js/core.js',
       'src/js/bar-chart.js',
-      'src/js/bubble-chart.js',
       'src/js/pie-chart.js',
+      'src/js/line-chart.js',
+      'src/js/bubble-chart.js',
       'src/js/sunburst-chart.js',
       'src/js/choropleth-map.js'
     ])

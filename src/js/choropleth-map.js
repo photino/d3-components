@@ -1,5 +1,6 @@
 /*!
  * Choropleth Map
+ * Reference: http://bl.ocks.org/mbostock/4180634
  */
 
 // Register a chart type
@@ -12,8 +13,9 @@ d3.components.choroplethMap = {
         key: 'id',
         type: 'string',
         mappings: [
-          'name',
-          'code'
+          'adcode',
+          'code',
+          'name'
         ]
       },
       {
@@ -25,8 +27,16 @@ d3.components.choroplethMap = {
       }
     ]
   },
-  stroke: '#333',
-  fill: '#ccc'
+  projection: 'geoMercator',
+  coloring: 'ordinal',
+  graticules: {
+    show: false,
+    step: [10, 10],
+    stroke: '#ccc'
+  },
+  stroke: '#666',
+  fill: '#ccc',
+  colorScheme: d3.schemeCategory20c
 };
 
 // Choropleth map
@@ -53,7 +63,7 @@ d3.choroplethMap = function (data, options) {
 
   // Create geo projection
   var map = options.map;
-  var projection = d3.geoMercator()
+  var projection = d3[options.projection]()
                      .translate([width / 2, height / 2])
                      .center(map.center)
                      .scale(height * map.scale);
@@ -78,16 +88,41 @@ d3.choroplethMap = function (data, options) {
                .attr('stroke-width', strokeWidth)
                .attr('fill', fill);
 
-    d3.getMapFeatures(map, function (features) {
-      g.selectAll('path')
+    var color = d3.scaleOrdinal(colorScheme);
+    var coloring = options.coloring;
+    d3.getMap(map, function (data) {
+      var features = data.features;
+      var neighbors = data.neighbors;
+      g.selectAll('.region')
        .data(features)
        .enter()
        .append('path')
+       .attr('class', 'region')
        .attr('d', path)
        .attr('id', function (d) {
          return id + '-' + d.id;
+       })
+       .attr('fill', function (d, i) {
+         if (coloring === 'topological' && neighbors.length) {
+           d.color = (d3.max(neighbors[i], function (n) {
+             return features[n].color;
+           }) | 0) + 1;
+           return color(d.color);
+         }
+         return color(d.id);
        });
     });
+
+    var graticules = options.graticules;
+    var graticule = d3.geoGraticule()
+                      .step(graticules.step);
+    if (graticules.show) {
+      g.append('path')
+       .datum(graticule)
+       .attr('class', 'graticule')
+       .attr('d', path)
+       .attr('stroke', graticules.stroke);
+    }
 
   } else if (renderer === 'canvas') {
 

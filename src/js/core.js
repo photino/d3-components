@@ -316,8 +316,8 @@ d3.setAxis = function (scale, options) {
   return axis;
 };
 
-// Get map features
-d3.getMapFeatures = function (map, callback) {
+// Get map data
+d3.getMap = function (map, callback) {
   // Normalize callback
   callback = (typeof callback === 'function') ? callback : function () {};
 
@@ -325,7 +325,7 @@ d3.getMapFeatures = function (map, callback) {
   var data = map.data;
   var type = d3.type(data);
   if (type === 'object') {
-    return callback(data.features);
+    return callback(data);
   }
   if (type === 'string') {
     if (/(geo|topo)\.?json$/.test(data)) {
@@ -334,15 +334,24 @@ d3.getMapFeatures = function (map, callback) {
   }
   if (type === 'json') {
     d3.json(data, function (json) {
-      if (window.topojson && map.object) {
-        json = topojson.feature(json, json.objects[map.object]);
-      }
-      return callback(json.features.map(function (feature, index) {
-        if (!feature.hasOwnProperty('id')) {
-          feature.id = String(feature.properties.id || index);
+      var features = json.features || [];
+      var neighbors = [];
+      if (window.topojson) {
+        if (map.object) {
+          var object = json.objects[map.object];
+          features = topojson.feature(json, object).features;
+          neighbors = topojson.neighbors(object.geometries);
         }
-        return feature;
-      }));
+      }
+      return callback({
+        features: features.map(function (feature, index) {
+          if (!feature.hasOwnProperty('id')) {
+            feature.id = String(feature.properties.id || index);
+          }
+          return feature;
+        }),
+        neighbors: neighbors
+      });
     });
   }
 };
@@ -350,8 +359,8 @@ d3.getMapFeatures = function (map, callback) {
 // Built-in map data
 d3.maps = {
   world: {
-    center: [0, 30],
-    scale: 0.18
+    center: [0, 0],
+    scale: 0.25
   },
   china: {
     center: [103.3886, 35.5636],

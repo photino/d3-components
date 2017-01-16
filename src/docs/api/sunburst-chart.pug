@@ -24,9 +24,8 @@ block article
           d3.sunburstChart(data, {
             id: 'sunburst-chart-sorted',
             sort: 'descending(count)',
-            donut: true,
-            partition: {
-              round: true
+            donut: {
+              show: true
             },
             tooltip: {
               html: function (d) {
@@ -48,9 +47,8 @@ block append foot
       d3.sunburstChart(data, {
         id: 'sunburst-chart-sorted',
         sort: 'descending(count)',
-        donut: true,
-        partition: {
-          round: true
+        donut: {
+          show: true
         },
         tooltip: {
           html: function (d) {

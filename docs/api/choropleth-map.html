@@ -28,8 +28,9 @@
         <h3 class="ui-header-primary">Components</h3>
         <ul class="ui-list-group ui-block-fluid ui-zoom-large ui-text-capitalize">
           <li><a href="./../api/bar-chart.html">Bar Chart</a></li>
-          <li><a href="./../api/bubble-chart.html">Bubble Chart</a></li>
           <li><a href="./../api/pie-chart.html">Pie Chart</a></li>
+          <li><a href="./../api/line-chart.html">Line Chart</a></li>
+          <li><a href="./../api/bubble-chart.html">Bubble Chart</a></li>
           <li><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
           <li class="ui-state-active"><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
         </ul>
@@ -60,10 +61,12 @@
   d3.choroplethMap(data, {
     id: 'choropleth-map-topojson',
     map: {
-      name: 'china',
-      data: '../dist/maps/china.topo.json',
-      object: 'china.geo'
-    }
+      name: 'world',
+      data: '../dist/maps/world.topo.json',
+      object: 'countries'
+    },
+    projection: 'geoEquirectangular',
+    coloring: 'topological'
   });
 &lt;/script&gt;
 </code></pre>
@@ -84,17 +87,20 @@
       d3.choroplethMap(data, {
         id: 'choropleth-map-geojson',
         map: {
-          name: 'world',
-          data: '../dist/maps/world.geo.json'
-        }
+          name: 'china',
+          data: '../dist/maps/china.geo.json'
+        },
+        coloring: 'topological'
       });
       d3.choroplethMap(data, {
         id: 'choropleth-map-topojson',
         map: {
-          name: 'china',
-          data: '../dist/maps/china.topo.json',
-          object: 'china.geo'
-        }
+          name: 'world',
+          data: '../dist/maps/world.topo.json',
+          object: 'countries'
+        },
+        projection: 'geoEquirectangular',
+        coloring: 'topological'
       });
     </script>
   </body>

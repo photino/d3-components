@@ -30,10 +30,12 @@ block article
         d3.choroplethMap(data, {
           id: 'choropleth-map-topojson',
           map: {
-            name: 'china',
-            data: '../dist/maps/china.topo.json',
-            object: 'china.geo'
-          }
+            name: 'world',
+            data: '../dist/maps/world.topo.json',
+            object: 'countries'
+          },
+          projection: 'geoEquirectangular',
+          coloring: 'topological'
         });
       &lt;/script&gt;
 
@@ -44,15 +46,18 @@ block append foot
     d3.choroplethMap(data, {
       id: 'choropleth-map-geojson',
       map: {
-        name: 'world',
-        data: '../dist/maps/world.geo.json'
-      }
+        name: 'china',
+        data: '../dist/maps/china.geo.json'
+      },
+      coloring: 'topological'
     });
     d3.choroplethMap(data, {
       id: 'choropleth-map-topojson',
       map: {
-        name: 'china',
-        data: '../dist/maps/china.topo.json',
-        object: 'china.geo'
-      }
+        name: 'world',
+        data: '../dist/maps/world.topo.json',
+        object: 'countries'
+      },
+      projection: 'geoEquirectangular',
+      coloring: 'topological'
     });

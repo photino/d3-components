@@ -51,12 +51,12 @@ d3.components.bubbleChart = {
     tickFormat: 'd'
   },
   gridX: {
-    show: false,
+    show: true,
     stroke: '#999',
     strokeDash: [6, 4]
   },
   gridY: {
-    show: true,
+    show: false,
     stroke: '#999',
     strokeDash: [6, 4]
   },
@@ -69,7 +69,7 @@ d3.components.bubbleChart = {
     text: 'Y'
   },
   dots: {
-    scale: 12,
+    scale: '2%',
     minRadius: 4,
     stroke: '#fff',
     opacity: 0.8,
@@ -186,13 +186,18 @@ d3.bubbleChart = function (data, options) {
       g.append('g')
        .attr('class', 'grid grid-x')
        .attr('stroke-dasharray', gridX.strokeDash.join())
-       .attr('transform', d3.translate(0, innerHeight))
-       .call(gx.tickSize(-innerHeight, 0).tickFormat(''));
+       .call(gy.tickSize(-innerWidth, 0).tickFormat(''));
       g.select('.grid-x')
        .select('.domain')
        .attr('stroke-width', 0);
       g.select('.grid-x')
        .selectAll('.tick')
+       .attr('stroke-width', function () {
+         var transform = d3.select(this)
+                           .attr('transform');
+         var dy = +transform.split(/[\,\(\)]/)[2];
+         return (dy === 0 || dy === innerHeight) ? 0 : null;
+       })
        .select('line')
        .attr('stroke', gridX.stroke);
     }
@@ -200,12 +205,19 @@ d3.bubbleChart = function (data, options) {
       g.append('g')
        .attr('class', 'grid grid-y')
        .attr('stroke-dasharray', gridY.strokeDash.join())
-       .call(gy.tickSize(-innerWidth, 0).tickFormat(''));
+       .attr('transform', d3.translate(0, innerHeight))
+       .call(gx.tickSize(-innerHeight, 0).tickFormat(''));
       g.select('.grid-y')
        .select('.domain')
        .attr('stroke-width', 0);
       g.select('.grid-y')
        .selectAll('.tick')
+       .attr('stroke-width', function () {
+         var transform = d3.select(this)
+                           .attr('transform');
+         var dx = +transform.split(/[\,\(\)]/)[1];
+         return (dx === 0 || dx === innerWidth) ? 0 : null;
+       })
        .select('line')
        .attr('stroke', gridY.stroke);
     }
@@ -235,6 +247,8 @@ d3.bubbleChart = function (data, options) {
     // Add dots
     var color = d3.scaleOrdinal(colorScheme);
     var dots = options.dots;
+    var scale = dots.scale;
+    var minRadius = dots.minRadius;
     var opacity = dots.opacity;
     var hue = dots.hue;
     var saturation = dots.saturation;
@@ -251,7 +265,7 @@ d3.bubbleChart = function (data, options) {
                  return y(d.y);
                })
                .attr('r', function (d) {
-                 return Math.sqrt(d.z / zmax) * dots.scale + dots.minRadius;
+                 return Math.sqrt(d.z / zmax) * scale + minRadius;
                })
                .attr('opacity', opacity)
                .attr('stroke', dots.stroke)
