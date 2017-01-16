@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html id="api/sunburst-chart" lang="en">
+<html id="api/bar-chart" lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Sunburst Chart | D3 Components</title>
+    <title>Bar Chart | D3 Components</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="keywords" content="UI, Schema, HTML, CSS, JS, JavaScript, front-end, framework, web development">
     <meta name="description" content="D3-based visualization components">
@@ -27,47 +27,33 @@
       <aside class="ui-grid-25 ui-mobile-expand ui-sticky-top">
         <h3 class="ui-header-primary">Components</h3>
         <ul class="ui-list-group ui-block-fluid ui-zoom-large ui-text-capitalize">
-          <li><a href="./../api/bar-chart.html">Bar Chart</a></li>
-          <li><a href="./../api/pie-chart.html">Pie Chart</a></li>
-          <li><a href="./../api/line-chart.html">Line Chart</a></li>
+          <li class="ui-state-active"><a href="./../api/bar-chart.html">Bar Chart</a></li>
           <li><a href="./../api/bubble-chart.html">Bubble Chart</a></li>
-          <li class="ui-state-active"><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
+          <li><a href="./../api/pie-chart.html">Pie Chart</a></li>
+          <li><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
           <li><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
         </ul>
       </aside>
       <article class="ui-grid-75 ui-mobile-expand">
-        <h3 class="ui-header-primary">Sunburst Chart</h3>
+        <h3 class="ui-header-primary">Bar Chart</h3>
         <div class="ui-container-grid">
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="sunburst-chart-default"></div>
+            <div id="simple-bar-chart-svg"></div>
           </div>
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="sunburst-chart-sorted"></div>
+            <div id="simple-bar-chart-canvas"></div>
           </div>
         </div>
         <div>
-          <pre><code class="language-markup">&lt;div id="sunburst-chart-default"&gt;&lt;/div&gt;
-&lt;div id="sunburst-chart-sorted"&gt;&lt;/div&gt;
+          <pre><code class="language-markup">&lt;div id="simple-bar-chart-svg"&gt;&lt;/div&gt;
+&lt;div id="simple-bar-chart-canvas"&gt;&lt;/div&gt;
 
 &lt;script&gt;
-  d3.json('../data/arxiv-categories.json', function (data) {
-    d3.sunburstChart(data, { id: 'sunburst-chart-default' });
-    d3.sunburstChart(data, {
-      id: 'sunburst-chart-sorted',
-      sort: 'descending(count)',
-      donut: {
-        show: true
-      },
-      tooltip: {
-        html: function (d) {
-          var category = d.data.category;
-          var count = d.data.count;
-          var total = (d.parent || d).data.count;
-          var percent = (100 * count / total).toPrecision(3) + '%';
-          return category + ': ' + count + ' (' + percent + ')';
-        }
-      }
-    });
+  var data = [];
+  d3.barChart(data, { id: 'simple-bar-chart-svg' });
+  d3.barChart(data, {
+    id: 'simple-bar-chart-canvas',
+    renderer: 'canvas'
   });
 &lt;/script&gt;
 </code></pre>
@@ -83,24 +69,11 @@
     <script src="./../dist/d3-4.4.1.min.js"></script>
     <script src="./../dist/d3-components-0.0.2.min.js"></script>
     <script>
-      d3.json('../data/arxiv-categories.json', function (data) {
-        d3.sunburstChart(data, { id: 'sunburst-chart-default' });
-        d3.sunburstChart(data, {
-          id: 'sunburst-chart-sorted',
-          sort: 'descending(count)',
-          donut: {
-            show: true
-          },
-          tooltip: {
-            html: function (d) {
-              var category = d.data.category;
-              var count = d.data.count;
-              var total = (d.parent || d).data.count;
-              var percent = (100 * count / total).toPrecision(3) + '%';
-              return category + ': ' + count + ' (' + percent + ')';
-            }
-          }
-        });
+      var data = [];
+      d3.barChart(data, { id: 'simple-bar-chart-svg' });
+      d3.barChart(data, {
+        id: 'simple-bar-chart-canvas',
+        renderer: 'canvas'
       });
     </script>
   </body>
