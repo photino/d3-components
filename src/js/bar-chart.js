@@ -31,7 +31,6 @@ d3.components.barChart = {
     show: false
   },
   tooltip: {
-    show: true,
     html: function (d, i) {
       return 'Datum ' + i;
     }
@@ -50,8 +49,6 @@ d3.barChart = function (data, options) {
   var context = options.context;
   var width = options.width;
   var height = options.height;
-  var innerWidth = options.innerWidth;
-  var innerHeight = options.innerHeight;
   var stroke = options.stroke;
   var strokeWidth = options.strokeWidth;
   var colorScheme = options.colorScheme;
@@ -59,24 +56,15 @@ d3.barChart = function (data, options) {
   var lineHeight = options.lineHeight;
 
   if (renderer === 'svg') {
-    // Create the `svg` element
-    var svg = d3.select(chart)
-                .append('svg')
-                .attr('width', width)
-                .attr('height', height);
+    // Create the plot
+    var plot = d3.createPlot(chart, options);
+    var svg = plot.svg;
+    var g = plot.container;
 
-    // Create the `g` elements
-    var transform = options.position || d3.translate(width / 2, height / 2);
-    var g = svg.append('g')
-               .attr('class', 'bar')
-               .attr('transform', transform)
-               .attr('stroke', stroke)
-               .attr('stroke-width', strokeWidth);
+  }
 
-    // Create the `path` elements
-    var color = d3.scaleOrdinal(colorScheme);
-
-  } else if (renderer === 'canvas') {
-
+  // Callbacks
+  if (typeof options.onready === 'function') {
+    options.onready(chart);
   }
 };

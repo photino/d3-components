@@ -52,8 +52,6 @@ d3.choroplethMap = function (data, options) {
   var context = options.context;
   var width = options.width;
   var height = options.height;
-  var innerWidth = options.innerWidth;
-  var innerHeight = options.innerHeight;
   var stroke = options.stroke;
   var fill = options.fill;
   var strokeWidth = options.strokeWidth;
@@ -64,7 +62,7 @@ d3.choroplethMap = function (data, options) {
   // Create geo projection
   var map = options.map;
   var projection = d3[options.projection]()
-                     .translate([width / 2, height / 2])
+                     .translate([0, 0])
                      .center(map.center)
                      .scale(height * map.scale);
 
@@ -72,47 +70,18 @@ d3.choroplethMap = function (data, options) {
   var path = d3.geoPath()
                .projection(projection);
 
+  // Parse geo data
+  var data = d3.parseGeoData(map, { neighbors: true });
+  var features = data.features;
+  var neighbors = data.neighbors;
+
   if (renderer === 'svg') {
-    // Create the `svg` element
-    var svg = d3.select(chart)
-                .append('svg')
-                .attr('width', width)
-                .attr('height', height);
+    // Create the plot
+    var plot = d3.createPlot(chart, options);
+    var svg = plot.svg;
+    var g = plot.container;
 
-    // Create the `g` elements
-    var transform = options.position || d3.translate(0, 0);
-    var g = svg.append('g')
-               .attr('class', 'map')
-               .attr('transform', transform)
-               .attr('stroke', stroke)
-               .attr('stroke-width', strokeWidth)
-               .attr('fill', fill);
-
-    var color = d3.scaleOrdinal(colorScheme);
-    var coloring = options.coloring;
-    d3.getMap(map, function (data) {
-      var features = data.features;
-      var neighbors = data.neighbors;
-      g.selectAll('.region')
-       .data(features)
-       .enter()
-       .append('path')
-       .attr('class', 'region')
-       .attr('d', path)
-       .attr('id', function (d) {
-         return id + '-' + d.id;
-       })
-       .attr('fill', function (d, i) {
-         if (coloring === 'topological' && neighbors.length) {
-           d.color = (d3.max(neighbors[i], function (n) {
-             return features[n].color;
-           }) | 0) + 1;
-           return color(d.color);
-         }
-         return color(d.id);
-       });
-    });
-
+    // Graticules
     var graticules = options.graticules;
     var graticule = d3.geoGraticule()
                       .step(graticules.step);
@@ -124,7 +93,32 @@ d3.choroplethMap = function (data, options) {
        .attr('stroke', graticules.stroke);
     }
 
-  } else if (renderer === 'canvas') {
+    // Regions
+    var colors = d3.scaleOrdinal(colorScheme);
+    var coloring = options.coloring;
+    g.selectAll('.region')
+     .data(features)
+     .enter()
+     .append('path')
+     .attr('class', 'region')
+     .attr('d', path)
+     .attr('id', function (d) {
+       return id + '-' + d.id;
+     })
+     .attr('fill', function (d, i) {
+       if (coloring === 'topological' && neighbors.length) {
+         d.color = (d3.max(neighbors[i], function (n) {
+           return features[n].color;
+         }) | 0) + 1;
+         return colors(d.color);
+       }
+       return colors(d.id);
+     });
 
+  }
+
+  // Callbacks
+  if (typeof options.onready === 'function') {
+    options.onready(chart);
   }
 };

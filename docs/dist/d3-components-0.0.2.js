@@ -14,13 +14,25 @@ d3.defaultOptions = {
   aspectRatio: 0.618034,
   color: '#1f77b4',
   colorScheme: d3.schemeCategory10,
-  textColor: '#333',
-  disabledTextColor: '#ccc',
   stroke: 'none',
   strokeWidth: 1,
   fontSize: 14,
   lineHeight: 20,
+  title: {
+    show: false,
+    x: '50%',
+    y: '1.6em',
+    height: '2em',
+    wrapText: true,
+    wrapWidth: '90%',
+    lineHeight: '2em',
+    fontSize: '1.4em',
+    fontWeight: 'bold',
+    textAnchor: 'middle',
+    text: ''
+  },
   tooltip: {
+    show: true,
     style: {
       display: 'none',
       boxSizing: 'border-box',
@@ -33,6 +45,18 @@ d3.defaultOptions = {
       fontSize: '85%',
       opacity: 0.8
     }
+  },
+  legend: {
+    symbol: {
+      width: '1.294427em',
+      height: '0.8em'
+    },
+    dx: '0.5em',
+    transform: 'scale(0.85)',
+    lineHeight: '1.6em',
+    textColor: '#333',
+    disabledTextColor: '#ccc',
+    updateInPlace: true
   }
 };
 
@@ -47,6 +71,12 @@ d3.parseData = function (plot, data) {
       return d !== null && d !== undefined;
     }).map(function (d, i) {
       if (Array.isArray(d)) {
+        d = d.map(function (datum) {
+          if (!datum.hasOwnProperty('series')) {
+            datum.series = String(i);
+          }
+          return datum;
+        });
         return d3.parseData(plot, d);
       }
       if (d3.type(d) !== 'object') {
@@ -66,8 +96,14 @@ d3.parseData = function (plot, data) {
         entries.forEach(function (entry) {
           var key = entry.key;
           var type = entry.type;
-          if (!d.hasOwnProperty(key)) {
-            var mapping = null;
+          var mapping = null;
+          if (d.hasOwnProperty(key)) {
+            if (key === hierarchy && type === 'array') {
+              d[hierarchy] = d3.parseData(plot, d[hierarchy]);
+            }
+            keys.splice(keys.indexOf(key), 1);
+            mapping = key;
+          } else {
             var mappings = entry.mappings || [];
             mappings.some(function (m) {
               var i = keys.indexOf(m);
@@ -87,29 +123,26 @@ d3.parseData = function (plot, data) {
                 return false;
               });
             }
-            if (mapping) {
-              var value = d[mapping];
-              if (type === 'string') {
-                value = String(value);
-              } else if (type === 'number') {
-                value = Number(value);
-              } else if (type === 'date') {
-                value = new Date(value);
-              }
-              d[key] = value;
+          }
+          if (mapping) {
+            var value = d[mapping];
+            if (type === 'string') {
+              value = String(value);
+            } else if (type === 'number') {
+              value = Number(value);
+            } else if (type === 'date') {
+              value = new Date(value);
             }
-          } else if (key === hierarchy && type === 'array') {
-            d[hierarchy] = d3.parseData(plot, d[hierarchy]);
+            d[key] = value;
           }
         });
         return d;
       });
     }
-  } else {
-    data = d3.parseData(plot, [data])[0];
+    return [].concat.apply([], data);
   }
 
-  return data;
+  return d3.parseData(plot, [data])[0];
 };
 
 // Parse plotting options
@@ -210,8 +243,8 @@ d3.parseOptions = function (plot, options) {
   // Parse map config
   if (options.hasOwnProperty('map')) {
     var map = options.map || {};
-    var mapName = map.name || 'world';
-    options.map = d3.extend(d3.maps[mapName], map);
+    var name = map.name || 'world';
+    options.map = d3.extend(d3.maps[name], map);
   }
 
   return options;
@@ -227,13 +260,13 @@ d3.parseValue = function (value, context) {
       }
     }
   } else if (type === 'string') {
-    if (/^\d+\.?\d*(px)$/.test(value)) {
+    if (/^\-?\d+\.?\d*(px)$/.test(value)) {
       value = Number(value.replace('px', ''));
-    } else if (/^\d+\.?\d*(em)$/.test(value)) {
+    } else if (/^\-?\d+\.?\d*(em)$/.test(value)) {
       if (context.hasOwnProperty('fontSize')) {
         value = Number(value.replace('em', '')) * context.fontSize;
       }
-    } else if (/^\d+\.?\d*\%$/.test(value)) {
+    } else if (/^\-?\d+\.?\d*\%$/.test(value)) {
       if (context.hasOwnProperty('width')) {
         value = Number(value.replace('%', '')) * context.width / 100;
       }
@@ -293,6 +326,15 @@ d3.translate = function (dx, dy) {
   return 'translate(' + dx + ',' + dy + ')';
 };
 
+// Generate the points of a regular polygon
+d3.regularPolygon = function (n, r) {
+  var theta = 2 * Math.PI / n;
+  return d3.range(n).map(function (i) {
+    var angle = theta * i;
+    return [r * Math.sin(angle), -r * Math.cos(angle)];
+  });
+};
+
 // Set an axis
 d3.setAxis = function (scale, options) {
   var axis = d3.axisBottom(scale);
@@ -316,44 +358,292 @@ d3.setAxis = function (scale, options) {
   return axis;
 };
 
-// Get map data
-d3.getMap = function (map, callback) {
-  // Normalize callback
-  callback = (typeof callback === 'function') ? callback : function () {};
+// Create a plot
+d3.createPlot = function (chart, options) {
+  // Create the `svg` element
+  var width = options.width;
+  var height = options.height;
+  var svg = d3.select(chart)
+              .append('svg')
+              .attr('class', options.type)
+              .attr('width', width);
 
-  // Set data type
+  // Set the title
+  var titleHeight = 0;
+  var title = options.title;
+  if (title.show) {
+    var t = svg.append('text')
+               .attr('class', 'title')
+               .attr('x', title.x)
+               .attr('y', title.y)
+               .attr('font-size', title.fontSize)
+               .attr('font-weight', title.fontWeight)
+               .attr('text-anchor', title.textAnchor)
+               .text(title.text)
+               .call(d3.wrapText, title);
+    var lines = Math.ceil(t.node().getComputedTextLength() / title.wrapWidth);
+    titleHeight = lines * title.lineHeight;
+  }
+  title.height = titleHeight;
+
+  // Create the container
+  var transform = d3.translate(width / 2, height / 2 + titleHeight);
+  var g = svg.attr('height', height + titleHeight)
+             .append('g')
+             .attr('class', 'container')
+             .attr('transform', transform)
+             .attr('stroke', options.stroke)
+             .attr('stroke-width', options.strokeWidth);
+
+  return {
+    svg: svg,
+    container: g
+  };
+};
+
+// Get the position relative to the SVG container
+d3.getPosition = function (selection) {
+    var node = d3.select(selection).node();
+    var position = node.getBoundingClientRect();
+    var svgPosition = getSVGPosition(node);
+
+    // Get the SVG position
+    function getSVGPosition(node) {
+      if(node.parentElement.tagName === 'svg') {
+        return node.parentElement.getBoundingClientRect();
+      }
+      return getSVGPosition(node.parentElement);
+    }
+
+    return {
+        top: position.top - svgPosition.top,
+        bottom: position.bottom - svgPosition.top,
+        right: position.right - svgPosition.left,
+        left: position.left - svgPosition.left,
+        width: position.width,
+        height: position.height
+    };
+
+};
+
+// Set the tooltip
+d3.setTooltip = function (chart, options) {
+  if (options.show) {
+    var tooltip = d3.select('#' + options.id);
+    var lineHeight = parseInt(tooltip.style('line-height'));
+    var hoverTarget = options.hoverTarget;
+    var hoverEffect = options.hoverEffect;
+    hoverTarget.on('mouseover', function (d) {
+      var position = d3.mouse(chart);
+      var left = position[0];
+      var top = position[1];
+      tooltip.attr('class', 'tooltip')
+             .style('display', 'block')
+             .html(options.html(d));
+      if (isNaN(left) || isNaN(top)) {
+        var offsetX = parseInt(tooltip.style('width')) / 2;
+        var offsetY = parseInt(tooltip.style('height')) + lineHeight / 6;
+        position = d3.getPosition(this);
+        left = position.left + position.width / 2 - offsetX;
+        top = position.top + position.height / 2 - offsetY;
+      }
+      tooltip.style('left', left + 'px')
+             .style('top', top + 'px');
+      if (hoverEffect === 'darker') {
+        d3.select(this)
+          .attr('fill', d3.color(d.color).darker());
+      }
+    })
+    .on('mousemove', function (d) {
+      var position = d3.mouse(chart);
+      var offsetX = parseInt(tooltip.style('width')) / 2;
+      var offsetY = parseInt(tooltip.style('height')) + lineHeight / 6;
+      tooltip.style('left', (position[0] - offsetX) + 'px')
+             .style('top', (position[1] - offsetY) + 'px');
+    })
+    .on('mouseout', function (d) {
+      tooltip.style('display', 'none');
+      if (hoverEffect === 'darker') {
+        d3.select(this)
+          .attr('fill', d.color);
+      }
+    });
+  }
+};
+
+// Set the legend
+d3.setLegend = function (container, options) {
+  if (options.show) {
+    var symbol = options.symbol;
+    var symbolWidth = Math.round(symbol.width);
+    var symbolHeight = Math.round(symbol.height);
+    var textColor = options.textColor;
+    var disabledTextColor = options.disabledTextColor;
+    var lineHeight = options.lineHeight;
+    var item = container.append('g')
+                        .attr('class', 'legend')
+                        .attr('transform', options.translation)
+                        .attr('cursor', 'pointer')
+                        .selectAll('.legend-item')
+                        .data(options.bindingData)
+                        .enter()
+                        .append('g')
+                        .attr('class', function (d) {
+                          d.disabled = d.disabled || d.data.disabled;
+                          return 'legend-item' + (d.disabled ? ' disabled' : '');
+                        })
+                        .attr('transform', options.transform);
+
+    item.append('rect')
+        .attr('width', symbolWidth)
+        .attr('height', symbolHeight)
+        .attr('x', 0)
+        .attr('y', function (d, i) {
+          return lineHeight * (i + 1) - symbolHeight;
+        })
+        .attr('fill', function (d) {
+          return d.disabled ? disabledTextColor : d.color;
+        });
+
+    item.append('text')
+        .text(options.text)
+        .attr('x', symbolWidth)
+        .attr('y', function (d, i) {
+          return lineHeight * (i + 1);
+        })
+        .attr('dx', options.dx)
+        .attr('fill', function (d) {
+          return d.disabled ? disabledTextColor : textColor;
+        });
+
+    item.on('click', options.onclick);
+  }
+};
+
+// Wrap long labels: http://bl.ocks.org/mbostock/7555321
+d3.wrapText = function (selection, options) {
+  if (options.wrapText) {
+    var wrapWidth = options.wrapWidth;
+    var lineHeight = options.lineHeight;
+    selection.each(function () {
+      var label = d3.select(this);
+      var words = label.text().split(/\s+/).reverse();
+      if (words.length > 1) {
+        var x = label.attr('x');
+        var y = label.attr('y');
+        var dy = parseFloat(label.attr('dy'));
+        var tspan = label.text(null).append('tspan');
+        var word = words.pop();
+        var lineNumber = 0;
+        var line = [];
+        while (word) {
+          line.push(word);
+          tspan.text(line.join(' '));
+          if (tspan.node().getComputedTextLength() > wrapWidth) {
+            line.pop();
+            tspan.text(line.join(' '));
+            line = [word];
+            lineNumber += 1;
+            tspan = label.append('tspan')
+                         .attr('x', x)
+                         .attr('dy', lineHeight)
+                         .text(word);
+          }
+          word = words.pop();
+        }
+        if (options.verticalAlign) {
+          var align = options.verticalAlign;
+          var factor = 0;
+          if (align === 'middle') {
+            factor = 1 / 2;
+          } else if (align === 'bottom') {
+            factor = 1;
+          }
+          label.attr('y', y - lineNumber * lineHeight * factor);
+        }
+      }
+    });
+  }
+};
+
+// Trigger an action
+d3.triggerAction = function (selection, options) {
+  var nodes = selection.nodes() || [];
+  var name = options.event || options;
+  var event = null;
+  try {
+    event = new Event(name);
+  } catch (error) {
+    event = document.createEvent('SVGEvents');
+    event.initEvent(name, true, true);
+  }
+  if (d3.type(options) === 'object') {
+    var delay = options.delay || 0;
+    var length = nodes.length;
+    if (length && options.carousel) {
+      var interval = options.interval || 2000;
+      var limit = options.limit || length;
+      var randomize = options.randomize;
+      var infinite = options.infinite;
+      var index = 0;
+      var count = 0;
+      var timer = d3.timer(function (elapsed) {
+        if (elapsed > interval * count) {
+          count += 1;
+          nodes[index].dispatchEvent(event);
+          if (randomize === true) {
+            index = Math.floor(Math.random() * length);
+          } else {
+            index = (index + 1) % length;
+          }
+        }
+        if (infinite !== true && count >= limit) {
+          timer.stop();
+        }
+      }, delay);
+    } else {
+      d3.timeout(function () {
+        nodes.forEach(function (node) {
+          node.dispatchEvent(event);
+        });
+      }, delay);
+    }
+  } else {
+    nodes.forEach(function (node) {
+      node.dispatchEvent(event);
+    });
+  }
+};
+
+// Parse geo data
+d3.parseGeoData = function (map, options) {
   var data = map.data;
+  var key = map.key || 'id';
+  var features = [];
+  var neighbors = [];
   var type = d3.type(data);
   if (type === 'object') {
-    return callback(data);
-  }
-  if (type === 'string') {
-    if (/(geo|topo)\.?json$/.test(data)) {
-      type = 'json';
-    }
-  }
-  if (type === 'json') {
-    d3.json(data, function (json) {
-      var features = json.features || [];
-      var neighbors = [];
-      if (window.topojson) {
-        if (map.object) {
-          var object = json.objects[map.object];
-          features = topojson.feature(json, object).features;
+    if (data.hasOwnProperty('features')) {
+      features = data.features;
+    } else if (window.topojson) {
+      if (map.object) {
+        var object = data.objects[map.object];
+        features = topojson.feature(data, object).features;
+        if (options.neighbors) {
           neighbors = topojson.neighbors(object.geometries);
         }
       }
-      return callback({
-        features: features.map(function (feature, index) {
-          if (!feature.hasOwnProperty('id')) {
-            feature.id = String(feature.properties.id || index);
-          }
-          return feature;
-        }),
-        neighbors: neighbors
-      });
-    });
+    }
   }
+  return {
+    features: features.map(function (feature, index) {
+      if (!feature.hasOwnProperty(key)) {
+        feature[key] = String(feature[key] || feature.properties[key] || index);
+      }
+      return feature;
+    }),
+    neighbors: neighbors
+  };
 };
 
 // Built-in map data
@@ -401,7 +691,6 @@ d3.components.barChart = {
     show: false
   },
   tooltip: {
-    show: true,
     html: function (d, i) {
       return 'Datum ' + i;
     }
@@ -420,8 +709,6 @@ d3.barChart = function (data, options) {
   var context = options.context;
   var width = options.width;
   var height = options.height;
-  var innerWidth = options.innerWidth;
-  var innerHeight = options.innerHeight;
   var stroke = options.stroke;
   var strokeWidth = options.strokeWidth;
   var colorScheme = options.colorScheme;
@@ -429,25 +716,16 @@ d3.barChart = function (data, options) {
   var lineHeight = options.lineHeight;
 
   if (renderer === 'svg') {
-    // Create the `svg` element
-    var svg = d3.select(chart)
-                .append('svg')
-                .attr('width', width)
-                .attr('height', height);
+    // Create the plot
+    var plot = d3.createPlot(chart, options);
+    var svg = plot.svg;
+    var g = plot.container;
 
-    // Create the `g` elements
-    var transform = options.position || d3.translate(width / 2, height / 2);
-    var g = svg.append('g')
-               .attr('class', 'bar')
-               .attr('transform', transform)
-               .attr('stroke', stroke)
-               .attr('stroke-width', strokeWidth);
+  }
 
-    // Create the `path` elements
-    var color = d3.scaleOrdinal(colorScheme);
-
-  } else if (renderer === 'canvas') {
-
+  // Callbacks
+  if (typeof options.onready === 'function') {
+    options.onready(chart);
   }
 };
 
@@ -485,24 +763,24 @@ d3.components.pieChart = {
   innerRadius: 0,
   labels: {
     show: false,
+    dy: '0.25em',
     fill: '#fff',
     minAngle: Math.PI / 12,
+    wrapText: false,
+    wrapWidth: '5em',
+    lineHeight: '1.2em',
+    verticalAlign: 'middle',
     text: function (d) {
-      return d.data.label;
+      return d3.format('.0%')(d.data.percentage);
     }
   },
   legend: {
     show: true,
-    symbol: {
-      width: '1.294427em',
-      height: '0.8em'
-    },
     text: function (d) {
       return d.data.label;
     }
   },
   tooltip: {
-    show: true,
     html: function (d) {
       var percentage = (d.endAngle - d.startAngle) / (2 * Math.PI);
       return d.data.label + ': ' + d3.format('.1%')(percentage);
@@ -549,33 +827,25 @@ d3.pieChart = function (data, options) {
               .context(context);
 
   if (renderer === 'svg') {
-    // Create the `svg` element
-    var svg = d3.select(chart)
-                .append('svg')
-                .attr('width', width)
-                .attr('height', height);
-
-    // Create the `g` elements
-    var transform = options.position || d3.translate(width / 2, height / 2);
-    var g = svg.append('g')
-               .attr('class', 'pie')
-               .attr('transform', transform)
-               .attr('stroke', stroke)
-               .attr('stroke-width', strokeWidth);
+    // Create the plot
+    var plot = d3.createPlot(chart, options);
+    var svg = plot.svg;
+    var g = plot.container;
 
     // Create the `path` elements
-    var color = d3.scaleOrdinal(colorScheme);
-    var colorFunction = function (d) {
-      return color(d.data.label);
-    };
-    var path = g.selectAll('.arc')
-                .data(arcs)
-                .enter()
-                .append('g')
-                .attr('class', 'arc')
-                .append('path')
-                .attr('d', arc)
-                .attr('fill', colorFunction);
+    var colors = d3.scaleOrdinal(colorScheme);
+    var color = function (d) { return colors(d.data.label); };
+    var slice = g.selectAll('.arc')
+                 .data(arcs)
+                 .enter()
+                 .append('g')
+                 .attr('class', 'arc')
+                 .append('path')
+                 .attr('d', arc)
+                 .attr('fill', function (d) {
+                   d.color = colors(d.data.label);
+                   return d.color;
+                 });
 
     // Create the labels
     var labels = options.labels;
@@ -589,102 +859,47 @@ d3.pieChart = function (data, options) {
        .attr('y', function (d) {
          return arc.centroid(d)[1];
        })
+       .attr('dy', labels.dy)
        .attr('text-anchor', 'middle')
        .attr('fill', labels.fill)
        .text(labels.text)
        .attr('opacity', function (d) {
          var angle = d.endAngle - d.startAngle;
          return angle >= labels.minAngle ? 1 : 0;
-       });
+       })
+       .call(d3.wrapText, labels);
     }
 
     // Create the legend
     var legend = options.legend;
-    if (legend.show) {
-      var legendPosition = legend.position;
-      var legendSymbol = legend.symbol;
-      var symbolWidth = Math.round(legendSymbol.width);
-      var symbolHeight = Math.round(legendSymbol.height);
-      var textColor = options.textColor;
-      var disabledTextColor = options.disabledTextColor;
-      var item = svg.append('g')
-                    .attr('class', 'legend')
-                    .attr('transform', legendPosition)
-                    .attr('cursor', 'pointer')
-                    .selectAll('.legend-item')
-                    .data(arcs)
-                    .enter()
-                    .append('g')
-                    .attr('class', function (d) {
-                      return 'legend-item' + (d.data.disabled ? ' disabled' : '');
-                    });
-
-      item.append('rect')
-          .attr('width', symbolWidth)
-          .attr('height', symbolHeight)
-          .attr('x', 0)
-          .attr('y', function (d, i) {
-            return lineHeight * (i + 1) - symbolHeight;
-          })
-          .attr('fill', function (d) {
-            return d.data.disabled ? disabledTextColor : color(d.data.label);
-          });
-
-      item.append('text')
-          .text(legend.text)
-          .attr('x', symbolWidth + fontSize / 4)
-          .attr('y', function (d, i) {
-            return lineHeight * (i + 1);
-          })
-          .attr('fill', function (d) {
-            return d.data.disabled ? disabledTextColor : textColor;
-          });
-
-      item.on('click', function (d) {
-        var label = d.data.label;
-        var disabled = d.data.disabled;
-        data.some(function (d) {
-          if (d.label === label) {
-            d.disabled = !disabled;
-            return true;
-          }
-          return false;
-        });
-        svg.remove();
-        d3.pieChart(data, options);
-      });
+    if (!legend.translation) {
+      legend.translation = d3.translate(-width / 2, -height / 2);
     }
+    legend.bindingData = arcs;
+    legend.onclick = function (d) {
+      var label = d.data.label;
+      var disabled = d.data.disabled;
+      data.some(function (d) {
+        if (d.label === label) {
+          d.disabled = !disabled;
+          return true;
+        }
+        return false;
+      });
+      if (legend.updateInPlace) {
+        d3.select(chart)
+          .selectAll('svg')
+          .remove();
+      }
+      d3.pieChart(data, options);
+    };
+    d3.setLegend(g, legend);
 
     // Create the tooltip
     var tooltip = options.tooltip;
-    if (tooltip.show) {
-      var t = d3.select('#' + tooltip.id);
-      g.selectAll('.arc')
-       .on('mouseover', function (d) {
-         var position = d3.mouse(chart);
-         d3.select(this)
-           .select('path')
-           .attr('fill', d3.color(color(d.data.label)).darker());
-         t.attr('class', 'tooltip')
-          .style('display', 'block');
-         t.html(tooltip.html(d))
-          .style('left', position[0] + 'px')
-          .style('top', position[1] + 'px');
-       })
-       .on('mousemove', function (d) {
-         var position = d3.mouse(chart);
-         var offsetX = parseInt(t.style('width')) / 2;
-         var offsetY = parseInt(t.style('height')) + lineHeight / 6;
-         t.style('left', (position[0] - offsetX) + 'px')
-          .style('top', (position[1] - offsetY) + 'px');
-       })
-       .on('mouseout', function () {
-         d3.select(this)
-           .select('path')
-           .attr('fill', colorFunction);
-         t.style('display', 'none');
-       });
-    }
+    tooltip.hoverTarget = slice;
+    tooltip.hoverEffect = 'darker';
+    d3.setTooltip(chart, tooltip);
 
   } else if (renderer === 'canvas') {
     context.translate(width / 2, height / 2);
@@ -704,6 +919,11 @@ d3.pieChart = function (data, options) {
       context.stroke();
       context.closePath();
     }
+  }
+
+  // Callbacks
+  if (typeof options.onready === 'function') {
+    options.onready(chart);
   }
 };
 
@@ -740,7 +960,6 @@ d3.components.lineChart = {
     show: false
   },
   tooltip: {
-    show: true,
     html: function (d, i) {
       return 'Datum ' + i;
     }
@@ -759,8 +978,6 @@ d3.lineChart = function (data, options) {
   var context = options.context;
   var width = options.width;
   var height = options.height;
-  var innerWidth = options.innerWidth;
-  var innerHeight = options.innerHeight;
   var stroke = options.stroke;
   var strokeWidth = options.strokeWidth;
   var colorScheme = options.colorScheme;
@@ -768,25 +985,16 @@ d3.lineChart = function (data, options) {
   var lineHeight = options.lineHeight;
 
   if (renderer === 'svg') {
-    // Create the `svg` element
-    var svg = d3.select(chart)
-                .append('svg')
-                .attr('width', width)
-                .attr('height', height);
+    // Create the plot
+    var plot = d3.createPlot(chart, options);
+    var svg = plot.svg;
+    var g = plot.container;
 
-    // Create the `g` elements
-    var transform = options.position || d3.translate(width / 2, height / 2);
-    var g = svg.append('g')
-               .attr('class', 'line')
-               .attr('transform', transform)
-               .attr('stroke', stroke)
-               .attr('stroke-width', strokeWidth);
+  }
 
-    // Create the `path` elements
-    var color = d3.scaleOrdinal(colorScheme);
-
-  } else if (renderer === 'canvas') {
-
+  // Callbacks
+  if (typeof options.onready === 'function') {
+    options.onready(chart);
   }
 };
 
@@ -844,21 +1052,23 @@ d3.components.bubbleChart = {
   },
   gridX: {
     show: true,
-    stroke: '#999',
+    stroke: '#ccc',
     strokeDash: [6, 4]
   },
   gridY: {
     show: false,
-    stroke: '#999',
+    stroke: '#ccc',
     strokeDash: [6, 4]
   },
   labelX: {
     show: false,
-    text: 'X'
+    text: 'X',
+    dy: '2.8em'
   },
   labelY: {
     show: false,
-    text: 'Y'
+    text: 'Y',
+    dy: '-3em'
   },
   dots: {
     scale: '2%',
@@ -871,7 +1081,6 @@ d3.components.bubbleChart = {
     lightness: 0.6
   },
   tooltip: {
-    show: true,
     html: function (d) {
       return 'x = ' + d.x + '<br/>y = ' + d.y + '<br/>z = ' + d.z;
     }
@@ -919,18 +1128,12 @@ d3.bubbleChart = function (data, options) {
             .range(options.rangeY || [innerHeight, 0]);
 
   if (renderer === 'svg') {
-    // Create the `svg` element
-    var svg = d3.select(chart)
-                .append('svg')
-                .attr('width', width)
-                .attr('height', height);
-
-    // Create the `g` elements
-    var g = svg.append('g')
-               .attr('class', 'bubble')
-               .attr('transform', d3.translate(margin.left, margin.top))
-               .attr('stroke', stroke)
-               .attr('stroke-width', strokeWidth);
+    // Create the plot
+    var plot = d3.createPlot(chart, options);
+    var svg = plot.svg;
+    var g = plot.container;
+    var titleHeight = options.title.height;
+    g.attr('transform', d3.translate(margin.left, margin.top + titleHeight));
 
     // Set axes
     var axisX = options.axisX;
@@ -1023,7 +1226,7 @@ d3.bubbleChart = function (data, options) {
        .attr('text-anchor', 'end')
        .attr('x', innerWidth)
        .attr('y', innerHeight)
-       .attr('dy', '3em')
+       .attr('dy', labelX.dy)
        .text(labelX.text);
     }
     if (labelY.show) {
@@ -1031,13 +1234,13 @@ d3.bubbleChart = function (data, options) {
        .attr('class', 'label label-y')
        .attr('text-anchor', 'end')
        .attr('y', 0)
-       .attr('dy', '-3em')
+       .attr('dy', labelY.dy)
        .attr('transform', 'rotate(-90)')
        .text(labelY.text);
     }
 
     // Add dots
-    var color = d3.scaleOrdinal(colorScheme);
+    var colors = d3.scaleOrdinal(colorScheme);
     var dots = options.dots;
     var scale = dots.scale;
     var minRadius = dots.minRadius;
@@ -1071,7 +1274,7 @@ d3.bubbleChart = function (data, options) {
                    var l = lightness - (1 - lightness) * (d.x - xmin) / ((xmax - xmin) || 1);
                    return d3.hsl(h, s, l);
                  }
-                 return color(d.x);
+                 return colors(d.x);
                })
                .sort(function (a, b) {
                  // Defines a sort order so that the smallest dots are drawn on top
@@ -1089,30 +1292,376 @@ d3.bubbleChart = function (data, options) {
 
      // Create the tooltip
      var tooltip = options.tooltip;
-     if (tooltip.show) {
-       var t = d3.select('#' + tooltip.id);
-       dot.on('mouseover', function (d) {
-         var position = d3.mouse(chart);
-         t.attr('class', 'tooltip')
-          .style('display', 'block');
-         t.html(tooltip.html(d))
-          .style('left', position[0] + 'px')
-          .style('top', position[1] + 'px');
-       })
-       .on('mousemove', function (d) {
-         var position = d3.mouse(chart);
-         var offsetX = parseInt(t.style('width')) / 2;
-         var offsetY = parseInt(t.style('height')) + lineHeight / 6;
-         t.style('left', (position[0] - offsetX) + 'px')
-          .style('top', (position[1] - offsetY) + 'px');
-       })
-       .on('mouseout', function () {
-         t.style('display', 'none');
-       });
-     }
+     tooltip.hoverTarget = dot;
+     d3.setTooltip(chart, tooltip);
 
-  } else if (renderer === 'canvas') {
+  }
 
+  // Callbacks
+  if (typeof options.onready === 'function') {
+    options.onready(chart);
+  }
+};
+
+/*!
+ * Radar Chart
+ * References: http://bl.ocks.org/nbremer/6506614
+ *             http://bl.ocks.org/nbremer/21746a9668ffdf6d8242
+ *             http://bl.ocks.org/tpreusse/2bc99d74a461b8c0acb1
+ */
+
+// Register a chart type
+d3.components.radarChart = {
+  type: 'radar chart',
+  schema: {
+    type: 'object',
+    entries: [
+      {
+        key: 'axis',
+        type: 'string',
+        mappings: [
+          'category',
+          'label',
+          'name'
+        ]
+      },
+      {
+        key: 'value',
+        type: 'number',
+        mappings: [
+          'count',
+          'percentage'
+        ]
+      },
+      {
+        key: 'series',
+        type: 'string',
+        mappings: [
+          'entry',
+          'item'
+        ]
+      }
+    ]
+  },
+  sort: null,
+  curve: 'curveLinearClosed',
+  levels: 3,
+  maxValue: 0,
+  grids: {
+    show: true,
+    shape: 'polygon',
+    stroke: '#ccc',
+    strokeWidth: 1,
+    fill: 'none'
+  },
+  rays: {
+    show: true,
+    stroke: '#999',
+    strokeWidth: 1
+  },
+  areas: {
+    stroke: '#1f77b4',
+    strokeWidth: 2,
+    fill: '#3182bd',
+    opacity: 0.65
+  },
+  dots: {
+    show: true,
+    radius: 3,
+    strokeWidth: 1,
+    fill: '#fff'
+  },
+  labels: {
+    show: true,
+    dy: '0.25em',
+    padding: '1em',
+    wrapText: false,
+    wrapWidth: '10em',
+    lineHeight: '1.2em',
+    verticalAlign: 'middle'
+  },
+  legend: {
+    show: null,
+    text: function (d) {
+      return d.series;
+    }
+  },
+  tooltip: {
+    html: function (d) {
+      return d.axis + ': ' + d.value;
+    }
+  }
+};
+
+// Radar chart
+d3.radarChart = function (data, options) {
+  // Parse plotting data and options
+  data = d3.parseData('radarChart', data);
+  options = d3.parseOptions('radarChart', options);
+
+  // Use the options
+  var chart = options.chart;
+  var renderer = options.renderer;
+  var context = options.context;
+  var width = options.width;
+  var height = options.height;
+  var innerWidth = options.innerWidth;
+  var innerHeight = options.innerHeight;
+  var stroke = options.stroke;
+  var strokeWidth = options.strokeWidth;
+  var colorScheme = options.colorScheme;
+  var fontSize = options.fontSize;
+  var lineHeight = options.lineHeight;
+
+  // Process data
+  var axes = options.axes || [];
+  var list = options.series || [];
+  var values = [];
+  data.forEach(function (d) {
+    var axis = d.axis;
+    var series = d.series;
+    if (axes.indexOf(axis) === -1) {
+      axes.push(axis);
+    }
+    if (list.indexOf(series) === -1) {
+      list.push(series);
+    }
+    values.push(d.value);
+  });
+  list = list.map(function (series) {
+    var array = data.filter(function (d) {
+      return d.series === series;
+    });
+    return {
+      series: series,
+      disabled: array.every(function (d) {
+        return d.disabled;
+      }),
+      data: axes.map(function (axis) {
+        var datum = null;
+        array.some(function (d) {
+          if (d.axis === axis) {
+            datum = d;
+            return true;
+          }
+          return false;
+        });
+        if (datum === null) {
+          datum = {
+            axis: axis,
+            value: 0
+          };
+        }
+        return datum;
+      })
+    };
+  });
+
+  // Layout
+  var dimension = axes.length;
+  var theta = 2 * Math.PI / dimension;
+  var radius = Math.min(innerWidth, innerHeight) / 2;
+  var rmax = Math.max(d3.max(values), options.maxValue);
+  var rscale = d3.scaleLinear()
+                 .range([0, radius])
+                 .domain([0, rmax]);
+  var radar = d3.radialLine()
+                .radius(function (d) {
+                  return rscale(d.value);
+                })
+                .angle(function (d, i) {
+                  return theta * i;
+                })
+                .curve(d3[options.curve])
+                .context(context);
+
+  if (renderer === 'svg') {
+    // Create the plot
+    var plot = d3.createPlot(chart, options);
+    var svg = plot.svg;
+    var g = plot.container;
+
+    // Grids
+    var grids = options.grids;
+    var levels = options.levels;
+    if (grids.show) {
+      var shape = grids.shape;
+      if (shape === 'polygon') {
+        g.selectAll('.grid')
+         .data(d3.range(1, levels + 1))
+         .enter()
+         .append('polygon')
+         .attr('class', 'grid')
+         .attr('points', function (d) {
+           var r = rscale(rmax / levels * d);
+           return d3.regularPolygon(dimension, r).join(' ');
+         })
+         .attr('stroke', grids.stroke)
+         .attr('stroke-width', grids.strokeWidth)
+         .attr('fill', grids.fill);
+      } else if (shape === 'circle') {
+        g.selectAll('.grid')
+         .data(d3.range(1, levels + 1))
+         .enter()
+         .append('circle')
+         .attr('class', 'grid')
+         .attr('cx', 0)
+         .attr('cy', 0)
+         .attr('r', function (d) {
+           return radius / levels * d;
+         })
+         .attr('stroke', grids.stroke)
+         .attr('stroke-width', grids.strokeWidth)
+         .attr('fill', grids.fill);
+      }
+    }
+
+    // Radical lines
+    var rays = options.rays;
+    if (rays.show) {
+      g.selectAll('.ray')
+       .data(d3.range(dimension))
+       .enter()
+       .append('line')
+       .attr('class', 'ray')
+       .attr('x1', 0)
+       .attr('y1', 0)
+       .attr('x2', function (d) {
+         return radius * Math.sin(theta * d);
+       })
+       .attr('y2', function (d) {
+         return -radius * Math.cos(theta * d);
+       })
+       .attr('stroke', rays.stroke)
+       .attr('stroke-width', rays.strokeWidth);
+    }
+
+    // Areas and dots
+    var colors = d3.scaleOrdinal(colorScheme);
+    var color = function (d) { return d.color; };
+    var darkColor = function (d) { return d3.color(d.color).darker(); };
+    var areas = options.areas;
+    var dots = options.dots;
+    var s = g.selectAll('.series')
+             .data(list)
+             .enter()
+             .append('g')
+             .attr('class', 'series')
+             .attr('stroke', function (d) {
+               d.color = colors(d.series);
+               return d3.color(d.color).darker();
+             })
+             .attr('stroke-width', areas.strokeWidth)
+             .style('display', function (d) {
+               return d.disabled ? 'none' : 'block';
+             });
+    var area = s.append('path')
+                .attr('class', 'area')
+                .attr('d', function (d) {
+                  return radar(d.data);
+                })
+                .attr('fill', color)
+                .attr('opacity', areas.opacity)
+                .on('mouseover', function () {
+                  s.selectAll('.area')
+                   .attr('fill', 'none')
+                   .attr('pointer-events', 'none');
+                  d3.select(this)
+                    .attr('fill', darkColor)
+                    .attr('pointer-events', 'visible');
+                })
+                .on('mouseout', function () {
+                  s.selectAll('.area')
+                   .attr('fill', color)
+                   .attr('pointer-events', 'visible');
+                });
+   if (dots.show) {
+     var dot = s.selectAll('.dot')
+                .data(function (d) {
+                  return d.data;
+                })
+                .enter()
+                .append('circle')
+                .attr('class', 'dot')
+                .attr('cx', function (d, i) {
+                  return rscale(d.value) * Math.sin(theta * i);
+                })
+                .attr('cy', function (d, i) {
+                  return -rscale(d.value) * Math.cos(theta * i);
+                })
+                .attr('r', dots.radius)
+                .attr('stroke', dots.stroke)
+                .attr('stroke-width', dots.strokeWidth)
+                .attr('fill', dots.fill);
+   }
+
+    // Labels
+    var labels = options.labels;
+    if (labels.show) {
+      var r = radius + labels.padding;
+      g.selectAll('.label')
+       .data(axes)
+       .enter()
+       .append('text')
+       .attr('class', 'label')
+       .attr('x', function (d, i) {
+         return r * Math.sin(theta * i);
+       })
+       .attr('y', function (d, i) {
+         return -r * Math.cos(theta * i);
+       })
+       .attr('dy', labels.dy)
+       .attr('text-anchor', function (d, i) {
+         var anchor = 'middle';
+         if (i > 0 && i < Math.ceil(dimension / 2)) {
+           anchor = 'start';
+         } else if (i >= Math.floor(dimension / 2) + 1) {
+           anchor = 'end';
+         }
+         return anchor;
+       })
+       .text(function (d) {
+         return d;
+       })
+       .call(d3.wrapText, labels);
+    }
+
+    // Legend
+    var legend = options.legend;
+    if (legend.show === null) {
+      legend.show = list.length > 1;
+    }
+    if (!legend.translation) {
+      legend.translation = d3.translate(-width / 2, -height / 2);
+    }
+    legend.bindingData = list;
+    legend.onclick = function (d) {
+      var series = d.series;
+      var disabled = d.disabled;
+      data.forEach(function (d) {
+        if (d.series === series) {
+          d.disabled = !disabled;
+        }
+      });
+      if (legend.updateInPlace) {
+        d3.select(chart)
+          .selectAll('svg')
+          .remove();
+      }
+      d3.radarChart(data, options);
+    };
+    d3.setLegend(g, legend);
+
+    // Tooltip
+    var tooltip = options.tooltip;
+    tooltip.hoverTarget = dot;
+    d3.setTooltip(chart, tooltip);
+
+  }
+
+  // Callbacks
+  if (typeof options.onready === 'function') {
+    options.onready(chart);
   }
 };
 
@@ -1160,7 +1709,6 @@ d3.components.sunburstChart = {
     show: false
   },
   tooltip: {
-    show: true,
     html: function (d) {
       return d.data.label + ': ' + d.data.value;
     }
@@ -1181,8 +1729,6 @@ d3.sunburstChart = function (data, options) {
   var context = options.context;
   var width = options.width;
   var height = options.height;
-  var innerWidth = options.innerWidth;
-  var innerHeight = options.innerHeight;
   var stroke = options.stroke;
   var strokeWidth = options.strokeWidth;
   var colorScheme = options.colorScheme;
@@ -1223,84 +1769,59 @@ d3.sunburstChart = function (data, options) {
               .context(context);
 
   if (renderer === 'svg') {
-    // Create the `svg` element
-    var svg = d3.select(chart)
-                .append('svg')
-                .attr('width', width)
-                .attr('height', height);
-
-    // Create the `g` elements
-    var transform = options.position || d3.translate(width / 2, height / 2);
-    var g = svg.append('g')
-               .attr('class', 'sunburst')
-               .attr('transform', transform)
-               .attr('stroke', stroke)
-               .attr('stroke-width', strokeWidth);
+    // Create the plot
+    var plot = d3.createPlot(chart, options);
+    var svg = plot.svg;
+    var g = plot.container;
 
     // Create the `path` elements
-    var color = d3.scaleOrdinal(colorScheme);
+    var colors = d3.scaleOrdinal(colorScheme);
     var donut = options.donut;
-    var path = g.selectAll('.arc')
-                .data(root.descendants())
-                .enter()
-                .append('g')
-                .attr('class', 'arc')
-                .append('path')
-                .attr('d', arc)
-                .attr('opacity', function (d) {
-                  return donut.show && d.parent === null ? 0 : null;
-                })
-                .attr('fill', function (d) {
-                  return color((d.children ? d : d.parent).data.label);
-                });
+    var slice = g.selectAll('.arc')
+                 .data(root.descendants())
+                 .enter()
+                 .append('g')
+                 .attr('class', 'arc')
+                 .append('path')
+                 .attr('d', arc)
+                 .attr('opacity', function (d) {
+                   return donut.show && d.parent === null ? 0 : null;
+                 })
+                 .attr('fill', function (d) {
+                   return colors((d.children ? d : d.parent).data.label);
+                 });
     if (options.zoomable) {
-      path.attr('cursor', 'pointer')
-          .on('click', function (d) {
-            var donutRadius = radius * donut.ratio || donut.radius;
-            g.transition()
-             .tween('scale', function() {
-               var xd = d3.interpolate(x.domain(), [d.x0, d.x1]);
-               var yd = d3.interpolate(y.domain(), [d.y0, 1]);
-               var yr = d3.interpolate(y.range(), [d.y0 ? donutRadius : 0, radius]);
-               return function (t) {
-                 x.domain(xd(t));
-                 y.domain(yd(t))
-                  .range(yr(t));
-               };
-             })
-             .selectAll('path')
-             .attrTween('d', function (d) {
-               return function() { return arc(d); };
-             });
-          });
+      slice.attr('cursor', 'pointer')
+           .on('click', function (d) {
+             var donutRadius = radius * donut.ratio || donut.radius;
+             g.transition()
+              .tween('scale', function() {
+                var xd = d3.interpolate(x.domain(), [d.x0, d.x1]);
+                var yd = d3.interpolate(y.domain(), [d.y0, 1]);
+                var yr = d3.interpolate(y.range(), [d.y0 ? donutRadius : 0, radius]);
+                return function (t) {
+                  x.domain(xd(t));
+                  y.domain(yd(t))
+                   .range(yr(t));
+                };
+              })
+              .selectAll('path')
+              .attrTween('d', function (d) {
+                return function() { return arc(d); };
+              });
+           });
     }
 
     // Create the tooltip
     var tooltip = options.tooltip;
-    if (tooltip.show) {
-      var t = d3.select('#' + tooltip.id);
-      path.on('mouseover', function (d) {
-        var position = d3.mouse(chart);
-        t.attr('class', 'tooltip')
-         .style('display', 'block');
-        t.html(tooltip.html(d))
-         .style('left', position[0] + 'px')
-         .style('top', position[1] + 'px');
-      })
-      .on('mousemove', function (d) {
-        var position = d3.mouse(chart);
-        var offsetX = parseInt(t.style('width')) / 2;
-        var offsetY = parseInt(t.style('height')) + lineHeight / 6;
-        t.style('left', (position[0] - offsetX) + 'px')
-         .style('top', (position[1] - offsetY) + 'px');
-      })
-      .on('mouseout', function () {
-        t.style('display', 'none');
-      });
-    }
+    tooltip.hoverTarget = slice;
+    d3.setTooltip(chart, tooltip);
 
-  } else if (renderer === 'canvas') {
+  }
 
+  // Callbacks
+  if (typeof options.onready === 'function') {
+    options.onready(chart);
   }
 };
 
@@ -1358,8 +1879,6 @@ d3.choroplethMap = function (data, options) {
   var context = options.context;
   var width = options.width;
   var height = options.height;
-  var innerWidth = options.innerWidth;
-  var innerHeight = options.innerHeight;
   var stroke = options.stroke;
   var fill = options.fill;
   var strokeWidth = options.strokeWidth;
@@ -1370,7 +1889,7 @@ d3.choroplethMap = function (data, options) {
   // Create geo projection
   var map = options.map;
   var projection = d3[options.projection]()
-                     .translate([width / 2, height / 2])
+                     .translate([0, 0])
                      .center(map.center)
                      .scale(height * map.scale);
 
@@ -1378,47 +1897,18 @@ d3.choroplethMap = function (data, options) {
   var path = d3.geoPath()
                .projection(projection);
 
+  // Parse geo data
+  var data = d3.parseGeoData(map, { neighbors: true });
+  var features = data.features;
+  var neighbors = data.neighbors;
+
   if (renderer === 'svg') {
-    // Create the `svg` element
-    var svg = d3.select(chart)
-                .append('svg')
-                .attr('width', width)
-                .attr('height', height);
+    // Create the plot
+    var plot = d3.createPlot(chart, options);
+    var svg = plot.svg;
+    var g = plot.container;
 
-    // Create the `g` elements
-    var transform = options.position || d3.translate(0, 0);
-    var g = svg.append('g')
-               .attr('class', 'map')
-               .attr('transform', transform)
-               .attr('stroke', stroke)
-               .attr('stroke-width', strokeWidth)
-               .attr('fill', fill);
-
-    var color = d3.scaleOrdinal(colorScheme);
-    var coloring = options.coloring;
-    d3.getMap(map, function (data) {
-      var features = data.features;
-      var neighbors = data.neighbors;
-      g.selectAll('.region')
-       .data(features)
-       .enter()
-       .append('path')
-       .attr('class', 'region')
-       .attr('d', path)
-       .attr('id', function (d) {
-         return id + '-' + d.id;
-       })
-       .attr('fill', function (d, i) {
-         if (coloring === 'topological' && neighbors.length) {
-           d.color = (d3.max(neighbors[i], function (n) {
-             return features[n].color;
-           }) | 0) + 1;
-           return color(d.color);
-         }
-         return color(d.id);
-       });
-    });
-
+    // Graticules
     var graticules = options.graticules;
     var graticule = d3.geoGraticule()
                       .step(graticules.step);
@@ -1430,7 +1920,32 @@ d3.choroplethMap = function (data, options) {
        .attr('stroke', graticules.stroke);
     }
 
-  } else if (renderer === 'canvas') {
+    // Regions
+    var colors = d3.scaleOrdinal(colorScheme);
+    var coloring = options.coloring;
+    g.selectAll('.region')
+     .data(features)
+     .enter()
+     .append('path')
+     .attr('class', 'region')
+     .attr('d', path)
+     .attr('id', function (d) {
+       return id + '-' + d.id;
+     })
+     .attr('fill', function (d, i) {
+       if (coloring === 'topological' && neighbors.length) {
+         d.color = (d3.max(neighbors[i], function (n) {
+           return features[n].color;
+         }) | 0) + 1;
+         return colors(d.color);
+       }
+       return colors(d.id);
+     });
 
+  }
+
+  // Callbacks
+  if (typeof options.onready === 'function') {
+    options.onready(chart);
   }
 };

@@ -31,6 +31,7 @@
           <li><a href="./../api/pie-chart.html">Pie Chart</a></li>
           <li><a href="./../api/line-chart.html">Line Chart</a></li>
           <li class="ui-state-active"><a href="./../api/bubble-chart.html">Bubble Chart</a></li>
+          <li><a href="./../api/radar-chart.html">Radar Chart</a></li>
           <li><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
           <li><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
         </ul>
@@ -54,6 +55,10 @@
     d3.bubbleChart(data, { id: 'bubble-chart-default' });
     d3.bubbleChart(data, {
       id: 'bubble-chart-gradient',
+      title: {
+        show: true,
+        text: 'Articles counted by published year of the keywords “topological insulator”'
+      },
       domainX: [2003, 2017],
       domainY: [0, 600],
       framed: true,
@@ -103,6 +108,10 @@
         d3.bubbleChart(data, { id: 'bubble-chart-default' });
         d3.bubbleChart(data, {
           id: 'bubble-chart-gradient',
+          title: {
+            show: true,
+            text: 'Articles counted by published year of the keywords “topological insulator”'
+          },
           domainX: [2003, 2017],
           domainY: [0, 600],
           framed: true,

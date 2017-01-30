@@ -23,6 +23,10 @@ block article
           d3.bubbleChart(data, { id: 'bubble-chart-default' });
           d3.bubbleChart(data, {
             id: 'bubble-chart-gradient',
+            title: {
+              show: true,
+              text: 'Articles counted by published year of the keywords “topological insulator”'
+            },
             domainX: [2003, 2017],
             domainY: [0, 600],
             framed: true,
@@ -62,6 +66,10 @@ block append foot
       d3.bubbleChart(data, { id: 'bubble-chart-default' });
       d3.bubbleChart(data, {
         id: 'bubble-chart-gradient',
+        title: {
+          show: true,
+          text: 'Articles counted by published year of the keywords “topological insulator”'
+        },
         domainX: [2003, 2017],
         domainY: [0, 600],
         framed: true,

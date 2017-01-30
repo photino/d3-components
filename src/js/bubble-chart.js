@@ -52,21 +52,23 @@ d3.components.bubbleChart = {
   },
   gridX: {
     show: true,
-    stroke: '#999',
+    stroke: '#ccc',
     strokeDash: [6, 4]
   },
   gridY: {
     show: false,
-    stroke: '#999',
+    stroke: '#ccc',
     strokeDash: [6, 4]
   },
   labelX: {
     show: false,
-    text: 'X'
+    text: 'X',
+    dy: '2.8em'
   },
   labelY: {
     show: false,
-    text: 'Y'
+    text: 'Y',
+    dy: '-3em'
   },
   dots: {
     scale: '2%',
@@ -79,7 +81,6 @@ d3.components.bubbleChart = {
     lightness: 0.6
   },
   tooltip: {
-    show: true,
     html: function (d) {
       return 'x = ' + d.x + '<br/>y = ' + d.y + '<br/>z = ' + d.z;
     }
@@ -127,18 +128,12 @@ d3.bubbleChart = function (data, options) {
             .range(options.rangeY || [innerHeight, 0]);
 
   if (renderer === 'svg') {
-    // Create the `svg` element
-    var svg = d3.select(chart)
-                .append('svg')
-                .attr('width', width)
-                .attr('height', height);
-
-    // Create the `g` elements
-    var g = svg.append('g')
-               .attr('class', 'bubble')
-               .attr('transform', d3.translate(margin.left, margin.top))
-               .attr('stroke', stroke)
-               .attr('stroke-width', strokeWidth);
+    // Create the plot
+    var plot = d3.createPlot(chart, options);
+    var svg = plot.svg;
+    var g = plot.container;
+    var titleHeight = options.title.height;
+    g.attr('transform', d3.translate(margin.left, margin.top + titleHeight));
 
     // Set axes
     var axisX = options.axisX;
@@ -231,7 +226,7 @@ d3.bubbleChart = function (data, options) {
        .attr('text-anchor', 'end')
        .attr('x', innerWidth)
        .attr('y', innerHeight)
-       .attr('dy', '3em')
+       .attr('dy', labelX.dy)
        .text(labelX.text);
     }
     if (labelY.show) {
@@ -239,13 +234,13 @@ d3.bubbleChart = function (data, options) {
        .attr('class', 'label label-y')
        .attr('text-anchor', 'end')
        .attr('y', 0)
-       .attr('dy', '-3em')
+       .attr('dy', labelY.dy)
        .attr('transform', 'rotate(-90)')
        .text(labelY.text);
     }
 
     // Add dots
-    var color = d3.scaleOrdinal(colorScheme);
+    var colors = d3.scaleOrdinal(colorScheme);
     var dots = options.dots;
     var scale = dots.scale;
     var minRadius = dots.minRadius;
@@ -279,7 +274,7 @@ d3.bubbleChart = function (data, options) {
                    var l = lightness - (1 - lightness) * (d.x - xmin) / ((xmax - xmin) || 1);
                    return d3.hsl(h, s, l);
                  }
-                 return color(d.x);
+                 return colors(d.x);
                })
                .sort(function (a, b) {
                  // Defines a sort order so that the smallest dots are drawn on top
@@ -297,29 +292,13 @@ d3.bubbleChart = function (data, options) {
 
      // Create the tooltip
      var tooltip = options.tooltip;
-     if (tooltip.show) {
-       var t = d3.select('#' + tooltip.id);
-       dot.on('mouseover', function (d) {
-         var position = d3.mouse(chart);
-         t.attr('class', 'tooltip')
-          .style('display', 'block');
-         t.html(tooltip.html(d))
-          .style('left', position[0] + 'px')
-          .style('top', position[1] + 'px');
-       })
-       .on('mousemove', function (d) {
-         var position = d3.mouse(chart);
-         var offsetX = parseInt(t.style('width')) / 2;
-         var offsetY = parseInt(t.style('height')) + lineHeight / 6;
-         t.style('left', (position[0] - offsetX) + 'px')
-          .style('top', (position[1] - offsetY) + 'px');
-       })
-       .on('mouseout', function () {
-         t.style('display', 'none');
-       });
-     }
+     tooltip.hoverTarget = dot;
+     d3.setTooltip(chart, tooltip);
 
-  } else if (renderer === 'canvas') {
+  }
 
+  // Callbacks
+  if (typeof options.onready === 'function') {
+    options.onready(chart);
   }
 };

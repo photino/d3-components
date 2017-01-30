@@ -1,0 +1,167 @@
+
+extends components
+
+block variables
+  - var pageID = 'api/radar-chart'
+  - var pageTitle = 'Radar Chart'
+  - var prism = true
+
+block article
+  h3.ui-header-primary= pageTitle
+  .ui-container-grid
+    .ui-grid-50.ui-mobile-expand
+      #radar-chart-default
+    .ui-grid-50.ui-mobile-expand
+      #radar-chart-circular
+  div
+    pre: code.language-markup.
+      &lt;div id="radar-chart-default"&gt;&lt;/div&gt;
+      &lt;div id="radar-chart-circular"&gt;&lt;/div&gt;
+
+      &lt;script&gt;
+        d3.radarChart([
+          { axis: 'Computing power', value: 90 },
+          { axis: 'Investments', value: 66 },
+          { axis: 'Big data', value: 45 },
+          { axis: 'Innovations', value: 72 },
+          { axis: 'Demands', value: 42 }
+        ], { id: 'radar-chart-default' });
+        d3.radarChart([
+          { axis: 'Innovations', value: 92, city: 'Shenzhen' },
+          { axis: 'Computing power', value: 90, city: 'Hangzhou' },
+          { axis: 'Investments', value: 85, city: 'Shenzhen' },
+          { axis: 'Computing power', value: 78, city: 'Shenzhen' },
+          { axis: 'Innovations', value: 72, city: 'Hangzhou' },
+          { axis: 'Investments', value: 66, city: 'Hangzhou' },
+          { axis: 'Demands', value: 60, city: 'Shenzhen' },
+          { axis: 'Big data', value: 45, city: 'Hangzhou' },
+          { axis: 'Demands', value: 42, city: 'Hangzhou' },
+          { axis: 'Big data', value: 30, city: 'Shenzhen' }
+        ], {
+          id: 'radar-chart-circular',
+          title: {
+            show: true,
+            text: 'Cloud Indexes of China Cities'
+          },
+          axes: [
+            'Computing power',
+            'Investments',
+            'Big data',
+            'Innovations',
+            'Demands'
+          ],
+          series: [
+            'Hangzhou',
+            'Shenzhen'
+          ],
+          maxValue: 100,
+          levels: 5,
+          curve: 'curveCardinalClosed',
+          grids: {
+            shape: 'circle'
+          },
+          tooltip: {
+            html: function (d) {
+              return d.axis + ': ' + d.value + ' (' + d.city + ')';
+            }
+          }
+        });
+        d3.select('#radar-chart-default')
+          .call(function (chart) {
+            var dots = chart.selectAll('.dot');
+            d3.triggerAction(dots, {
+              event: 'mouseover',
+              carousel: true,
+              delay: 2000,
+              interval: 2000,
+              randomize: true,
+              infinite: true
+            });
+          });
+        d3.select('#radar-chart-circular')
+          .call(function (chart) {
+            d3.interval(function () {
+              var items = chart.selectAll('.legend-item');
+              d3.triggerAction(items, {
+                event: 'click',
+                carousel: true,
+                delay: 2000,
+                interval: 2000
+              });
+            }, 6000);
+          });
+      &lt;/script&gt;
+
+block append foot
+  script.
+    d3.radarChart([
+      { axis: 'Computing power', value: 90 },
+      { axis: 'Investments', value: 66 },
+      { axis: 'Big data', value: 45 },
+      { axis: 'Innovations', value: 72 },
+      { axis: 'Demands', value: 42 }
+    ], { id: 'radar-chart-default' });
+    d3.radarChart([
+      { axis: 'Innovations', value: 92, city: 'Shenzhen' },
+      { axis: 'Computing power', value: 90, city: 'Hangzhou' },
+      { axis: 'Investments', value: 85, city: 'Shenzhen' },
+      { axis: 'Computing power', value: 78, city: 'Shenzhen' },
+      { axis: 'Innovations', value: 72, city: 'Hangzhou' },
+      { axis: 'Investments', value: 66, city: 'Hangzhou' },
+      { axis: 'Demands', value: 60, city: 'Shenzhen' },
+      { axis: 'Big data', value: 45, city: 'Hangzhou' },
+      { axis: 'Demands', value: 42, city: 'Hangzhou' },
+      { axis: 'Big data', value: 30, city: 'Shenzhen' }
+    ], {
+      id: 'radar-chart-circular',
+      title: {
+        show: true,
+        text: 'Cloud Indexes of China Cities'
+      },
+      axes: [
+        'Computing power',
+        'Investments',
+        'Big data',
+        'Innovations',
+        'Demands'
+      ],
+      series: [
+        'Hangzhou',
+        'Shenzhen'
+      ],
+      maxValue: 100,
+      levels: 5,
+      curve: 'curveCardinalClosed',
+      grids: {
+        shape: 'circle'
+      },
+      tooltip: {
+        html: function (d) {
+          return d.axis + ': ' + d.value + ' (' + d.city + ')';
+        }
+      }
+    });
+    d3.select('#radar-chart-default')
+      .call(function (chart) {
+        var dots = chart.selectAll('.dot');
+        d3.triggerAction(dots, {
+          event: 'mouseover',
+          carousel: true,
+          delay: 2000,
+          interval: 2000,
+          randomize: true,
+          infinite: true
+        });
+      });
+    d3.select('#radar-chart-circular')
+      .call(function (chart) {
+        d3.interval(function () {
+          var items = chart.selectAll('.legend-item');
+          d3.triggerAction(items, {
+            event: 'click',
+            carousel: true,
+            delay: 2000,
+            interval: 2000
+          });
+        }, 6000);
+      });

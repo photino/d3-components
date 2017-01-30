@@ -31,6 +31,7 @@
           <li><a href="./../api/pie-chart.html">Pie Chart</a></li>
           <li><a href="./../api/line-chart.html">Line Chart</a></li>
           <li><a href="./../api/bubble-chart.html">Bubble Chart</a></li>
+          <li><a href="./../api/radar-chart.html">Radar Chart</a></li>
           <li><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
           <li class="ui-state-active"><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
         </ul>
@@ -51,22 +52,27 @@
 
 &lt;script&gt;
   var data = [];
-  d3.choroplethMap(data, {
-    id: 'choropleth-map-geojson',
-    map: {
-      name: 'china',
-      data: '../dist/maps/china.geo.json'
-    }
+  d3.json('../dist/maps/china.geo.json', function (geojson) {
+    d3.choroplethMap(data, {
+      id: 'choropleth-map-geojson',
+      map: {
+        name: 'china',
+        data: geojson
+      },
+      coloring: 'topological'
+    });
   });
-  d3.choroplethMap(data, {
-    id: 'choropleth-map-topojson',
-    map: {
-      name: 'world',
-      data: '../dist/maps/world.topo.json',
-      object: 'countries'
-    },
-    projection: 'geoEquirectangular',
-    coloring: 'topological'
+  d3.json('../dist/maps/world.topo.json', function (topojson) {
+    d3.choroplethMap(data, {
+      id: 'choropleth-map-topojson',
+      map: {
+        name: 'world',
+        data: topojson,
+        object: 'countries'
+      },
+      projection: 'geoEquirectangular',
+      coloring: 'topological'
+    });
   });
 &lt;/script&gt;
 </code></pre>
@@ -84,23 +90,27 @@
     <script src="../dist/topojson-2.2.0.min.js"></script>
     <script>
       var data = [];
-      d3.choroplethMap(data, {
-        id: 'choropleth-map-geojson',
-        map: {
-          name: 'china',
-          data: '../dist/maps/china.geo.json'
-        },
-        coloring: 'topological'
+      d3.json('../dist/maps/china.geo.json', function (geojson) {
+        d3.choroplethMap(data, {
+          id: 'choropleth-map-geojson',
+          map: {
+            name: 'china',
+            data: geojson
+          },
+          coloring: 'topological'
+        });
       });
-      d3.choroplethMap(data, {
-        id: 'choropleth-map-topojson',
-        map: {
-          name: 'world',
-          data: '../dist/maps/world.topo.json',
-          object: 'countries'
-        },
-        projection: 'geoEquirectangular',
-        coloring: 'topological'
+      d3.json('../dist/maps/world.topo.json', function (topojson) {
+        d3.choroplethMap(data, {
+          id: 'choropleth-map-topojson',
+          map: {
+            name: 'world',
+            data: topojson,
+            object: 'countries'
+          },
+          projection: 'geoEquirectangular',
+          coloring: 'topological'
+        });
       });
     </script>
   </body>

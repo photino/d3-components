@@ -32,24 +32,24 @@ d3.components.pieChart = {
   innerRadius: 0,
   labels: {
     show: false,
+    dy: '0.25em',
     fill: '#fff',
     minAngle: Math.PI / 12,
+    wrapText: false,
+    wrapWidth: '5em',
+    lineHeight: '1.2em',
+    verticalAlign: 'middle',
     text: function (d) {
-      return d.data.label;
+      return d3.format('.0%')(d.data.percentage);
     }
   },
   legend: {
     show: true,
-    symbol: {
-      width: '1.294427em',
-      height: '0.8em'
-    },
     text: function (d) {
       return d.data.label;
     }
   },
   tooltip: {
-    show: true,
     html: function (d) {
       var percentage = (d.endAngle - d.startAngle) / (2 * Math.PI);
       return d.data.label + ': ' + d3.format('.1%')(percentage);
@@ -96,33 +96,25 @@ d3.pieChart = function (data, options) {
               .context(context);
 
   if (renderer === 'svg') {
-    // Create the `svg` element
-    var svg = d3.select(chart)
-                .append('svg')
-                .attr('width', width)
-                .attr('height', height);
-
-    // Create the `g` elements
-    var transform = options.position || d3.translate(width / 2, height / 2);
-    var g = svg.append('g')
-               .attr('class', 'pie')
-               .attr('transform', transform)
-               .attr('stroke', stroke)
-               .attr('stroke-width', strokeWidth);
+    // Create the plot
+    var plot = d3.createPlot(chart, options);
+    var svg = plot.svg;
+    var g = plot.container;
 
     // Create the `path` elements
-    var color = d3.scaleOrdinal(colorScheme);
-    var colorFunction = function (d) {
-      return color(d.data.label);
-    };
-    var path = g.selectAll('.arc')
-                .data(arcs)
-                .enter()
-                .append('g')
-                .attr('class', 'arc')
-                .append('path')
-                .attr('d', arc)
-                .attr('fill', colorFunction);
+    var colors = d3.scaleOrdinal(colorScheme);
+    var color = function (d) { return colors(d.data.label); };
+    var slice = g.selectAll('.arc')
+                 .data(arcs)
+                 .enter()
+                 .append('g')
+                 .attr('class', 'arc')
+                 .append('path')
+                 .attr('d', arc)
+                 .attr('fill', function (d) {
+                   d.color = colors(d.data.label);
+                   return d.color;
+                 });
 
     // Create the labels
     var labels = options.labels;
@@ -136,102 +128,47 @@ d3.pieChart = function (data, options) {
        .attr('y', function (d) {
          return arc.centroid(d)[1];
        })
+       .attr('dy', labels.dy)
        .attr('text-anchor', 'middle')
        .attr('fill', labels.fill)
        .text(labels.text)
        .attr('opacity', function (d) {
          var angle = d.endAngle - d.startAngle;
          return angle >= labels.minAngle ? 1 : 0;
-       });
+       })
+       .call(d3.wrapText, labels);
     }
 
     // Create the legend
     var legend = options.legend;
-    if (legend.show) {
-      var legendPosition = legend.position;
-      var legendSymbol = legend.symbol;
-      var symbolWidth = Math.round(legendSymbol.width);
-      var symbolHeight = Math.round(legendSymbol.height);
-      var textColor = options.textColor;
-      var disabledTextColor = options.disabledTextColor;
-      var item = svg.append('g')
-                    .attr('class', 'legend')
-                    .attr('transform', legendPosition)
-                    .attr('cursor', 'pointer')
-                    .selectAll('.legend-item')
-                    .data(arcs)
-                    .enter()
-                    .append('g')
-                    .attr('class', function (d) {
-                      return 'legend-item' + (d.data.disabled ? ' disabled' : '');
-                    });
-
-      item.append('rect')
-          .attr('width', symbolWidth)
-          .attr('height', symbolHeight)
-          .attr('x', 0)
-          .attr('y', function (d, i) {
-            return lineHeight * (i + 1) - symbolHeight;
-          })
-          .attr('fill', function (d) {
-            return d.data.disabled ? disabledTextColor : color(d.data.label);
-          });
-
-      item.append('text')
-          .text(legend.text)
-          .attr('x', symbolWidth + fontSize / 4)
-          .attr('y', function (d, i) {
-            return lineHeight * (i + 1);
-          })
-          .attr('fill', function (d) {
-            return d.data.disabled ? disabledTextColor : textColor;
-          });
-
-      item.on('click', function (d) {
-        var label = d.data.label;
-        var disabled = d.data.disabled;
-        data.some(function (d) {
-          if (d.label === label) {
-            d.disabled = !disabled;
-            return true;
-          }
-          return false;
-        });
-        svg.remove();
-        d3.pieChart(data, options);
-      });
+    if (!legend.translation) {
+      legend.translation = d3.translate(-width / 2, -height / 2);
     }
+    legend.bindingData = arcs;
+    legend.onclick = function (d) {
+      var label = d.data.label;
+      var disabled = d.data.disabled;
+      data.some(function (d) {
+        if (d.label === label) {
+          d.disabled = !disabled;
+          return true;
+        }
+        return false;
+      });
+      if (legend.updateInPlace) {
+        d3.select(chart)
+          .selectAll('svg')
+          .remove();
+      }
+      d3.pieChart(data, options);
+    };
+    d3.setLegend(g, legend);
 
     // Create the tooltip
     var tooltip = options.tooltip;
-    if (tooltip.show) {
-      var t = d3.select('#' + tooltip.id);
-      g.selectAll('.arc')
-       .on('mouseover', function (d) {
-         var position = d3.mouse(chart);
-         d3.select(this)
-           .select('path')
-           .attr('fill', d3.color(color(d.data.label)).darker());
-         t.attr('class', 'tooltip')
-          .style('display', 'block');
-         t.html(tooltip.html(d))
-          .style('left', position[0] + 'px')
-          .style('top', position[1] + 'px');
-       })
-       .on('mousemove', function (d) {
-         var position = d3.mouse(chart);
-         var offsetX = parseInt(t.style('width')) / 2;
-         var offsetY = parseInt(t.style('height')) + lineHeight / 6;
-         t.style('left', (position[0] - offsetX) + 'px')
-          .style('top', (position[1] - offsetY) + 'px');
-       })
-       .on('mouseout', function () {
-         d3.select(this)
-           .select('path')
-           .attr('fill', colorFunction);
-         t.style('display', 'none');
-       });
-    }
+    tooltip.hoverTarget = slice;
+    tooltip.hoverEffect = 'darker';
+    d3.setTooltip(chart, tooltip);
 
   } else if (renderer === 'canvas') {
     context.translate(width / 2, height / 2);
@@ -251,5 +188,10 @@ d3.pieChart = function (data, options) {
       context.stroke();
       context.closePath();
     }
+  }
+
+  // Callbacks
+  if (typeof options.onready === 'function') {
+    options.onready(chart);
   }
 };
