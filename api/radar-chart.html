@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html id="api/radar-chart" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Radar Chart | D3 Components</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="UI, Schema, HTML, CSS, JS, JavaScript, front-end, framework, web development">
+    <meta name="description" content="D3-based visualization components">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./../dist/ui-schema-0.4.4.min.css" media="all">
+    <link rel="stylesheet" href="./../dist/prism-1.4.1.min.css" media="all">
+  </head>
+  <body>
+    <header class="ui-header-navbar ui-container-fluid ui-container-grid">
+      <div class="ui-navbar-brand">
+        <h2><a href="./../index.html" accesskey="h">D3 Components</a></h2>
+      </div>
+      <nav class="ui-navbar-nav">
+        <ul>
+          <li><a href="./../api.html">API</a></li>
+          <li><a href="./../gallery.html">Gallery</a></li>
+          <li><a href="https://github.com/photino/d3-components" rel="external" target="_blank">GitHub</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main class="ui-container-fluid ui-container-grid">
+      <aside class="ui-grid-25 ui-mobile-expand ui-sticky-top">
+        <h3 class="ui-header-primary">Components</h3>
+        <ul class="ui-list-group ui-block-fluid ui-zoom-large ui-text-capitalize">
+          <li><a href="./../api/bar-chart.html">Bar Chart</a></li>
+          <li><a href="./../api/pie-chart.html">Pie Chart</a></li>
+          <li><a href="./../api/line-chart.html">Line Chart</a></li>
+          <li><a href="./../api/bubble-chart.html">Bubble Chart</a></li>
+          <li class="ui-state-active"><a href="./../api/radar-chart.html">Radar Chart</a></li>
+          <li><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
+          <li><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
+        </ul>
+      </aside>
+      <article class="ui-grid-75 ui-mobile-expand">
+        <h3 class="ui-header-primary">Radar Chart</h3>
+        <div class="ui-container-grid">
+          <div class="ui-grid-50 ui-mobile-expand">
+            <div id="radar-chart-default"></div>
+          </div>
+          <div class="ui-grid-50 ui-mobile-expand">
+            <div id="radar-chart-circular"></div>
+          </div>
+        </div>
+        <div>
+          <pre><code class="language-markup">&lt;div id="radar-chart-default"&gt;&lt;/div&gt;
+&lt;div id="radar-chart-circular"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  d3.radarChart([
+    { axis: 'Computing power', value: 90 },
+    { axis: 'Investments', value: 66 },
+    { axis: 'Big data', value: 45 },
+    { axis: 'Innovations', value: 72 },
+    { axis: 'Demands', value: 42 }
+  ], { id: 'radar-chart-default' });
+  d3.radarChart([
+    { axis: 'Innovations', value: 92, city: 'Shenzhen' },
+    { axis: 'Computing power', value: 90, city: 'Hangzhou' },
+    { axis: 'Investments', value: 85, city: 'Shenzhen' },
+    { axis: 'Computing power', value: 78, city: 'Shenzhen' },
+    { axis: 'Innovations', value: 72, city: 'Hangzhou' },
+    { axis: 'Investments', value: 66, city: 'Hangzhou' },
+    { axis: 'Demands', value: 60, city: 'Shenzhen' },
+    { axis: 'Big data', value: 45, city: 'Hangzhou' },
+    { axis: 'Demands', value: 42, city: 'Hangzhou' },
+    { axis: 'Big data', value: 30, city: 'Shenzhen' }
+  ], {
+    id: 'radar-chart-circular',
+    title: {
+      show: true,
+      text: 'Cloud Indexes of China Cities'
+    },
+    axes: [
+      'Computing power',
+      'Investments',
+      'Big data',
+      'Innovations',
+      'Demands'
+    ],
+    series: [
+      'Hangzhou',
+      'Shenzhen'
+    ],
+    maxValue: 100,
+    levels: 5,
+    curve: 'curveCardinalClosed',
+    grids: {
+      shape: 'circle'
+    },
+    tooltip: {
+      html: function (d) {
+        return d.axis + ': ' + d.value + ' (' + d.city + ')';
+      }
+    }
+  });
+  d3.select('#radar-chart-default')
+    .call(function (chart) {
+      var dots = chart.selectAll('.dot');
+      d3.triggerAction(dots, {
+        event: 'mouseover',
+        carousel: true,
+        delay: 2000,
+        interval: 2000,
+        randomize: true,
+        infinite: true
+      });
+    });
+  d3.select('#radar-chart-circular')
+    .call(function (chart) {
+      d3.interval(function () {
+        var items = chart.selectAll('.legend-item');
+        d3.triggerAction(items, {
+          event: 'click',
+          carousel: true,
+          delay: 2000,
+          interval: 2000
+        });
+      }, 6000);
+    });
+&lt;/script&gt;
+</code></pre>
+        </div>
+      </article>
+    </main>
+    <footer class="ui-container-fluid">
+      <address class="ui-text-muted ui-mobile-expand"><span>&copy; 2016&ndash;2017 Zan Pan &nbsp;</span><span>Code licensed under <a href="https://github.com/photino/d3-components/blob/master/LICENSE" rel="external" target="_blank">MIT</a>, documentation under <a href="http://creativecommons.org/licenses/by-sa/4.0" rel="external" target="_blank">CC BY-SA 4.0</a>.</span></address>
+    </footer>
+    <script src="./../dist/jquery-3.1.1.min.js"></script>
+    <script src="./../dist/prism-1.4.1.min.js"></script>
+    <script src="./../dist/ui-schema-0.4.4.min.js"></script>
+    <script src="./../dist/d3-4.4.1.min.js"></script>
+    <script src="./../dist/d3-components-0.0.2.min.js"></script>
+    <script>
+      d3.radarChart([
+        { axis: 'Computing power', value: 90 },
+        { axis: 'Investments', value: 66 },
+        { axis: 'Big data', value: 45 },
+        { axis: 'Innovations', value: 72 },
+        { axis: 'Demands', value: 42 }
+      ], { id: 'radar-chart-default' });
+      d3.radarChart([
+        { axis: 'Innovations', value: 92, city: 'Shenzhen' },
+        { axis: 'Computing power', value: 90, city: 'Hangzhou' },
+        { axis: 'Investments', value: 85, city: 'Shenzhen' },
+        { axis: 'Computing power', value: 78, city: 'Shenzhen' },
+        { axis: 'Innovations', value: 72, city: 'Hangzhou' },
+        { axis: 'Investments', value: 66, city: 'Hangzhou' },
+        { axis: 'Demands', value: 60, city: 'Shenzhen' },
+        { axis: 'Big data', value: 45, city: 'Hangzhou' },
+        { axis: 'Demands', value: 42, city: 'Hangzhou' },
+        { axis: 'Big data', value: 30, city: 'Shenzhen' }
+      ], {
+        id: 'radar-chart-circular',
+        title: {
+          show: true,
+          text: 'Cloud Indexes of China Cities'
+        },
+        axes: [
+          'Computing power',
+          'Investments',
+          'Big data',
+          'Innovations',
+          'Demands'
+        ],
+        series: [
+          'Hangzhou',
+          'Shenzhen'
+        ],
+        maxValue: 100,
+        levels: 5,
+        curve: 'curveCardinalClosed',
+        grids: {
+          shape: 'circle'
+        },
+        tooltip: {
+          html: function (d) {
+            return d.axis + ': ' + d.value + ' (' + d.city + ')';
+          }
+        }
+      });
+      d3.select('#radar-chart-default')
+        .call(function (chart) {
+          var dots = chart.selectAll('.dot');
+          d3.triggerAction(dots, {
+            event: 'mouseover',
+            carousel: true,
+            delay: 2000,
+            interval: 2000,
+            randomize: true,
+            infinite: true
+          });
+        });
+      d3.select('#radar-chart-circular')
+        .call(function (chart) {
+          d3.interval(function () {
+            var items = chart.selectAll('.legend-item');
+            d3.triggerAction(items, {
+              event: 'click',
+              carousel: true,
+              delay: 2000,
+              interval: 2000
+            });
+          }, 6000);
+        });
+    </script>
+  </body>
+</html>
