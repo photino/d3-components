@@ -93,6 +93,9 @@ d3.bubbleChart = function (data, options) {
   data = d3.parseData('bubbleChart', data);
   options = d3.parseOptions('bubbleChart', options);
 
+  // Register callbacks
+  var dispatch = d3.dispatch('init', 'update', 'finalize');
+
   // Use the options
   var chart = options.chart;
   var renderer = options.renderer;
@@ -130,10 +133,10 @@ d3.bubbleChart = function (data, options) {
   if (renderer === 'svg') {
     // Create the plot
     var plot = d3.createPlot(chart, options);
+    var transform = d3.translate(margin.left, margin.top + options.title.height);
     var svg = plot.svg;
-    var g = plot.container;
-    var titleHeight = options.title.height;
-    g.attr('transform', d3.translate(margin.left, margin.top + titleHeight));
+    var g = plot.container
+                .attr('transform', transform);
 
     // Set axes
     var axisX = options.axisX;
@@ -297,8 +300,4 @@ d3.bubbleChart = function (data, options) {
 
   }
 
-  // Callbacks
-  if (typeof options.onready === 'function') {
-    options.onready(chart);
-  }
 };

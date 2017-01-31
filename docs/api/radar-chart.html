@@ -96,32 +96,11 @@
       html: function (d) {
         return d.axis + ': ' + d.value + ' (' + d.city + ')';
       }
+    },
+    legend: {
+      autoplay: true
     }
   });
-  d3.select('#radar-chart-default')
-    .call(function (chart) {
-      var dots = chart.selectAll('.dot');
-      d3.triggerAction(dots, {
-        event: 'mouseover',
-        carousel: true,
-        delay: 2000,
-        interval: 2000,
-        randomize: true,
-        infinite: true
-      });
-    });
-  d3.select('#radar-chart-circular')
-    .call(function (chart) {
-      d3.interval(function () {
-        var items = chart.selectAll('.legend-item');
-        d3.triggerAction(items, {
-          event: 'click',
-          carousel: true,
-          delay: 2000,
-          interval: 2000
-        });
-      }, 6000);
-    });
 &lt;/script&gt;
 </code></pre>
         </div>
@@ -133,7 +112,7 @@
     <script src="./../dist/jquery-3.1.1.min.js"></script>
     <script src="./../dist/prism-1.4.1.min.js"></script>
     <script src="./../dist/ui-schema-0.4.4.min.js"></script>
-    <script src="./../dist/d3-4.4.1.min.js"></script>
+    <script src="./../dist/d3-4.5.0.min.js"></script>
     <script src="./../dist/d3-components-0.0.2.min.js"></script>
     <script>
       d3.radarChart([
@@ -181,32 +160,11 @@
           html: function (d) {
             return d.axis + ': ' + d.value + ' (' + d.city + ')';
           }
+        },
+        legend: {
+          autoplay: true
         }
       });
-      d3.select('#radar-chart-default')
-        .call(function (chart) {
-          var dots = chart.selectAll('.dot');
-          d3.triggerAction(dots, {
-            event: 'mouseover',
-            carousel: true,
-            delay: 2000,
-            interval: 2000,
-            randomize: true,
-            infinite: true
-          });
-        });
-      d3.select('#radar-chart-circular')
-        .call(function (chart) {
-          d3.interval(function () {
-            var items = chart.selectAll('.legend-item');
-            d3.triggerAction(items, {
-              event: 'click',
-              carousel: true,
-              delay: 2000,
-              interval: 2000
-            });
-          }, 6000);
-        });
     </script>
   </body>
 </html>

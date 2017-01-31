@@ -56,6 +56,9 @@ d3.sunburstChart = function (data, options) {
   data = d3.parseData('sunburstChart', data);
   options = d3.parseOptions('sunburstChart', options);
 
+  // Register callbacks
+  var dispatch = d3.dispatch('init', 'update', 'finalize');
+
   // Use the options
   var chart = options.chart;
   var renderer = options.renderer;
@@ -152,8 +155,4 @@ d3.sunburstChart = function (data, options) {
 
   }
 
-  // Callbacks
-  if (typeof options.onready === 'function') {
-    options.onready(chart);
-  }
 };

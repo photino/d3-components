@@ -43,6 +43,9 @@ d3.barChart = function (data, options) {
   data = d3.parseData('barChart', data);
   options = d3.parseOptions('barChart', options);
 
+  // Register callbacks
+  var dispatch = d3.dispatch('init', 'update', 'finalize');
+
   // Use the options
   var chart = options.chart;
   var renderer = options.renderer;
@@ -63,8 +66,4 @@ d3.barChart = function (data, options) {
 
   }
 
-  // Callbacks
-  if (typeof options.onready === 'function') {
-    options.onready(chart);
-  }
 };

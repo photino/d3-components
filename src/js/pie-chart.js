@@ -34,13 +34,14 @@ d3.components.pieChart = {
     show: false,
     dy: '0.25em',
     fill: '#fff',
-    minAngle: Math.PI / 12,
+    minAngle: Math.PI / 10,
     wrapText: false,
     wrapWidth: '5em',
     lineHeight: '1.2em',
     verticalAlign: 'middle',
     text: function (d) {
-      return d3.format('.0%')(d.data.percentage);
+      var percentage = (d.endAngle - d.startAngle) / (2 * Math.PI);
+      return d3.format('.0%')(percentage);
     }
   },
   legend: {
@@ -63,7 +64,10 @@ d3.pieChart = function (data, options) {
   data = d3.parseData('pieChart', data);
   options = d3.parseOptions('pieChart', options);
 
-  // Use the options
+  // Register callbacks
+  var dispatch = d3.dispatch('init', 'update', 'finalize');
+
+  // Use options
   var chart = options.chart;
   var renderer = options.renderer;
   var context = options.context;
@@ -85,15 +89,16 @@ d3.pieChart = function (data, options) {
   }
 
   // Shape and arcs
-  var arcs = d3.pie()
+  var pie = d3.pie()
               .sort(options.sort)
               .value(function (d) {
                 return d.disabled ? 0 : d.value;
-              })(data);
+              });
   var arc = d3.arc()
               .innerRadius(innerRadius)
               .outerRadius(outerRadius)
               .context(context);
+  var arcs = pie(data);
 
   if (renderer === 'svg') {
     // Create the plot
@@ -101,74 +106,86 @@ d3.pieChart = function (data, options) {
     var svg = plot.svg;
     var g = plot.container;
 
-    // Create the `path` elements
-    var colors = d3.scaleOrdinal(colorScheme);
-    var color = function (d) { return colors(d.data.label); };
-    var slice = g.selectAll('.arc')
-                 .data(arcs)
-                 .enter()
-                 .append('g')
-                 .attr('class', 'arc')
-                 .append('path')
-                 .attr('d', arc)
-                 .attr('fill', function (d) {
-                   d.color = colors(d.data.label);
-                   return d.color;
-                 });
-
-    // Create the labels
-    var labels = options.labels;
-    if (labels.show) {
+    // Slices
+    dispatch.on('init.slices', function (data) {
       g.selectAll('.arc')
-       .append('text')
-       .attr('class', 'label')
-       .attr('x', function (d) {
-         return arc.centroid(d)[0];
-       })
-       .attr('y', function (d) {
-         return arc.centroid(d)[1];
-       })
-       .attr('dy', labels.dy)
-       .attr('text-anchor', 'middle')
-       .attr('fill', labels.fill)
-       .text(labels.text)
-       .attr('opacity', function (d) {
-         var angle = d.endAngle - d.startAngle;
-         return angle >= labels.minAngle ? 1 : 0;
-       })
-       .call(d3.wrapText, labels);
-    }
+       .data(data)
+       .enter()
+       .append('g')
+       .attr('class', 'arc');
+    });
 
-    // Create the legend
-    var legend = options.legend;
-    if (!legend.translation) {
-      legend.translation = d3.translate(-width / 2, -height / 2);
-    }
-    legend.bindingData = arcs;
-    legend.onclick = function (d) {
-      var label = d.data.label;
-      var disabled = d.data.disabled;
-      data.some(function (d) {
-        if (d.label === label) {
-          d.disabled = !disabled;
-          return true;
-        }
-        return false;
-      });
-      if (legend.updateInPlace) {
-        d3.select(chart)
-          .selectAll('svg')
-          .remove();
+    // Arcs
+    dispatch.on('update.arcs', function (slice) {
+      var colors = d3.scaleOrdinal(colorScheme);
+      slice.append('path')
+           .attr('d', arc)
+           .attr('fill', function (d) {
+             d.color = colors(d.data.label);
+             return d.color;
+           });
+    });
+
+    // Labels
+    dispatch.on('update.labels', function (slice) {
+      var labels = options.labels;
+      if (labels.show) {
+        slice.append('text')
+             .attr('class', 'label')
+             .attr('x', function (d) {
+               return arc.centroid(d)[0];
+             })
+             .attr('y', function (d) {
+               return arc.centroid(d)[1];
+             })
+             .attr('dy', labels.dy)
+             .attr('text-anchor', 'middle')
+             .attr('fill', labels.fill)
+             .text(labels.text)
+             .attr('opacity', function (d) {
+               var angle = d.endAngle - d.startAngle;
+               return angle >= labels.minAngle ? 1 : 0;
+             })
+             .call(d3.wrapText, labels);
       }
-      d3.pieChart(data, options);
-    };
-    d3.setLegend(g, legend);
+    });
 
-    // Create the tooltip
-    var tooltip = options.tooltip;
-    tooltip.hoverTarget = slice;
-    tooltip.hoverEffect = 'darker';
-    d3.setTooltip(chart, tooltip);
+    // Tooltip
+    dispatch.on('update.tooltip', function (slice) {
+      var tooltip = options.tooltip;
+      tooltip.hoverTarget = slice.selectAll('path');
+      tooltip.hoverEffect = 'darker';
+      d3.setTooltip(chart, tooltip);
+    });
+
+    // Legend
+    dispatch.on('finalize.legend', function () {
+      var legend = options.legend;
+      if (!legend.translation) {
+        legend.translation = d3.translate(-width / 2, -height / 2);
+      }
+      legend.bindingData = arcs;
+      legend.onclick = function (d) {
+        var label = d.data.label;
+        var disabled = d.data.disabled;
+        data.some(function (d) {
+          if (d.label === label) {
+            d.disabled = !disabled;
+            return true;
+          }
+          return false;
+        });
+        g.selectAll('.arc')
+         .remove();
+        dispatch.call('init', this, pie(data));
+        dispatch.call('update', this, g.selectAll('.arc'));
+      };
+      d3.setLegend(g, legend);
+    });
+
+    // Load components
+    dispatch.call('init', this, arcs);
+    dispatch.call('update', this, g.selectAll('.arc'));
 
   } else if (renderer === 'canvas') {
     context.translate(width / 2, height / 2);
@@ -190,8 +207,5 @@ d3.pieChart = function (data, options) {
     }
   }
 
-  // Callbacks
-  if (typeof options.onready === 'function') {
-    options.onready(chart);
-  }
+  dispatch.call('finalize', this);
 };

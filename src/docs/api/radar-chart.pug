@@ -64,32 +64,11 @@ block article
             html: function (d) {
               return d.axis + ': ' + d.value + ' (' + d.city + ')';
             }
+          },
+          legend: {
+            autoplay: true
           }
         });
-        d3.select('#radar-chart-default')
-          .call(function (chart) {
-            var dots = chart.selectAll('.dot');
-            d3.triggerAction(dots, {
-              event: 'mouseover',
-              carousel: true,
-              delay: 2000,
-              interval: 2000,
-              randomize: true,
-              infinite: true
-            });
-          });
-        d3.select('#radar-chart-circular')
-          .call(function (chart) {
-            d3.interval(function () {
-              var items = chart.selectAll('.legend-item');
-              d3.triggerAction(items, {
-                event: 'click',
-                carousel: true,
-                delay: 2000,
-                interval: 2000
-              });
-            }, 6000);
-          });
       &lt;/script&gt;
 
 block append foot
@@ -139,29 +118,8 @@ block append foot
         html: function (d) {
           return d.axis + ': ' + d.value + ' (' + d.city + ')';
         }
+      },
+      legend: {
+        autoplay: true
       }
     });
-    d3.select('#radar-chart-default')
-      .call(function (chart) {
-        var dots = chart.selectAll('.dot');
-        d3.triggerAction(dots, {
-          event: 'mouseover',
-          carousel: true,
-          delay: 2000,
-          interval: 2000,
-          randomize: true,
-          infinite: true
-        });
-      });
-    d3.select('#radar-chart-circular')
-      .call(function (chart) {
-        d3.interval(function () {
-          var items = chart.selectAll('.legend-item');
-          d3.triggerAction(items, {
-            event: 'click',
-            carousel: true,
-            delay: 2000,
-            interval: 2000
-          });
-        }, 6000);
-      });

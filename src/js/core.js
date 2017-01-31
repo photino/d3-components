@@ -33,6 +33,11 @@ d3.defaultOptions = {
   },
   tooltip: {
     show: true,
+    autoplay: false,
+    carousel: {
+      delay: 2000,
+      interval: 2000
+    },
     style: {
       display: 'none',
       boxSizing: 'border-box',
@@ -47,6 +52,11 @@ d3.defaultOptions = {
     }
   },
   legend: {
+    autoplay: false,
+    carousel: {
+      delay: 2000,
+      interval: 2000
+    },
     symbol: {
       width: '1.294427em',
       height: '0.8em'
@@ -55,8 +65,7 @@ d3.defaultOptions = {
     transform: 'scale(0.85)',
     lineHeight: '1.6em',
     textColor: '#333',
-    disabledTextColor: '#ccc',
-    updateInPlace: true
+    disabledTextColor: '#ccc'
   }
 };
 
@@ -401,25 +410,20 @@ d3.createPlot = function (chart, options) {
   };
 };
 
-// Get the position relative to the SVG container
-d3.getPosition = function (selection) {
+// Get the position relative to the container
+d3.getPosition = function (selection, container) {
     var node = d3.select(selection).node();
     var position = node.getBoundingClientRect();
-    var svgPosition = getSVGPosition(node);
-
-    // Get the SVG position
-    function getSVGPosition(node) {
-      if(node.parentElement.tagName === 'svg') {
-        return node.parentElement.getBoundingClientRect();
-      }
-      return getSVGPosition(node.parentElement);
+    var tagName = container.tagName;
+    while (node.parentElement.tagName !== tagName) {
+      node = node.parentElement;
     }
 
+    // Get the container position
+    var containerPosition = node.parentElement.getBoundingClientRect();
     return {
-        top: position.top - svgPosition.top,
-        bottom: position.bottom - svgPosition.top,
-        right: position.right - svgPosition.left,
-        left: position.left - svgPosition.left,
+        top: position.top - containerPosition.top,
+        left: position.left - containerPosition.left,
         width: position.width,
         height: position.height
     };
@@ -443,7 +447,7 @@ d3.setTooltip = function (chart, options) {
       if (isNaN(left) || isNaN(top)) {
         var offsetX = parseInt(tooltip.style('width')) / 2;
         var offsetY = parseInt(tooltip.style('height')) + lineHeight / 6;
-        position = d3.getPosition(this);
+        position = d3.getPosition(this, chart);
         left = position.left + position.width / 2 - offsetX;
         top = position.top + position.height / 2 - offsetY;
       }
@@ -468,6 +472,12 @@ d3.setTooltip = function (chart, options) {
           .attr('fill', d.color);
       }
     });
+    if (options.autoplay) {
+      hoverTarget.call(d3.triggerAction, d3.extend({
+        event: 'mouseover',
+        carousel: true
+      }, options.carousel));
+    }
   }
 };
 
@@ -489,7 +499,9 @@ d3.setLegend = function (container, options) {
                         .enter()
                         .append('g')
                         .attr('class', function (d) {
-                          d.disabled = d.disabled || d.data.disabled;
+                          if (!d.hasOwnProperty('disabled')) {
+                            d.disabled = d.data.disabled || false;
+                          }
                           return 'legend-item' + (d.disabled ? ' disabled' : '');
                         })
                         .attr('transform', options.transform);
@@ -516,7 +528,23 @@ d3.setLegend = function (container, options) {
           return d.disabled ? disabledTextColor : textColor;
         });
 
-    item.on('click', options.onclick);
+    item.on('click', function (d) {
+      var disabled = !d.disabled;
+      var item = d3.select(this)
+                   .classed('disabled', disabled);
+      item.select('rect')
+          .attr('fill', disabled ? disabledTextColor : d.color);
+      item.select('text')
+          .attr('fill', disabled ? disabledTextColor : textColor);
+      d.disabled = disabled;
+      options.onclick(d);
+    });
+    if (options.autoplay) {
+      item.call(d3.triggerAction, d3.extend({
+        event: 'click',
+        carousel: true
+      }, options.carousel));
+    }
   }
 };
 
@@ -597,7 +625,7 @@ d3.triggerAction = function (selection, options) {
             index = (index + 1) % length;
           }
         }
-        if (infinite !== true && count >= limit) {
+        if (infinite === false && count >= limit) {
           timer.stop();
         }
       }, delay);

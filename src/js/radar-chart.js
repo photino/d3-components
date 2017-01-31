@@ -94,6 +94,9 @@ d3.radarChart = function (data, options) {
   data = d3.parseData('radarChart', data);
   options = d3.parseOptions('radarChart', options);
 
+  // Register callbacks
+  var dispatch = d3.dispatch('init', 'update', 'finalize');
+
   // Use the options
   var chart = options.chart;
   var renderer = options.renderer;
@@ -110,7 +113,7 @@ d3.radarChart = function (data, options) {
 
   // Process data
   var axes = options.axes || [];
-  var list = options.series || [];
+  var dataset = options.series || [];
   var values = [];
   data.forEach(function (d) {
     var axis = d.axis;
@@ -118,20 +121,18 @@ d3.radarChart = function (data, options) {
     if (axes.indexOf(axis) === -1) {
       axes.push(axis);
     }
-    if (list.indexOf(series) === -1) {
-      list.push(series);
+    if (dataset.indexOf(series) === -1) {
+      dataset.push(series);
     }
     values.push(d.value);
   });
-  list = list.map(function (series) {
+  dataset = dataset.map(function (series) {
     var array = data.filter(function (d) {
       return d.series === series;
     });
     return {
       series: series,
-      disabled: array.every(function (d) {
-        return d.disabled;
-      }),
+      disabled: false,
       data: axes.map(function (axis) {
         var datum = null;
         array.some(function (d) {
@@ -238,7 +239,7 @@ d3.radarChart = function (data, options) {
     var areas = options.areas;
     var dots = options.dots;
     var s = g.selectAll('.series')
-             .data(list)
+             .data(dataset)
              .enter()
              .append('g')
              .attr('class', 'series')
@@ -324,38 +325,24 @@ d3.radarChart = function (data, options) {
     // Legend
     var legend = options.legend;
     if (legend.show === null) {
-      legend.show = list.length > 1;
+      legend.show = dataset.length > 1;
     }
     if (!legend.translation) {
       legend.translation = d3.translate(-width / 2, -height / 2);
     }
-    legend.bindingData = list;
-    legend.onclick = function (d) {
-      var series = d.series;
-      var disabled = d.disabled;
-      data.forEach(function (d) {
-        if (d.series === series) {
-          d.disabled = !disabled;
-        }
-      });
-      if (legend.updateInPlace) {
-        d3.select(chart)
-          .selectAll('svg')
-          .remove();
-      }
-      d3.radarChart(data, options);
+    legend.bindingData = dataset;
+    legend.onclick = function () {
+      s.style('display', function (d) {
+        return d.disabled ? 'none' : 'block';
+       });
     };
     d3.setLegend(g, legend);
 
-    // Tooltip
-    var tooltip = options.tooltip;
-    tooltip.hoverTarget = dot;
-    d3.setTooltip(chart, tooltip);
-
   }
 
-  // Callbacks
-  if (typeof options.onready === 'function') {
-    options.onready(chart);
-  }
+  // Tooltip
+  var tooltip = options.tooltip;
+  tooltip.hoverTarget = dot;
+  d3.setTooltip(chart, tooltip);
+
 };

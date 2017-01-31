@@ -43,6 +43,9 @@ d3.lineChart = function (data, options) {
   data = d3.parseData('lineChart', data);
   options = d3.parseOptions('lineChart', options);
 
+  // Register callbacks
+  var dispatch = d3.dispatch('init', 'update', 'finalize');
+
   // Use the options
   var chart = options.chart;
   var renderer = options.renderer;
@@ -63,8 +66,4 @@ d3.lineChart = function (data, options) {
 
   }
 
-  // Callbacks
-  if (typeof options.onready === 'function') {
-    options.onready(chart);
-  }
 };

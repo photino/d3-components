@@ -45,6 +45,9 @@ d3.choroplethMap = function (data, options) {
   data = d3.parseData('choroplethMap', data);
   options = d3.parseOptions('choroplethMap', options);
 
+  // Register callbacks
+  var dispatch = d3.dispatch('init', 'update', 'finalize');
+
   // Use the options
   var chart = options.chart;
   var id = options.id;
@@ -117,8 +120,4 @@ d3.choroplethMap = function (data, options) {
 
   }
 
-  // Callbacks
-  if (typeof options.onready === 'function') {
-    options.onready(chart);
-  }
 };
