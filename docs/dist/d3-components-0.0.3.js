@@ -606,10 +606,16 @@ d3.wrapText = function (selection, options) {
 
 // Trigger an action
 d3.triggerAction = function (selection, options) {
+  var name = options.event || options;
   var sort = options && options.sort || null;
   var nodes = selection.sort(sort).nodes() || [];
-  var event = document.createEvent('SVGEvents');
-  event.initEvent(options.event || options, true, true);
+  var event = null;
+  try {
+    event = new Event(name);
+  } catch (error) {
+    event = document.createEvent('SVGEvent');
+    event.initEvent(name, true, true);
+  }
   if (d3.type(options) === 'object') {
     var delay = options.delay || 0;
     var length = nodes.length;
