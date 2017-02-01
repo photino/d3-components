@@ -38,6 +38,9 @@ d3.defaultOptions = {
       delay: 2000,
       interval: 2000
     },
+    html: function (d, i) {
+      return 'Datum ' + i;
+    },
     style: {
       display: 'none',
       boxSizing: 'border-box',
@@ -284,11 +287,18 @@ d3.parseValue = function (value, context) {
       var order = parts[0];
       var key = parts[1];
       value = function (a, b) {
+        var sign = order === 'ascdending' ? -1 : 1;
         if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
-          return d3[order](a[key], b[key]);
+          if (a[key] === undefined || a[key] === null) {
+            return sign;
+          }
+          return d3[order](a[key], b[key]) || -sign;
         }
         if (a.data && b.data) {
-          return d3[order](a.data[key], b.data[key]);
+          if (a.data[key] == undefined || a.data[key] === null) {
+            return sign;
+          }
+          return d3[order](a.data[key], b.data[key]) || -sign;
         }
         return 0;
       };
@@ -437,13 +447,13 @@ d3.setTooltip = function (chart, options) {
     var lineHeight = parseInt(tooltip.style('line-height'));
     var hoverTarget = options.hoverTarget;
     var hoverEffect = options.hoverEffect;
-    hoverTarget.on('mouseover', function (d) {
+    hoverTarget.on('mouseover', function (d, i) {
       var position = d3.mouse(chart);
       var left = position[0];
       var top = position[1];
       tooltip.attr('class', 'tooltip')
              .style('display', 'block')
-             .html(options.html(d));
+             .html(options.html(d, i));
       if (isNaN(left) || isNaN(top)) {
         var offsetX = parseInt(tooltip.style('width')) / 2;
         var offsetY = parseInt(tooltip.style('height')) + lineHeight / 6;
@@ -596,8 +606,9 @@ d3.wrapText = function (selection, options) {
 
 // Trigger an action
 d3.triggerAction = function (selection, options) {
-  var nodes = selection.nodes() || [];
   var name = options.event || options;
+  var sort = options && options.sort || null;
+  var nodes = selection.sort(sort).nodes() || [];
   var event = null;
   try {
     event = new Event(name);
@@ -647,6 +658,7 @@ d3.triggerAction = function (selection, options) {
 d3.parseGeoData = function (map, options) {
   var data = map.data;
   var key = map.key || 'id';
+  var dataset = options && options.data || [];
   var features = [];
   var neighbors = [];
   var type = d3.type(data);
@@ -665,9 +677,22 @@ d3.parseGeoData = function (map, options) {
   }
   return {
     features: features.map(function (feature, index) {
-      if (!feature.hasOwnProperty(key)) {
-        feature[key] = String(feature[key] || feature.properties[key] || index);
-      }
+      var property = String(feature[key] || feature.properties[key] || index);
+      feature.data = {
+        id: property,
+        value: undefined
+      };
+      dataset.some(function (d) {
+        var value = String(d[key]);
+        var matched = value === property;
+        if (!matched && /^\W/.test(value)) {
+          matched = new RegExp(value).test(property);
+        }
+        if (matched) {
+          feature.data = d;
+        }
+        return matched;
+      });
       return feature;
     }),
     neighbors: neighbors
@@ -681,6 +706,7 @@ d3.maps = {
     scale: 0.25
   },
   china: {
+    key: 'name',
     center: [103.3886, 35.5636],
     scale: 1.0
   }

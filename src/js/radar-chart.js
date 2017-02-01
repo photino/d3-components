@@ -21,19 +21,19 @@ d3.components.radarChart = {
         ]
       },
       {
+        key: 'series',
+        type: 'string',
+        mappings: [
+          'item',
+          'year'
+        ]
+      },
+      {
         key: 'value',
         type: 'number',
         mappings: [
           'count',
           'percentage'
-        ]
-      },
-      {
-        key: 'series',
-        type: 'string',
-        mappings: [
-          'entry',
-          'item'
         ]
       }
     ]
@@ -338,11 +338,11 @@ d3.radarChart = function (data, options) {
     };
     d3.setLegend(g, legend);
 
-  }
+    // Tooltip
+    var tooltip = options.tooltip;
+    tooltip.hoverTarget = dot;
+    d3.setTooltip(chart, tooltip);
 
-  // Tooltip
-  var tooltip = options.tooltip;
-  tooltip.hoverTarget = dot;
-  d3.setTooltip(chart, tooltip);
+  }
 
 };

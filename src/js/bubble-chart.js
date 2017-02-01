@@ -114,15 +114,15 @@ d3.bubbleChart = function (data, options) {
   // Coordinates and scales
   var offsetX = options.offsetX;
   var offsetY = options.offsetY;
-  var xs = data.map(function (d) { return d.x; });
-  var ys = data.map(function (d) { return d.y; });
-  var zs = data.map(function (d) { return d.z; });
-  var xmin = d3.min(xs);
-  var xmax = d3.max(xs);
-  var ymin = d3.min(ys);
-  var ymax = d3.max(ys);
-  var zmin = d3.min(zs);
-  var zmax = d3.max(zs);
+  var extentX = d3.extent(data, function (d) { return d.x; });
+  var extentY = d3.extent(data, function (d) { return d.y; });
+  var extentZ = d3.extent(data, function (d) { return d.z; });
+  var xmin = extentX[0];
+  var xmax = extentX[1];
+  var ymin = extentY[0];
+  var ymax = extentY[1];
+  var zmin = extentZ[0];
+  var zmax = extentZ[1];
   var x = d3.scaleLinear()
             .domain(options.domainX || [xmin - offsetX[0], xmax + offsetX[1]])
             .range(options.rangeX || [0, innerWidth]);

@@ -38,6 +38,9 @@ d3.defaultOptions = {
       delay: 2000,
       interval: 2000
     },
+    html: function (d, i) {
+      return 'Datum ' + i;
+    },
     style: {
       display: 'none',
       boxSizing: 'border-box',
@@ -284,11 +287,18 @@ d3.parseValue = function (value, context) {
       var order = parts[0];
       var key = parts[1];
       value = function (a, b) {
+        var sign = order === 'ascdending' ? -1 : 1;
         if (a.hasOwnProperty(key) && b.hasOwnProperty(key)) {
-          return d3[order](a[key], b[key]);
+          if (a[key] === undefined || a[key] === null) {
+            return sign;
+          }
+          return d3[order](a[key], b[key]) || -sign;
         }
         if (a.data && b.data) {
-          return d3[order](a.data[key], b.data[key]);
+          if (a.data[key] == undefined || a.data[key] === null) {
+            return sign;
+          }
+          return d3[order](a.data[key], b.data[key]) || -sign;
         }
         return 0;
       };
@@ -437,13 +447,13 @@ d3.setTooltip = function (chart, options) {
     var lineHeight = parseInt(tooltip.style('line-height'));
     var hoverTarget = options.hoverTarget;
     var hoverEffect = options.hoverEffect;
-    hoverTarget.on('mouseover', function (d) {
+    hoverTarget.on('mouseover', function (d, i) {
       var position = d3.mouse(chart);
       var left = position[0];
       var top = position[1];
       tooltip.attr('class', 'tooltip')
              .style('display', 'block')
-             .html(options.html(d));
+             .html(options.html(d, i));
       if (isNaN(left) || isNaN(top)) {
         var offsetX = parseInt(tooltip.style('width')) / 2;
         var offsetY = parseInt(tooltip.style('height')) + lineHeight / 6;
@@ -596,8 +606,9 @@ d3.wrapText = function (selection, options) {
 
 // Trigger an action
 d3.triggerAction = function (selection, options) {
-  var nodes = selection.nodes() || [];
   var name = options.event || options;
+  var sort = options && options.sort || null;
+  var nodes = selection.sort(sort).nodes() || [];
   var event = null;
   try {
     event = new Event(name);
@@ -647,6 +658,7 @@ d3.triggerAction = function (selection, options) {
 d3.parseGeoData = function (map, options) {
   var data = map.data;
   var key = map.key || 'id';
+  var dataset = options && options.data || [];
   var features = [];
   var neighbors = [];
   var type = d3.type(data);
@@ -665,9 +677,22 @@ d3.parseGeoData = function (map, options) {
   }
   return {
     features: features.map(function (feature, index) {
-      if (!feature.hasOwnProperty(key)) {
-        feature[key] = String(feature[key] || feature.properties[key] || index);
-      }
+      var property = String(feature[key] || feature.properties[key] || index);
+      feature.data = {
+        id: property,
+        value: undefined
+      };
+      dataset.some(function (d) {
+        var value = String(d[key]);
+        var matched = value === property;
+        if (!matched && /^\W/.test(value)) {
+          matched = new RegExp(value).test(property);
+        }
+        if (matched) {
+          feature.data = d;
+        }
+        return matched;
+      });
       return feature;
     }),
     neighbors: neighbors
@@ -681,6 +706,7 @@ d3.maps = {
     scale: 0.25
   },
   china: {
+    key: 'name',
     center: [103.3886, 35.5636],
     scale: 1.0
   }
@@ -1154,15 +1180,15 @@ d3.bubbleChart = function (data, options) {
   // Coordinates and scales
   var offsetX = options.offsetX;
   var offsetY = options.offsetY;
-  var xs = data.map(function (d) { return d.x; });
-  var ys = data.map(function (d) { return d.y; });
-  var zs = data.map(function (d) { return d.z; });
-  var xmin = d3.min(xs);
-  var xmax = d3.max(xs);
-  var ymin = d3.min(ys);
-  var ymax = d3.max(ys);
-  var zmin = d3.min(zs);
-  var zmax = d3.max(zs);
+  var extentX = d3.extent(data, function (d) { return d.x; });
+  var extentY = d3.extent(data, function (d) { return d.y; });
+  var extentZ = d3.extent(data, function (d) { return d.z; });
+  var xmin = extentX[0];
+  var xmax = extentX[1];
+  var ymin = extentY[0];
+  var ymax = extentY[1];
+  var zmin = extentZ[0];
+  var zmax = extentZ[1];
   var x = d3.scaleLinear()
             .domain(options.domainX || [xmin - offsetX[0], xmax + offsetX[1]])
             .range(options.rangeX || [0, innerWidth]);
@@ -1365,19 +1391,19 @@ d3.components.radarChart = {
         ]
       },
       {
+        key: 'series',
+        type: 'string',
+        mappings: [
+          'item',
+          'year'
+        ]
+      },
+      {
         key: 'value',
         type: 'number',
         mappings: [
           'count',
           'percentage'
-        ]
-      },
-      {
-        key: 'series',
-        type: 'string',
-        mappings: [
-          'entry',
-          'item'
         ]
       }
     ]
@@ -1682,12 +1708,12 @@ d3.radarChart = function (data, options) {
     };
     d3.setLegend(g, legend);
 
-  }
+    // Tooltip
+    var tooltip = options.tooltip;
+    tooltip.hoverTarget = dot;
+    d3.setTooltip(chart, tooltip);
 
-  // Tooltip
-  var tooltip = options.tooltip;
-  tooltip.hoverTarget = dot;
-  d3.setTooltip(chart, tooltip);
+  }
 
 };
 
@@ -1852,7 +1878,8 @@ d3.sunburstChart = function (data, options) {
 
 /*!
  * Choropleth Map
- * Reference: http://bl.ocks.org/mbostock/4180634
+ * References: https://bl.ocks.org/mbostock/4180634
+ *             https://bl.ocks.org/mbostock/4060606
  */
 
 // Register a chart type
@@ -1871,6 +1898,13 @@ d3.components.choroplethMap = {
         ]
       },
       {
+        key: 'series',
+        type: 'string',
+        mappings: [
+          'year'
+        ]
+      },
+      {
         key: 'value',
         type: 'number',
         mappings: [
@@ -1879,15 +1913,22 @@ d3.components.choroplethMap = {
       }
     ]
   },
+  levels: 5,
   projection: 'geoMercator',
   coloring: 'ordinal',
+  colorScale: 'scaleOrdinal',
   graticules: {
     show: false,
     step: [10, 10],
     stroke: '#ccc'
   },
+  tooltip: {
+    html: function (d) {
+      return d.data.id + ': ' + d.data.value
+    }
+  },
   stroke: '#666',
-  fill: '#ccc',
+  fill: '#fff',
   colorScheme: d3.schemeCategory20c
 };
 
@@ -1914,6 +1955,12 @@ d3.choroplethMap = function (data, options) {
   var fontSize = options.fontSize;
   var lineHeight = options.lineHeight;
 
+  // Domain
+  var domain = options.domain || [];
+  var extent = d3.extent(data, function (d) { return d.value; });
+  var min = domain[0] || extent[0];
+  var max = domain[1] || extent[1];
+
   // Create geo projection
   var map = options.map;
   var projection = d3[options.projection]()
@@ -1926,9 +1973,28 @@ d3.choroplethMap = function (data, options) {
                .projection(projection);
 
   // Parse geo data
-  var data = d3.parseGeoData(map, { neighbors: true });
-  var features = data.features;
-  var neighbors = data.neighbors;
+  var geo = d3.parseGeoData(map, { neighbors: true, data: data });
+  var features = geo.features;
+  var neighbors = geo.neighbors;
+
+  // Colors
+  var coloring = options.coloring;
+  var colorScale = options.colorScale;
+  var colors = d3.scaleOrdinal(colorScheme);
+  if (colorScale === 'scaleSequential') {
+    colors = d3.scaleSequential(colorScheme);
+  } else if (colorScale === 'scaleThreshold') {
+    var thresholds = options.thresholds || [];
+    if (!thresholds.length) {
+      var levels = options.levels;
+      var step = (max - min) / levels;
+      thresholds = d3.range(levels)
+                     .map(function (i) { return step * i + min; });
+    }
+    colors = d3.scaleThreshold()
+               .domain(thresholds)
+               .range(colorScheme);
+  }
 
   if (renderer === 'svg') {
     // Create the plot
@@ -1949,26 +2015,33 @@ d3.choroplethMap = function (data, options) {
     }
 
     // Regions
-    var colors = d3.scaleOrdinal(colorScheme);
-    var coloring = options.coloring;
-    g.selectAll('.region')
-     .data(features)
-     .enter()
-     .append('path')
-     .attr('class', 'region')
-     .attr('d', path)
-     .attr('id', function (d) {
-       return id + '-' + d.id;
-     })
-     .attr('fill', function (d, i) {
-       if (coloring === 'topological' && neighbors.length) {
-         d.color = (d3.max(neighbors[i], function (n) {
-           return features[n].color;
-         }) | 0) + 1;
-         return colors(d.color);
-       }
-       return colors(d.id);
-     });
+    var region = g.selectAll('.region')
+                  .data(features)
+                  .enter()
+                  .append('path')
+                  .attr('class', 'region')
+                  .attr('d', path)
+                  .attr('fill', function (d, i) {
+                    if (coloring === 'topological' && neighbors.length) {
+                      d.value = (d3.max(neighbors[i], function (n) {
+                        return features[n].value;
+                      }) | 0) + 1;
+                    } else {
+                      d.value = d.data.value;
+                    }
+                    if (d.value === undefined || d.value === null) {
+                      return fill;
+                    }
+                    if (colorScale === 'scaleSequential') {
+                      d.value = (d.value - min) / max;
+                    }
+                    return colors(d.value);
+                  });
+
+     // Tooltip
+     var tooltip = options.tooltip;
+     tooltip.hoverTarget = region;
+     d3.setTooltip(chart, tooltip);
 
   }
 

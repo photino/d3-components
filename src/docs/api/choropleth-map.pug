@@ -19,19 +19,27 @@ block article
       &lt;div id="choropleth-map-topojson"&gt;&lt;/div&gt;
 
       &lt;script&gt;
-        var data = [];
         d3.json('../dist/maps/china.geo.json', function (geojson) {
-          d3.choroplethMap(data, {
-            id: 'choropleth-map-geojson',
-            map: {
-              name: 'china',
-              data: geojson
-            },
-            coloring: 'topological'
+          d3.json('../data/china-provinces-gdp.json', function (data) {
+            d3.choroplethMap(data, {
+              id: 'choropleth-map-geojson',
+              map: {
+                name: 'china',
+                data: geojson
+              },
+              colorScale: 'scaleSequential',
+              colorScheme: d3.interpolateReds,
+              tooltip: {
+                autoplay: true,
+                carousel: {
+                  sort: 'descending(gdp)'
+                }
+              }
+            });
           });
         });
         d3.json('../dist/maps/world.topo.json', function (topojson) {
-          d3.choroplethMap(data, {
+          d3.choroplethMap([], {
             id: 'choropleth-map-topojson',
             map: {
               name: 'world',
@@ -45,21 +53,30 @@ block article
       &lt;/script&gt;
 
 block append foot
+  script(src='../dist/d3-scale-chromatic-1.1.0.min.js')
   script(src='../dist/topojson-2.2.0.min.js')
   script.
-    var data = [];
     d3.json('../dist/maps/china.geo.json', function (geojson) {
-      d3.choroplethMap(data, {
-        id: 'choropleth-map-geojson',
-        map: {
-          name: 'china',
-          data: geojson
-        },
-        coloring: 'topological'
+      d3.json('../data/china-provinces-gdp.json', function (data) {
+        d3.choroplethMap(data, {
+          id: 'choropleth-map-geojson',
+          map: {
+            name: 'china',
+            data: geojson
+          },
+          colorScale: 'scaleSequential',
+          colorScheme: d3.interpolateReds,
+          tooltip: {
+            autoplay: true,
+            carousel: {
+              sort: 'descending(gdp)'
+            }
+          }
+        });
       });
     });
     d3.json('../dist/maps/world.topo.json', function (topojson) {
-      d3.choroplethMap(data, {
+      d3.choroplethMap([], {
         id: 'choropleth-map-topojson',
         map: {
           name: 'world',
