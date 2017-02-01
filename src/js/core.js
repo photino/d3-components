@@ -608,7 +608,8 @@ d3.wrapText = function (selection, options) {
 d3.triggerAction = function (selection, options) {
   var sort = options && options.sort || null;
   var nodes = selection.sort(sort).nodes() || [];
-  var event = event = new Event(options.event || options);
+  var event = document.createEvent('SVGEvents');
+  event.initEvent(options.event || options, true, true);
   if (d3.type(options) === 'object') {
     var delay = options.delay || 0;
     var length = nodes.length;
