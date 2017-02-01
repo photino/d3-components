@@ -193,7 +193,7 @@ d3.bubbleChart = function (data, options) {
        .attr('stroke-width', function () {
          var transform = d3.select(this)
                            .attr('transform');
-         var dy = +transform.split(/[\,\(\)]/)[2];
+         var dy = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[2];
          return (dy === 0 || dy === innerHeight) ? 0 : null;
        })
        .select('line')
@@ -213,7 +213,7 @@ d3.bubbleChart = function (data, options) {
        .attr('stroke-width', function () {
          var transform = d3.select(this)
                            .attr('transform');
-         var dx = +transform.split(/[\,\(\)]/)[1];
+         var dx = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[1];
          return (dx === 0 || dx === innerWidth) ? 0 : null;
        })
        .select('line')
