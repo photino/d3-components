@@ -20,12 +20,23 @@ block article
 
       &lt;script&gt;
         d3.json('../dist/maps/china.geo.json', function (geojson) {
-          d3.json('../data/china-provinces-gdp.json', function (data) {
+          d3.json('../data/china-gdp.json', function (data) {
             d3.choroplethMap(data, {
               id: 'choropleth-map-geojson',
               map: {
                 name: 'china',
                 data: geojson
+              },
+              tile: {
+                show: true,
+                scale: 2048,
+                zoomable: false,
+                image: {
+                  href: function (d) {
+                    var server = 'http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
+                    return server + d[2] + '/' + d[1] + '/' + d[0];
+                  }
+                }
               },
               colorScale: 'scaleSequential',
               colorScheme: d3.interpolateReds,
@@ -46,7 +57,15 @@ block article
               data: topojson,
               object: 'countries'
             },
-            projection: 'geoEquirectangular',
+            tile: {
+              show: true,
+              image: {
+                href: function (d) {
+                  var server = 'http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
+                  return server + d[2] + '/' + d[1] + '/' + d[0];
+                }
+              }
+            },
             coloring: 'topological'
           });
         });
@@ -54,15 +73,27 @@ block article
 
 block append foot
   script(src='../dist/d3-scale-chromatic-1.1.0.min.js')
+  script(src='../dist/d3-tile-0.0.3.min.js')
   script(src='../dist/topojson-2.2.0.min.js')
   script.
     d3.json('../dist/maps/china.geo.json', function (geojson) {
-      d3.json('../data/china-provinces-gdp.json', function (data) {
+      d3.json('../data/china-gdp.json', function (data) {
         d3.choroplethMap(data, {
           id: 'choropleth-map-geojson',
           map: {
             name: 'china',
             data: geojson
+          },
+          tile: {
+            show: true,
+            scale: 2048,
+            zoomable: false,
+            image: {
+              href: function (d) {
+                var server = 'http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
+                return server + d[2] + '/' + d[1] + '/' + d[0];
+              }
+            }
           },
           colorScale: 'scaleSequential',
           colorScheme: d3.interpolateReds,
@@ -83,7 +114,15 @@ block append foot
           data: topojson,
           object: 'countries'
         },
-        projection: 'geoEquirectangular',
+        tile: {
+          show: true,
+          image: {
+            href: function (d) {
+              var server = 'http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
+              return server + d[2] + '/' + d[1] + '/' + d[0];
+            }
+          }
+        },
         coloring: 'topological'
       });
     });

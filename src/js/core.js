@@ -432,10 +432,10 @@ d3.getPosition = function (selection, container) {
     // Get the container position
     var containerPosition = node.parentElement.getBoundingClientRect();
     return {
-        top: position.top - containerPosition.top,
-        left: position.left - containerPosition.left,
-        width: position.width,
-        height: position.height
+      top: position.top - containerPosition.top,
+      left: position.left - containerPosition.left,
+      width: position.width,
+      height: position.height
     };
 
 };
@@ -606,16 +606,11 @@ d3.wrapText = function (selection, options) {
 
 // Trigger an action
 d3.triggerAction = function (selection, options) {
-  var name = options.event || options;
+  var event = options.event || options;
+  var filter = options && options.filter || null;
   var sort = options && options.sort || null;
-  var nodes = selection.sort(sort).nodes() || [];
-  var event = null;
-  try {
-    event = new Event(name);
-  } catch (error) {
-    event = document.createEvent('SVGEvent');
-    event.initEvent(name, true, true);
-  }
+  var elements = filter !== null ? selection.filter(filter) : selection;
+  var nodes = elements.sort(sort).nodes();
   if (d3.type(options) === 'object') {
     var delay = options.delay || 0;
     var length = nodes.length;
@@ -629,7 +624,8 @@ d3.triggerAction = function (selection, options) {
       var timer = d3.timer(function (elapsed) {
         if (elapsed > interval * count) {
           count += 1;
-          nodes[index].dispatchEvent(event);
+          d3.select(nodes[index])
+            .dispatch(event);
           if (randomize === true) {
             index = Math.floor(Math.random() * length);
           } else {
@@ -642,16 +638,57 @@ d3.triggerAction = function (selection, options) {
       }, delay);
     } else {
       d3.timeout(function () {
-        nodes.forEach(function (node) {
-          node.dispatchEvent(event);
-        });
+        d3.selectAll(nodes)
+          .dispatch(event);
       }, delay);
     }
   } else {
-    nodes.forEach(function (node) {
-      node.dispatchEvent(event);
-    });
+    d3.selectAll(nodes)
+      .dispatch(event);
   }
+};
+
+// Create image tiles
+d3.imageTiles = function (selection, options) {
+  var tileImage = options.image;
+  var tileSize = tileImage.size;
+  var tiles = d3.tile ()
+                .size(options.size)
+                .scale(options.scale)
+                .translate(options.translate)();
+  var image = selection.selectAll('image')
+                       .data(tiles.filter(function (d) {
+                         return d[0] < Math.pow(2, d[2]);
+                       }), function (d) {
+                         return d;
+                       });
+
+  selection.attr('transform', function () {
+             var s = tiles.scale;
+             var t = tiles.translate;
+             var k = s / tileSize;
+             var r = s % 1 ? Number : Math.round;
+             var x = r(t[0] * s);
+             var y = r(t[1] * s);
+             return 'translate(' + x + ',' + y + ') scale(' + k + ')';
+           })
+           .style('filter', options.filter);
+
+  image.exit()
+       .remove();
+
+  image.enter()
+       .append('image')
+       .attr('xlink:href', tileImage.href)
+       .attr('x', function (d) {
+         return d[0] * tileSize;
+       })
+       .attr('y', function (d) {
+         return d[1] * tileSize;
+       })
+       .attr('width', tileSize + 1)
+       .attr('height', tileSize + 1);
+
 };
 
 // Parse geo data
@@ -682,17 +719,23 @@ d3.parseGeoData = function (map, options) {
         id: property,
         value: undefined
       };
-      dataset.some(function (d) {
-        var value = String(d[key]);
-        var matched = value === property;
-        if (!matched && /^\W/.test(value)) {
-          matched = new RegExp(value).test(property);
-        }
-        if (matched) {
+      var matched = dataset.some(function (d) {
+        if (d[key] === property) {
           feature.data = d;
+          return true;
         }
-        return matched;
+        return false;
       });
+      if (!matched) {
+        dataset.some(function (d) {
+          var value = String(d[key]);
+          if (/^\W/.test(value) && new RegExp(value).test(property)) {
+            feature.data = d;
+            return true;
+          }
+          return false;
+        });
+      }
       return feature;
     }),
     neighbors: neighbors

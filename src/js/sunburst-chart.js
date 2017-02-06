@@ -126,6 +126,7 @@ d3.sunburstChart = function (data, options) {
                  .attr('fill', function (d) {
                    return colors((d.children ? d : d.parent).data.label);
                  });
+
     if (options.zoomable) {
       slice.attr('cursor', 'pointer')
            .on('click', function (d) {

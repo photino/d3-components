@@ -432,10 +432,10 @@ d3.getPosition = function (selection, container) {
     // Get the container position
     var containerPosition = node.parentElement.getBoundingClientRect();
     return {
-        top: position.top - containerPosition.top,
-        left: position.left - containerPosition.left,
-        width: position.width,
-        height: position.height
+      top: position.top - containerPosition.top,
+      left: position.left - containerPosition.left,
+      width: position.width,
+      height: position.height
     };
 
 };
@@ -606,16 +606,11 @@ d3.wrapText = function (selection, options) {
 
 // Trigger an action
 d3.triggerAction = function (selection, options) {
-  var name = options.event || options;
+  var event = options.event || options;
+  var filter = options && options.filter || null;
   var sort = options && options.sort || null;
-  var nodes = selection.sort(sort).nodes() || [];
-  var event = null;
-  try {
-    event = new Event(name);
-  } catch (error) {
-    event = document.createEvent('SVGEvent');
-    event.initEvent(name, true, true);
-  }
+  var elements = filter !== null ? selection.filter(filter) : selection;
+  var nodes = elements.sort(sort).nodes();
   if (d3.type(options) === 'object') {
     var delay = options.delay || 0;
     var length = nodes.length;
@@ -629,7 +624,8 @@ d3.triggerAction = function (selection, options) {
       var timer = d3.timer(function (elapsed) {
         if (elapsed > interval * count) {
           count += 1;
-          nodes[index].dispatchEvent(event);
+          d3.select(nodes[index])
+            .dispatch(event);
           if (randomize === true) {
             index = Math.floor(Math.random() * length);
           } else {
@@ -642,16 +638,57 @@ d3.triggerAction = function (selection, options) {
       }, delay);
     } else {
       d3.timeout(function () {
-        nodes.forEach(function (node) {
-          node.dispatchEvent(event);
-        });
+        d3.selectAll(nodes)
+          .dispatch(event);
       }, delay);
     }
   } else {
-    nodes.forEach(function (node) {
-      node.dispatchEvent(event);
-    });
+    d3.selectAll(nodes)
+      .dispatch(event);
   }
+};
+
+// Create image tiles
+d3.imageTiles = function (selection, options) {
+  var tileImage = options.image;
+  var tileSize = tileImage.size;
+  var tiles = d3.tile ()
+                .size(options.size)
+                .scale(options.scale)
+                .translate(options.translate)();
+  var image = selection.selectAll('image')
+                       .data(tiles.filter(function (d) {
+                         return d[0] < Math.pow(2, d[2]);
+                       }), function (d) {
+                         return d;
+                       });
+
+  selection.attr('transform', function () {
+             var s = tiles.scale;
+             var t = tiles.translate;
+             var k = s / tileSize;
+             var r = s % 1 ? Number : Math.round;
+             var x = r(t[0] * s);
+             var y = r(t[1] * s);
+             return 'translate(' + x + ',' + y + ') scale(' + k + ')';
+           })
+           .style('filter', options.filter);
+
+  image.exit()
+       .remove();
+
+  image.enter()
+       .append('image')
+       .attr('xlink:href', tileImage.href)
+       .attr('x', function (d) {
+         return d[0] * tileSize;
+       })
+       .attr('y', function (d) {
+         return d[1] * tileSize;
+       })
+       .attr('width', tileSize + 1)
+       .attr('height', tileSize + 1);
+
 };
 
 // Parse geo data
@@ -682,17 +719,23 @@ d3.parseGeoData = function (map, options) {
         id: property,
         value: undefined
       };
-      dataset.some(function (d) {
-        var value = String(d[key]);
-        var matched = value === property;
-        if (!matched && /^\W/.test(value)) {
-          matched = new RegExp(value).test(property);
-        }
-        if (matched) {
+      var matched = dataset.some(function (d) {
+        if (d[key] === property) {
           feature.data = d;
+          return true;
         }
-        return matched;
+        return false;
       });
+      if (!matched) {
+        dataset.some(function (d) {
+          var value = String(d[key]);
+          if (/^\W/.test(value) && new RegExp(value).test(property)) {
+            feature.data = d;
+            return true;
+          }
+          return false;
+        });
+      }
       return feature;
     }),
     neighbors: neighbors
@@ -1845,6 +1888,7 @@ d3.sunburstChart = function (data, options) {
                  .attr('fill', function (d) {
                    return colors((d.children ? d : d.parent).data.label);
                  });
+
     if (options.zoomable) {
       slice.attr('cursor', 'pointer')
            .on('click', function (d) {
@@ -1917,10 +1961,32 @@ d3.components.choroplethMap = {
   projection: 'geoMercator',
   coloring: 'ordinal',
   colorScale: 'scaleOrdinal',
+  zoomable: false,
+  scaleExtent: [1, 12],
   graticules: {
     show: false,
     step: [10, 10],
     stroke: '#ccc'
+  },
+  tile: {
+    show: false,
+    zoomable: true,
+    scale: 512,
+    scaleExtent: [512, 262144],
+    image: {
+      size: 256
+    }
+  },
+  labels: {
+    show: false,
+    dy: '0.25em',
+    stroke: 'none',
+    fill: '#333',
+    fontSize: '0.5em',
+    opacity: 1,
+    text: function (d) {
+      return d.data.id;
+    }
   },
   tooltip: {
     html: function (d) {
@@ -1963,10 +2029,22 @@ d3.choroplethMap = function (data, options) {
 
   // Create geo projection
   var map = options.map;
-  var projection = d3[options.projection]()
-                     .translate([0, 0])
-                     .center(map.center)
-                     .scale(height * map.scale);
+  var tile = options.tile;
+  var projection = d3.geoMercator();
+  if (tile.show && d3.tile) {
+    options.zoomable = false;
+    tile.size = [width, height];
+    tile.center = tile.center || map.center;
+    tile.scale = Math.max(tile.scale, width);
+    projection.scale(1 / (2 * Math.PI))
+              .translate([0, 0])
+              .center([0, 0]);
+  } else {
+    projection = d3[options.projection]()
+                   .scale(height * map.scale)
+                   .translate(map.translate || [0, 0])
+                   .center(map.center);
+  }
 
   // Create geo path
   var path = d3.geoPath()
@@ -2002,11 +2080,40 @@ d3.choroplethMap = function (data, options) {
     var svg = plot.svg;
     var g = plot.container;
 
+    // Tiles
+    if (tile.show && d3.tile) {
+      var center = projection(tile.center);
+      var transform = d3.zoomIdentity
+                        .translate(width / 2, height / 2)
+                        .scale(tile.scale)
+                        .translate(-center[0], -center[1]);
+      var zoom = d3.zoom()
+                   .scaleExtent(tile.scaleExtent)
+                   .on('zoom', function () {
+                     var transform = d3.event.transform;
+                     tile.scale = transform.k;
+                     tile.translate = [transform.x, transform.y];
+                     d3.imageTiles(svg.select('.tile'), tile);
+                     projection.scale(tile.scale / (2 * Math.PI))
+                               .translate(tile.translate);
+                     svg.selectAll('.region')
+                        .attr('d', path);
+                   });
+      svg.insert('g', 'g')
+         .attr('class', 'tile');
+      g.attr('transform', d3.translate(0, 0));
+      svg.call(zoom)
+         .call(zoom.transform, transform);
+      if (tile.zoomable === false) {
+        zoom.on('zoom', null);
+      }
+    }
+
     // Graticules
     var graticules = options.graticules;
-    var graticule = d3.geoGraticule()
-                      .step(graticules.step);
     if (graticules.show) {
+      var graticule = d3.geoGraticule()
+                        .step(graticules.step);
       g.append('path')
        .datum(graticule)
        .attr('class', 'graticule')
@@ -2022,6 +2129,9 @@ d3.choroplethMap = function (data, options) {
                   .attr('class', 'region')
                   .attr('d', path)
                   .attr('fill', function (d, i) {
+                    if (fill === 'none') {
+                      return fill;
+                    }
                     if (coloring === 'topological' && neighbors.length) {
                       d.value = (d3.max(neighbors[i], function (n) {
                         return features[n].value;
@@ -2038,10 +2148,63 @@ d3.choroplethMap = function (data, options) {
                     return colors(d.value);
                   });
 
-     // Tooltip
-     var tooltip = options.tooltip;
-     tooltip.hoverTarget = region;
-     d3.setTooltip(chart, tooltip);
+    // Labels
+    var labels = options.labels;
+    if (labels.show) {
+      g.selectAll('.label')
+       .data(features)
+       .enter()
+       .append('text')
+       .attr('class', 'label')
+       .attr('x', function (d) {
+         d.center = path.centroid(d);
+         return d.center[0];
+       })
+       .attr('y', function (d) {
+         return d.center[1];
+       })
+       .attr('dy', labels.dy)
+       .attr('text-anchor', 'middle')
+       .attr('stroke', labels.stroke)
+       .attr('fill', labels.fill)
+       .attr('font-size', labels.fontSize)
+       .attr('opacity', labels.opacity)
+       .text(labels.text);
+    }
+
+    if (options.zoomable) {
+      var scale = projection.scale();
+      var translate = projection.translate();
+      var zoom = d3.zoom()
+                   .scaleExtent(options.scaleExtent)
+                   .on('zoom', function (d) {
+                     var transform = d3.event.transform;
+                     projection.scale(transform.k * scale)
+                               .translate([
+                                 translate[0] + transform.x,
+                                 translate[1] + transform.y
+                               ]);
+                     g.selectAll('.graticule')
+                      .attr('d', path);
+                     g.selectAll('.region')
+                      .attr('d', path);
+                     g.selectAll('.label')
+                      .attr('x', function (d) {
+                        d.center = path.centroid(d);
+                        return d.center[0];
+                      })
+                      .attr('y', function (d) {
+                        return d.center[1];
+                      });
+                   });
+      svg.attr('cursor', 'move')
+         .call(zoom);
+    }
+
+    // Tooltip
+    var tooltip = options.tooltip;
+    tooltip.hoverTarget = region;
+    d3.setTooltip(chart, tooltip);
 
   }
 
