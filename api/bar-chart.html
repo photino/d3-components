@@ -40,22 +40,40 @@
         <h3 class="ui-header-primary">Bar Chart</h3>
         <div class="ui-container-grid">
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="simple-bar-chart-svg"></div>
+            <div id="bar-chart-default"></div>
           </div>
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="simple-bar-chart-canvas"></div>
+            <div id="bar-chart-stacked"></div>
           </div>
         </div>
         <div>
-          <pre><code class="language-markup">&lt;div id="simple-bar-chart-svg"&gt;&lt;/div&gt;
-&lt;div id="simple-bar-chart-canvas"&gt;&lt;/div&gt;
+          <pre><code class="language-markup">&lt;div id="bar-chart-default"&gt;&lt;/div&gt;
+&lt;div id="bar-chart-stacked"&gt;&lt;/div&gt;
 
 &lt;script&gt;
-  var data = [];
-  d3.barChart(data, { id: 'simple-bar-chart-svg' });
-  d3.barChart(data, {
-    id: 'simple-bar-chart-canvas',
-    renderer: 'canvas'
+  d3.json('../data/china-population.json', function (data) {
+    d3.shuffle(data);
+    d3.barChart(data, { id: 'bar-chart-default' });
+    d3.barChart(data, {
+      id: 'bar-chart-stacked',
+      stacked: true,
+      horizontal: true,
+      axisX: {
+        tickFormat: d3.format('d')
+      },
+      axisY: {
+        tickFormat: null,
+        textAnchor: 'end'
+      },
+      gridX: {
+        show: true
+      },
+      tooltip: {
+        html: function (d) {
+          return d.city + ': ' + d.population + ' (' + d.type + ')';
+        }
+      }
+    });
   });
 &lt;/script&gt;
 </code></pre>
@@ -71,11 +89,29 @@
     <script src="./../dist/d3-4.5.0.min.js"></script>
     <script src="./../dist/d3-components-0.0.3.min.js"></script>
     <script>
-      var data = [];
-      d3.barChart(data, { id: 'simple-bar-chart-svg' });
-      d3.barChart(data, {
-        id: 'simple-bar-chart-canvas',
-        renderer: 'canvas'
+      d3.json('../data/china-population.json', function (data) {
+        d3.shuffle(data);
+        d3.barChart(data, { id: 'bar-chart-default' });
+        d3.barChart(data, {
+          id: 'bar-chart-stacked',
+          stacked: true,
+          horizontal: true,
+          axisX: {
+            tickFormat: d3.format('d')
+          },
+          axisY: {
+            tickFormat: null,
+            textAnchor: 'end'
+          },
+          gridX: {
+            show: true
+          },
+          tooltip: {
+            html: function (d) {
+              return d.city + ': ' + d.population + ' (' + d.type + ')';
+            }
+          }
+        });
       });
     </script>
   </body>

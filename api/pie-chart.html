@@ -40,15 +40,15 @@
         <h3 class="ui-header-primary">Pie Chart</h3>
         <div class="ui-container-grid">
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="simple-pie-chart-svg"></div>
+            <div id="pie-chart-default"></div>
           </div>
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="simple-pie-chart-canvas"></div>
+            <div id="pie-chart-donut"></div>
           </div>
         </div>
         <div>
-          <pre><code class="language-markup">&lt;div id="simple-pie-chart-svg"&gt;&lt;/div&gt;
-&lt;div id="simple-pie-chart-canvas"&gt;&lt;/div&gt;
+          <pre><code class="language-markup">&lt;div id="pie-chart-default"&gt;&lt;/div&gt;
+&lt;div id="pie-chart-donut"&gt;&lt;/div&gt;
 
 &lt;script&gt;
   var data = [
@@ -59,9 +59,10 @@
     { browser: 'Others', percentage: 0.0380 },
     { browser: 'Safari', percentage: 0.2047 }
   ];
-  d3.pieChart(data, { id: 'simple-pie-chart-svg' });
+  d3.shuffle(data);
+  d3.pieChart(data, { id: 'pie-chart-default' });
   d3.pieChart(data, {
-    id: 'simple-pie-chart-canvas',
+    id: 'pie-chart-donut',
     renderer: 'canvas',
     sort: 'descending(percentage)',
     donutRatio: 0.5,
@@ -89,9 +90,10 @@
         { browser: 'Others', percentage: 0.0380 },
         { browser: 'Safari', percentage: 0.2047 }
       ];
-      d3.pieChart(data, { id: 'simple-pie-chart-svg' });
+      d3.shuffle(data);
+      d3.pieChart(data, { id: 'pie-chart-default' });
       d3.pieChart(data, {
-        id: 'simple-pie-chart-canvas',
+        id: 'pie-chart-donut',
         renderer: 'canvas',
         sort: 'descending(percentage)',
         donutRatio: 0.5,

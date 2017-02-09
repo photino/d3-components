@@ -52,6 +52,7 @@
 
 &lt;script&gt;
   d3.json('../data/arxiv-categories.json', function (data) {
+    d3.shuffle(data);
     d3.sunburstChart(data, { id: 'sunburst-chart-default' });
     d3.sunburstChart(data, {
       id: 'sunburst-chart-sorted',
@@ -85,6 +86,7 @@
     <script src="./../dist/d3-components-0.0.3.min.js"></script>
     <script>
       d3.json('../data/arxiv-categories.json', function (data) {
+        d3.shuffle(data);
         d3.sunburstChart(data, { id: 'sunburst-chart-default' });
         d3.sunburstChart(data, {
           id: 'sunburst-chart-sorted',
