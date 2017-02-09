@@ -10,28 +10,64 @@ block article
   h3.ui-header-primary= pageTitle
   .ui-container-grid
     .ui-grid-50.ui-mobile-expand
-      #simple-bar-chart-svg
+      #bar-chart-default
     .ui-grid-50.ui-mobile-expand
-      #simple-bar-chart-canvas
+      #bar-chart-stacked
   div
     pre: code.language-markup.
-      &lt;div id="simple-bar-chart-svg"&gt;&lt;/div&gt;
-      &lt;div id="simple-bar-chart-canvas"&gt;&lt;/div&gt;
+      &lt;div id="bar-chart-default"&gt;&lt;/div&gt;
+      &lt;div id="bar-chart-stacked"&gt;&lt;/div&gt;
 
       &lt;script&gt;
-        var data = [];
-        d3.barChart(data, { id: 'simple-bar-chart-svg' });
-        d3.barChart(data, {
-          id: 'simple-bar-chart-canvas',
-          renderer: 'canvas'
+        d3.json('../data/china-population.json', function (data) {
+          d3.shuffle(data);
+          d3.barChart(data, { id: 'bar-chart-default' });
+          d3.barChart(data, {
+            id: 'bar-chart-stacked',
+            stacked: true,
+            horizontal: true,
+            axisX: {
+              tickFormat: d3.format('d')
+            },
+            axisY: {
+              tickFormat: null,
+              textAnchor: 'end'
+            },
+            gridX: {
+              show: true
+            },
+            tooltip: {
+              html: function (d) {
+                return d.city + ': ' + d.population + ' (' + d.type + ')';
+              }
+            }
+          });
         });
       &lt;/script&gt;
 
 block append foot
   script.
-    var data = [];
-    d3.barChart(data, { id: 'simple-bar-chart-svg' });
-    d3.barChart(data, {
-      id: 'simple-bar-chart-canvas',
-      renderer: 'canvas'
+    d3.json('../data/china-population.json', function (data) {
+      d3.shuffle(data);
+      d3.barChart(data, { id: 'bar-chart-default' });
+      d3.barChart(data, {
+        id: 'bar-chart-stacked',
+        stacked: true,
+        horizontal: true,
+        axisX: {
+          tickFormat: d3.format('d')
+        },
+        axisY: {
+          tickFormat: null,
+          textAnchor: 'end'
+        },
+        gridX: {
+          show: true
+        },
+        tooltip: {
+          html: function (d) {
+            return d.city + ': ' + d.population + ' (' + d.type + ')';
+          }
+        }
+      });
     });

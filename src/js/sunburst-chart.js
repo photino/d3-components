@@ -1,6 +1,6 @@
 /*!
  * Sunburst Chart
- * Reference: http://bl.ocks.org/maybelinot/5552606564ef37b5de7e47ed2b7dc099
+ * References: http://bl.ocks.org/maybelinot/5552606564ef37b5de7e47ed2b7dc099
  */
 
 // Register a chart type
@@ -22,7 +22,9 @@ d3.components.sunburstChart = {
         key: 'value',
         type: 'number',
         mappings: [
-          'count'
+          'count',
+          'percentage',
+          'ratio'
         ]
       },
       {

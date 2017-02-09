@@ -26,6 +26,8 @@ d3.defaultOptions = {
     wrapText: true,
     wrapWidth: '90%',
     lineHeight: '2em',
+    stroke: 'none',
+    fill: '#333',
     fontSize: '1.4em',
     fontWeight: 'bold',
     textAnchor: 'middle',
@@ -69,6 +71,32 @@ d3.defaultOptions = {
     lineHeight: '1.6em',
     textColor: '#333',
     disabledTextColor: '#ccc'
+  },
+  axisX: {
+    orient: 'bottom',
+    ticks: 8,
+    tickSizeInner: 6,
+    tickSizeOuter: 0,
+    tickPadding: 4,
+    fontSize: '0.85em'
+  },
+  axisY: {
+    orient: 'left',
+    ticks: 6,
+    tickSizeInner: 6,
+    tickSizeOuter: 0,
+    tickPadding: 4,
+    fontSize: '0.85em'
+  },
+  gridX: {
+    show: false,
+    stroke: '#ccc',
+    strokeDash: [6, 4]
+  },
+  gridY: {
+    show: false,
+    stroke: '#ccc',
+    strokeDash: [6, 4]
   }
 };
 
@@ -129,6 +157,7 @@ d3.parseData = function (plot, data) {
             if (mapping === null) {
               keys.some(function (k) {
                 if (d3.type(d[k]) === type) {
+                  keys.splice(keys.indexOf(k), 1);
                   mapping = k;
                   return true;
                 }
@@ -185,19 +214,6 @@ d3.parseOptions = function (plot, options) {
     }
   }
   options = d3.extend(defaults, options);
-
-  // Set the margins
-  var fontSize = options.fontSize;
-  var lineHeight = options.lineHeight;
-  var margin = d3.extend({
-    top: lineHeight,
-    right: 2 * fontSize,
-    bottom: 2 * lineHeight,
-    left: 4 * fontSize
-  }, options.margin);
-  options.margin = margin;
-  options.innerWidth = options.width - margin.left - margin.right;
-  options.innerHeight = options.height - margin.top - margin.bottom;
 
   // Set the tooltip
   var chart = canvas.node();
@@ -258,6 +274,19 @@ d3.parseOptions = function (plot, options) {
     var name = map.name || 'world';
     options.map = d3.extend(d3.maps[name], map);
   }
+
+  // Set the margins
+  var fontSize = options.fontSize;
+  var lineHeight = options.lineHeight;
+  var margin = d3.extend({
+    top: lineHeight,
+    right: 2 * fontSize,
+    bottom: 2 * lineHeight,
+    left: 4 * fontSize
+  }, options.margin);
+  options.margin = margin;
+  options.innerWidth = options.width - margin.left - margin.right;
+  options.innerHeight = options.height - margin.top - margin.bottom;
 
   return options;
 };
@@ -354,29 +383,6 @@ d3.regularPolygon = function (n, r) {
   });
 };
 
-// Set an axis
-d3.setAxis = function (scale, options) {
-  var axis = d3.axisBottom(scale);
-  var orient = options.orient;
-  if (orient === 'top') {
-    axis = d3.axisTop(scale);
-  } else if (orient === 'left') {
-    axis = d3.axisLeft(scale);
-  } else if (orient === 'right') {
-    axis = d3.axisRight(scale);
-  }
-  axis.ticks(options.ticks)
-      .tickSizeInner(options.tickSizeInner)
-      .tickSizeOuter(options.tickSizeOuter)
-      .tickPadding(options.tickPadding);
-  if (options.tickFormat !== '') {
-    axis.tickFormat(d3.format(options.tickFormat));
-  } else {
-    axis.tickFormat('');
-  }
-  return axis;
-};
-
 // Create a plot
 d3.createPlot = function (chart, options) {
   // Create the `svg` element
@@ -395,6 +401,8 @@ d3.createPlot = function (chart, options) {
                .attr('class', 'title')
                .attr('x', title.x)
                .attr('y', title.y)
+               .attr('stroke', title.stroke)
+               .attr('fill', title.fill)
                .attr('font-size', title.fontSize)
                .attr('font-weight', title.fontWeight)
                .attr('text-anchor', title.textAnchor)
@@ -438,6 +446,125 @@ d3.getPosition = function (selection, container) {
       height: position.height
     };
 
+};
+
+// Set an axis
+d3.setAxis = function (scale, options) {
+  var axis = d3.axisBottom(scale);
+  var orient = options.orient;
+  if (orient === 'top') {
+    axis = d3.axisTop(scale);
+  } else if (orient === 'left') {
+    axis = d3.axisLeft(scale);
+  } else if (orient === 'right') {
+    axis = d3.axisRight(scale);
+  }
+  axis.ticks(options.ticks)
+      .tickSizeInner(options.tickSizeInner)
+      .tickSizeOuter(options.tickSizeOuter)
+      .tickPadding(options.tickPadding)
+      .tickValues(options.tickValues)
+      .tickFormat(options.tickFormat);
+  return axis;
+};
+
+// Set axes
+d3.setAxes = function (container, options) {
+  var g = container;
+  var width = options.width;
+  var height = options.height;
+  var axisX = options.axisX;
+  var axisY = options.axisY;
+  var orientX = axisX.orient;
+  var orientY = axisY.orient;
+  var gx = d3.setAxis(options.scaleX, axisX);
+  var gy = d3.setAxis(options.scaleY, axisY);
+  g.selectAll('.axis')
+   .remove();
+  if (options.framed) {
+    g.append('g')
+     .attr('class', 'axis axis-x')
+     .attr('transform', d3.translate(0, height))
+     .call(gx);
+    g.append('g')
+     .attr('class', 'axis axis-y')
+     .call(gy);
+    g.append('g')
+     .attr('class', 'axis axis-x')
+     .call(gx.tickFormat(''));
+    g.append('g')
+     .attr('class', 'axis axis-y')
+     .attr('transform', d3.translate(width, 0))
+     .call(gy.tickFormat(''));
+  } else {
+    var ax = g.append('g')
+              .attr('class', 'axis axis-x')
+              .call(gx);
+    var ay = g.append('g')
+              .attr('class', 'axis axis-y')
+              .call(gy);
+    if (orientX === 'bottom') {
+      ax.attr('transform', d3.translate(0, height));
+    }
+    if (orientY === 'right') {
+      ay.attr('transform', d3.translate(width, 0));
+    }
+  }
+  g.selectAll('.axis-x')
+   .attr('font-size', axisX.fontSize)
+   .selectAll('text')
+   .attr('text-anchor', axisX.textAnchor)
+   .attr('transform', axisX.transform);
+  g.selectAll('.axis-y')
+   .attr('font-size', axisY.fontSize)
+   .selectAll('text')
+   .attr('text-anchor', axisY.textAnchor)
+   .attr('transform', axisY.transform);
+
+  // Grid lines
+  var gridX = options.gridX;
+  var gridY = options.gridY;
+  g.selectAll('.grid')
+   .remove();
+  if (gridX.show) {
+    g.insert('g', ':first-child')
+     .attr('class', 'grid grid-x')
+     .attr('stroke-dasharray', gridX.strokeDash.join())
+     .call(gy.tickSize(-width, 0).tickFormat(''));
+    g.select('.grid-x')
+     .select('.domain')
+     .attr('stroke-width', 0);
+    g.select('.grid-x')
+     .selectAll('.tick')
+     .attr('stroke-width', function () {
+       var transform = d3.select(this)
+                         .attr('transform');
+       var dy = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[2];
+       return (dy === 0 || dy === height) ? 0 : null;
+     })
+     .select('line')
+     .attr('stroke', gridX.stroke);
+  }
+  if (gridY.show) {
+    g.insert('g', ':first-child')
+     .attr('class', 'grid grid-y')
+     .attr('stroke-dasharray', gridY.strokeDash.join())
+     .attr('transform', d3.translate(0, height))
+     .call(gx.tickSize(-height, 0).tickFormat(''));
+    g.select('.grid-y')
+     .select('.domain')
+     .attr('stroke-width', 0);
+    g.select('.grid-y')
+     .selectAll('.tick')
+     .attr('stroke-width', function () {
+       var transform = d3.select(this)
+                         .attr('transform');
+       var dx = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[1];
+       return (dx === 0 || dx === width) ? 0 : null;
+     })
+     .select('line')
+     .attr('stroke', gridY.stroke);
+  }
 };
 
 // Set the tooltip
@@ -510,7 +637,7 @@ d3.setLegend = function (container, options) {
                         .append('g')
                         .attr('class', function (d) {
                           if (!d.hasOwnProperty('disabled')) {
-                            d.disabled = d.data.disabled || false;
+                            d.disabled = d.data && d.data.disabled || false;
                           }
                           return 'legend-item' + (d.disabled ? ' disabled' : '');
                         })

@@ -1,0 +1,102 @@
+[
+  {
+    "city": "北京",
+    "type": "户籍人口",
+    "population": 1345.20
+  },
+  {
+    "city": "北京",
+    "type": "外来人口",
+    "population": 822.60
+  },
+  {
+    "city": "上海",
+    "type": "户籍人口",
+    "population": 1433.62
+  },
+  {
+    "city": "上海",
+    "type": "外来人口",
+    "population": 981.65
+  },
+  {
+    "city": "广州",
+    "type": "户籍人口",
+    "population": 854.19
+  },
+  {
+    "city": "广州",
+    "type": "外来人口",
+    "population": 495.92
+  },
+  {
+    "city": "深圳",
+    "type": "户籍人口",
+    "population": 354.99
+  },
+  {
+    "city": "深圳",
+    "type": "外来人口",
+    "population": 782.90
+  },
+  {
+    "city": "天津",
+    "type": "户籍人口",
+    "population": 1046.60
+  },
+  {
+    "city": "天津",
+    "type": "外来人口",
+    "population": 500.35
+  },
+  {
+    "city": "重庆",
+    "type": "户籍人口",
+    "population": 2866.34
+  },
+  {
+    "city": "重庆",
+    "type": "外来人口",
+    "population": 150.21
+  },
+  {
+    "city": "苏州",
+    "type": "户籍人口",
+    "population": 667.01
+  },
+  {
+    "city": "苏州",
+    "type": "外来人口",
+    "population": 394.59
+  },
+  {
+    "city": "成都",
+    "type": "户籍人口",
+    "population": 1228.1
+  },
+  {
+    "city": "成都",
+    "type": "外来人口",
+    "population": 237.70
+  },
+  {
+    "city": "武汉",
+    "type": "户籍人口",
+    "population": 829.27
+  },
+  {
+    "city": "武汉",
+    "type": "外来人口",
+    "population": 231.50
+  },
+  {
+    "city": "杭州",
+    "type": "户籍人口",
+    "population": 706.61
+  },
+  {
+    "city": "杭州",
+    "type": "外来人口",
+    "population": 195.19
+  }
+]

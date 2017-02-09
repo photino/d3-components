@@ -21,6 +21,7 @@ block article
       &lt;script&gt;
         d3.json('../dist/maps/china.geo.json', function (geojson) {
           d3.json('../data/china-gdp.json', function (data) {
+            d3.shuffle(data);
             d3.choroplethMap(data, {
               id: 'choropleth-map-geojson',
               map: {
@@ -33,8 +34,8 @@ block article
                 zoomable: false,
                 image: {
                   href: function (d) {
-                    var server = 'http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
-                    return server + d[2] + '/' + d[1] + '/' + d[0];
+                    var server = 'http://' + ['a', 'b', 'c', 'd'][Math.random() * 4 | 0] + '.tiles.mapbox.com/v3/mapbox.natural-earth-2/'
+                    return server + d[2] + '/' + d[0] + '/' + d[1] + '.png';
                   }
                 }
               },
@@ -61,7 +62,7 @@ block article
               show: true,
               image: {
                 href: function (d) {
-                  var server = 'http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
+                  var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
                   return server + d[2] + '/' + d[1] + '/' + d[0];
                 }
               }
@@ -78,6 +79,7 @@ block append foot
   script.
     d3.json('../dist/maps/china.geo.json', function (geojson) {
       d3.json('../data/china-gdp.json', function (data) {
+        d3.shuffle(data);
         d3.choroplethMap(data, {
           id: 'choropleth-map-geojson',
           map: {
@@ -90,8 +92,8 @@ block append foot
             zoomable: false,
             image: {
               href: function (d) {
-                var server = 'http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
-                return server + d[2] + '/' + d[1] + '/' + d[0];
+                var server = 'http://' + ['a', 'b', 'c', 'd'][Math.random() * 4 | 0] + '.tiles.mapbox.com/v3/mapbox.natural-earth-2/'
+                return server + d[2] + '/' + d[0] + '/' + d[1] + '.png';
               }
             }
           },
@@ -118,7 +120,7 @@ block append foot
           show: true,
           image: {
             href: function (d) {
-              var server = 'http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
+              var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
               return server + d[2] + '/' + d[1] + '/' + d[0];
             }
           }

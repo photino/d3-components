@@ -1,5 +1,6 @@
 /*!
  * Pie Chart
+ * References: http://bl.ocks.org/dbuezas/9306799
  */
 
 // Register a chart type
@@ -21,7 +22,8 @@ d3.components.pieChart = {
         type: 'number',
         mappings: [
           'count',
-          'percentage'
+          'percentage',
+          'ratio'
         ]
       }
     ]
@@ -33,7 +35,9 @@ d3.components.pieChart = {
   labels: {
     show: false,
     dy: '0.25em',
+    stroke: 'none',
     fill: '#fff',
+    centroidRatio: 1.2,
     minAngle: Math.PI / 10,
     wrapText: false,
     wrapWidth: '5em',
@@ -109,6 +113,8 @@ d3.pieChart = function (data, options) {
     // Slices
     dispatch.on('init.slices', function (data) {
       g.selectAll('.arc')
+       .remove();
+      g.selectAll('.arc')
        .data(data)
        .enter()
        .append('g')
@@ -130,17 +136,18 @@ d3.pieChart = function (data, options) {
     dispatch.on('update.labels', function (slice) {
       var labels = options.labels;
       if (labels.show) {
+        var centroidRatio = labels.centroidRatio;
         slice.append('text')
              .attr('class', 'label')
              .attr('x', function (d) {
-               return arc.centroid(d)[0];
+               return arc.centroid(d)[0] * centroidRatio;
              })
              .attr('y', function (d) {
-               return arc.centroid(d)[1];
+               return arc.centroid(d)[1] * centroidRatio;
              })
              .attr('dy', labels.dy)
-             .attr('text-anchor', 'middle')
              .attr('fill', labels.fill)
+             .attr('text-anchor', 'middle')
              .text(labels.text)
              .attr('opacity', function (d) {
                var angle = d.endAngle - d.startAngle;
@@ -175,8 +182,6 @@ d3.pieChart = function (data, options) {
           }
           return false;
         });
-        g.selectAll('.arc')
-         .remove();
         dispatch.call('init', this, pie(data));
         dispatch.call('update', this, g.selectAll('.arc'));
       };

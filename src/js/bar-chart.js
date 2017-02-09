@@ -1,5 +1,8 @@
 /*!
  * Bar Chart
+ * References: http://bl.ocks.org/d3noob/8952219
+ *             https://bl.ocks.org/mbostock/3885304
+ *             http://bl.ocks.org/mbostock/3943967
  */
 
 // Register a chart type
@@ -9,10 +12,10 @@ d3.components.barChart = {
     type: 'object',
     entries: [
       {
-        key: 'label',
+        key: 'category',
         type: 'string',
         mappings: [
-          'category',
+          'label',
           'name'
         ]
       },
@@ -21,19 +24,58 @@ d3.components.barChart = {
         type: 'number',
         mappings: [
           'count',
-          'percentage'
+          'frequency',
+          'percentage',
+          'ratio'
+        ]
+      },
+      {
+        key: 'series',
+        type: 'string',
+        mappings: [
+          'group',
+          'type'
         ]
       }
     ]
   },
   sort: null,
-  labels: {
-    show: false
+  stacked: false,
+  horizontal: false,
+  paddingInner: 0.4,
+  paddingOuter: 0.4,
+  paddingMidst: 0,
+  align: 0.5,
+  framed: false,
+  axisY: {
+    tickFormat: d3.format('d')
+  },
+  labelX: {
+    show: false,
+    text: 'X',
+    dy: '2.8em'
+  },
+  labelY: {
+    show: false,
+    text: 'Y',
+    dy: '-3em'
+  },
+  legend: {
+    show: null,
+    text: function (d) {
+      return d.series;
+    }
   },
   tooltip: {
-    html: function (d, i) {
-      return 'Datum ' + i;
+    html: function (d) {
+      return d.category + ': ' + d.value;
     }
+  },
+  margin: {
+    top: '4em',
+    right: '2em',
+    bottom: '2em',
+    left: '4em'
   }
 };
 
@@ -52,17 +94,244 @@ d3.barChart = function (data, options) {
   var context = options.context;
   var width = options.width;
   var height = options.height;
+  var innerWidth = options.innerWidth;
+  var innerHeight = options.innerHeight;
+  var margin = options.margin;
   var stroke = options.stroke;
   var strokeWidth = options.strokeWidth;
   var colorScheme = options.colorScheme;
   var fontSize = options.fontSize;
   var lineHeight = options.lineHeight;
 
+  // Global data variables
+  var categories = options.categories || [];
+  var groups = options.series || [];
+  var dataset = [];
+
+  // Coordinates and scales
+  var x = d3.scaleBand()
+            .paddingInner(options.paddingInner)
+            .paddingOuter(options.paddingOuter)
+            .rangeRound([0, innerWidth])
+            .align(options.align);
+  var y = d3.scaleLinear()
+            .rangeRound([innerHeight, 0]);
+  if (options.horizontal) {
+    x = d3.scaleLinear()
+          .rangeRound([0, innerWidth]);
+    y = d3.scaleBand()
+          .paddingInner(options.paddingInner)
+          .paddingOuter(options.paddingOuter)
+          .rangeRound([innerHeight, 0])
+          .align(options.align);
+  }
+
   if (renderer === 'svg') {
     // Create the plot
     var plot = d3.createPlot(chart, options);
+    var transform = d3.translate(margin.left, margin.top + options.title.height);
     var svg = plot.svg;
-    var g = plot.container;
+    var g = plot.container
+                .attr('transform', transform);
+
+    // Process data
+    var colors = d3.scaleOrdinal(colorScheme);
+    var color = function (d) { return colors(d.series); };
+    dispatch.on('init.data', function (data) {
+      var labels = d3.set(data, function (d) { return d.category; });
+      var series = d3.set(data, function (d) { return d.series; });
+      if (labels.size() !== categories.length) {
+        categories = labels.values();
+      }
+      if (series.size() !== groups.length) {
+        groups = series.values();
+      }
+      if (!dataset.length) {
+        dataset = groups.map(function (series) {
+          return {
+            series: series,
+            disabled: false,
+            color: colors(series)
+          };
+        });
+      }
+      data.sort(function (a, b) {
+        var i = categories.indexOf(a.category);
+        var j = categories.indexOf(b.category);
+        if (i !== j) {
+          return d3.ascending(i, j);
+        } else {
+          var k = groups.indexOf(a.series);
+          var l = groups.indexOf(b.series);
+          return d3.ascending(k, l);
+        }
+      });
+    });
+
+    // Layout
+    dispatch.on('init.layout', function (data) {
+      var stacked = options.stacked;
+      var horizontal = options.horizontal;
+      var maxValue = 0;
+      if (stacked) {
+        maxValue = d3.max(categories, function (category) {
+          return d3.sum(data.filter(function (d) {
+            return d.category === category;
+          }), function (d) {
+            return d.value;
+          });
+        });
+      } else {
+        maxValue = d3.max(data, function (d) {
+          return d.value;
+        });
+      }
+      if (horizontal) {
+        x.domain([0, maxValue]);
+        y.domain(categories);
+      } else {
+        x.domain(categories);
+        y.domain([0, maxValue]);
+      }
+      g.select('.layout')
+       .remove();
+
+      // Rects
+      var rect = g.append('g')
+                  .attr('class', 'layout')
+                  .selectAll('rect')
+                  .data(data)
+                  .enter()
+                  .append('rect');
+      if (horizontal) {
+        var bandwidth = y.bandwidth();
+        if (stacked) {
+          rect.attr('y', function (d) {
+                return y(d.category);
+              })
+              .attr('x', function (d, i) {
+                var category = d.category;
+                var value = d3.sum(data.slice(0, i), function (d) {
+                  return d.category === category ? d.value : 0;
+                });
+                return x(value);
+              });
+        } else {
+          var m = groups.length;
+          var rectHeight = bandwidth / m;
+          var dy = y.step() * options.paddingMidst;
+          var ty = rectHeight + dy + 1;
+          var sy = dy * (m - 1) / 2 - 1;
+          bandwidth = rectHeight;
+          rect.attr('x', 0)
+              .attr('y', function (d, i) {
+                var category = d.category;
+                var j = data.slice(0, i).reduce(function (s, d) {
+                  return s + (d.category === category ? 1 : 0);
+                }, 0);
+                return y(category) + (d.series !== groups[0] ? ty : 1) * j - sy;
+              });
+        }
+        rect.attr('width', function (d) {
+              return x(d.value);
+            })
+            .attr('height', bandwidth);
+      } else {
+        var bandwidth = x.bandwidth();
+        if (stacked) {
+          rect.attr('x', function (d) {
+                return x(d.category);
+              })
+              .attr('y', function (d, i) {
+                var category = d.category;
+                var value = d3.sum(data.slice(0, i + 1), function (d) {
+                  return d.category === category ? d.value : 0;
+                });
+                return y(value);
+              });
+        } else {
+          var m = groups.length;
+          var rectWidth = bandwidth / m;
+          var dx = x.step() * options.paddingMidst;
+          var tx = rectWidth + dx + 1;
+          var sx = dx * (m - 1) / 2 - 1;
+          bandwidth = rectWidth;
+          rect.attr('x', function (d, i) {
+                var category = d.category;
+                var j = data.slice(0, i).reduce(function (s, d) {
+                  return s + (d.category === category ? 1 : 0);
+                }, 0);
+                return x(category) + (d.series !== groups[0] ? tx : 1) * j - sx;
+              })
+              .attr('y', function (d) {
+                return y(d.value);
+              });
+        }
+        rect.attr('width', bandwidth)
+            .attr('height', function (d) {
+              return innerHeight - y(d.value);
+            });
+      }
+      rect.attr('stroke', function (d) {
+            d.color = colors(d.series);
+            return d3.color(d.color).darker();
+          })
+          .attr('fill', color);
+    });
+
+    // Axes
+    dispatch.on('init.axes', function (data) {
+      d3.setAxes(g, {
+        width: innerWidth,
+        height: innerHeight,
+        scaleX: x,
+        scaleY: y,
+        axisX: options.axisX,
+        axisY: options.axisY,
+        gridX: options.gridX,
+        gridY: options.gridY,
+        framed: options.framed
+      });
+    });
+
+    // Tooltip
+    dispatch.on('update.tooltip', function (layout) {
+      var tooltip = options.tooltip;
+      tooltip.hoverTarget = layout.selectAll('rect');
+      tooltip.hoverEffect = 'darker';
+      d3.setTooltip(chart, tooltip);
+    });
+
+    // Legend
+    dispatch.on('finalize.legend', function () {
+      var legend = options.legend;
+      if (legend.show === null) {
+        legend.show = dataset.length > 1;
+      }
+      if (!legend.translation) {
+        legend.translation = d3.translate(-margin.left, -margin.top);
+      }
+      legend.bindingData = dataset;
+      legend.onclick = function (d) {
+        var series = d.series;
+        var disabled = d.disabled;
+        data.forEach(function (d) {
+          if (d.series === series) {
+            d.disabled = disabled;
+          }
+        });
+        dispatch.call('init', this, data.filter(function (d) {
+          return !d.disabled;
+        }));
+        dispatch.call('update', this, g.select('.layout'));
+      };
+      d3.setLegend(g, legend);
+    });
+
+    // Load components
+    dispatch.call('init', this, data);
+    dispatch.call('update', this, g.select('.layout'));
+    dispatch.call('finalize', this);
 
   }
 

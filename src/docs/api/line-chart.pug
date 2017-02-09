@@ -10,19 +10,19 @@ block article
   h3.ui-header-primary= pageTitle
   .ui-container-grid
     .ui-grid-50.ui-mobile-expand
-      #simple-line-chart-svg
+      #line-chart-default
     .ui-grid-50.ui-mobile-expand
-      #simple-line-chart-canvas
+      #line-chart-customized
   div
     pre: code.language-markup.
-      &lt;div id="simple-line-chart-svg"&gt;&lt;/div&gt;
-      &lt;div id="simple-line-chart-canvas"&gt;&lt;/div&gt;
+      &lt;div id="line-chart-default"&gt;&lt;/div&gt;
+      &lt;div id="line-chart-customized"&gt;&lt;/div&gt;
 
       &lt;script&gt;
         var data = [];
-        d3.lineChart(data, { id: 'simple-line-chart-svg' });
+        d3.lineChart(data, { id: 'line-chart-default' });
         d3.lineChart(data, {
-          id: 'simple-line-chart-canvas',
+          id: 'line-chart-customized',
           renderer: 'canvas'
         });
       &lt;/script&gt;
@@ -30,8 +30,8 @@ block article
 block append foot
   script.
     var data = [];
-    d3.lineChart(data, { id: 'simple-line-chart-svg' });
+    d3.lineChart(data, { id: 'line-chart-default' });
     d3.lineChart(data, {
-      id: 'simple-line-chart-canvas',
+      id: 'line-chart-customized',
       renderer: 'canvas'
     });

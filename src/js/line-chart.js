@@ -21,7 +21,8 @@ d3.components.lineChart = {
         type: 'number',
         mappings: [
           'count',
-          'percentage'
+          'percentage',
+          'ratio'
         ]
       }
     ]

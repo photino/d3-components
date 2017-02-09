@@ -20,17 +20,20 @@ d3.components.choroplethMap = {
         ]
       },
       {
-        key: 'series',
-        type: 'string',
-        mappings: [
-          'year'
-        ]
-      },
-      {
         key: 'value',
         type: 'number',
         mappings: [
-          'count'
+          'count',
+          'percentage',
+          'ratio'
+        ]
+      },
+      {
+        key: 'series',
+        type: 'string',
+        mappings: [
+          'group',
+          'type'
         ]
       }
     ]
@@ -177,7 +180,7 @@ d3.choroplethMap = function (data, options) {
                      svg.selectAll('.region')
                         .attr('d', path);
                    });
-      svg.insert('g', 'g')
+      svg.insert('g', ':first-child')
          .attr('class', 'tile');
       g.attr('transform', d3.translate(0, 0));
       svg.call(zoom)

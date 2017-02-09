@@ -21,19 +21,20 @@ d3.components.radarChart = {
         ]
       },
       {
-        key: 'series',
-        type: 'string',
-        mappings: [
-          'item',
-          'year'
-        ]
-      },
-      {
         key: 'value',
         type: 'number',
         mappings: [
           'count',
-          'percentage'
+          'percentage',
+          'ratio'
+        ]
+      },
+      {
+        key: 'series',
+        type: 'string',
+        mappings: [
+          'group',
+          'type'
         ]
       }
     ]
@@ -113,7 +114,8 @@ d3.radarChart = function (data, options) {
 
   // Process data
   var axes = options.axes || [];
-  var dataset = options.series || [];
+  var groups = options.series || [];
+  var dataset = [];
   var values = [];
   data.forEach(function (d) {
     var axis = d.axis;
@@ -121,12 +123,12 @@ d3.radarChart = function (data, options) {
     if (axes.indexOf(axis) === -1) {
       axes.push(axis);
     }
-    if (dataset.indexOf(series) === -1) {
-      dataset.push(series);
+    if (groups.indexOf(series) === -1) {
+      groups.push(series);
     }
     values.push(d.value);
   });
-  dataset = dataset.map(function (series) {
+  dataset = groups.map(function (series) {
     var array = data.filter(function (d) {
       return d.series === series;
     });
@@ -334,7 +336,7 @@ d3.radarChart = function (data, options) {
     legend.onclick = function () {
       s.style('display', function (d) {
         return d.disabled ? 'none' : 'block';
-       });
+      });
     };
     d3.setLegend(g, legend);
 

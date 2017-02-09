@@ -20,6 +20,7 @@ block article
 
       &lt;script&gt;
         d3.json('../data/arxiv-categories.json', function (data) {
+          d3.shuffle(data);
           d3.sunburstChart(data, { id: 'sunburst-chart-default' });
           d3.sunburstChart(data, {
             id: 'sunburst-chart-sorted',
@@ -43,6 +44,7 @@ block article
 block append foot
   script.
     d3.json('../data/arxiv-categories.json', function (data) {
+      d3.shuffle(data);
       d3.sunburstChart(data, { id: 'sunburst-chart-default' });
       d3.sunburstChart(data, {
         id: 'sunburst-chart-sorted',

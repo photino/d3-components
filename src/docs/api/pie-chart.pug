@@ -10,13 +10,13 @@ block article
   h3.ui-header-primary= pageTitle
   .ui-container-grid
     .ui-grid-50.ui-mobile-expand
-      #simple-pie-chart-svg
+      #pie-chart-default
     .ui-grid-50.ui-mobile-expand
-      #simple-pie-chart-canvas
+      #pie-chart-donut
   div
     pre: code.language-markup.
-      &lt;div id="simple-pie-chart-svg"&gt;&lt;/div&gt;
-      &lt;div id="simple-pie-chart-canvas"&gt;&lt;/div&gt;
+      &lt;div id="pie-chart-default"&gt;&lt;/div&gt;
+      &lt;div id="pie-chart-donut"&gt;&lt;/div&gt;
 
       &lt;script&gt;
         var data = [
@@ -27,9 +27,10 @@ block article
           { browser: 'Others', percentage: 0.0380 },
           { browser: 'Safari', percentage: 0.2047 }
         ];
-        d3.pieChart(data, { id: 'simple-pie-chart-svg' });
+        d3.shuffle(data);
+        d3.pieChart(data, { id: 'pie-chart-default' });
         d3.pieChart(data, {
-          id: 'simple-pie-chart-canvas',
+          id: 'pie-chart-donut',
           renderer: 'canvas',
           sort: 'descending(percentage)',
           donutRatio: 0.5,
@@ -47,9 +48,10 @@ block append foot
       { browser: 'Others', percentage: 0.0380 },
       { browser: 'Safari', percentage: 0.2047 }
     ];
-    d3.pieChart(data, { id: 'simple-pie-chart-svg' });
+    d3.shuffle(data);
+    d3.pieChart(data, { id: 'pie-chart-default' });
     d3.pieChart(data, {
-      id: 'simple-pie-chart-canvas',
+      id: 'pie-chart-donut',
       renderer: 'canvas',
       sort: 'descending(percentage)',
       donutRatio: 0.5,

@@ -40,21 +40,21 @@
         <h3 class="ui-header-primary">Line Chart</h3>
         <div class="ui-container-grid">
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="simple-line-chart-svg"></div>
+            <div id="line-chart-default"></div>
           </div>
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="simple-line-chart-canvas"></div>
+            <div id="line-chart-customized"></div>
           </div>
         </div>
         <div>
-          <pre><code class="language-markup">&lt;div id="simple-line-chart-svg"&gt;&lt;/div&gt;
-&lt;div id="simple-line-chart-canvas"&gt;&lt;/div&gt;
+          <pre><code class="language-markup">&lt;div id="line-chart-default"&gt;&lt;/div&gt;
+&lt;div id="line-chart-customized"&gt;&lt;/div&gt;
 
 &lt;script&gt;
   var data = [];
-  d3.lineChart(data, { id: 'simple-line-chart-svg' });
+  d3.lineChart(data, { id: 'line-chart-default' });
   d3.lineChart(data, {
-    id: 'simple-line-chart-canvas',
+    id: 'line-chart-customized',
     renderer: 'canvas'
   });
 &lt;/script&gt;
@@ -72,9 +72,9 @@
     <script src="./../dist/d3-components-0.0.3.min.js"></script>
     <script>
       var data = [];
-      d3.lineChart(data, { id: 'simple-line-chart-svg' });
+      d3.lineChart(data, { id: 'line-chart-default' });
       d3.lineChart(data, {
-        id: 'simple-line-chart-canvas',
+        id: 'line-chart-customized',
         renderer: 'canvas'
       });
     </script>

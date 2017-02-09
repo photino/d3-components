@@ -35,30 +35,13 @@ d3.components.bubbleChart = {
   offsetY: [0, 0],
   framed: false,
   axisX: {
-    orient: 'bottom',
-    ticks: 8,
-    tickSizeInner: 6,
-    tickSizeOuter: 0,
-    tickPadding: 4,
-    tickFormat: 'd'
+    tickFormat: d3.format('d')
   },
   axisY: {
-    orient: 'left',
-    ticks: 6,
-    tickSizeInner: 6,
-    tickSizeOuter: 0,
-    tickPadding: 4,
-    tickFormat: 'd'
+    tickFormat: d3.format('d')
   },
   gridX: {
-    show: true,
-    stroke: '#ccc',
-    strokeDash: [6, 4]
-  },
-  gridY: {
-    show: false,
-    stroke: '#ccc',
-    strokeDash: [6, 4]
+    show: true
   },
   labelX: {
     show: false,
@@ -138,87 +121,18 @@ d3.bubbleChart = function (data, options) {
     var g = plot.container
                 .attr('transform', transform);
 
-    // Set axes
-    var axisX = options.axisX;
-    var axisY = options.axisY;
-    var orientX = axisX.orient;
-    var orientY = axisY.orient;
-    var gx = d3.setAxis(x, axisX);
-    var gy = d3.setAxis(y, axisY);
-    if (options.framed) {
-      g.append('g')
-       .attr('class', 'axis axis-x')
-       .attr('transform', d3.translate(0, innerHeight))
-       .call(gx);
-      g.append('g')
-       .attr('class', 'axis axis-y')
-       .call(gy);
-      g.append('g')
-       .attr('class', 'axis axis-x')
-       .call(gx.tickFormat(''));
-      g.append('g')
-       .attr('class', 'axis axis-y')
-       .attr('transform', d3.translate(innerWidth, 0))
-       .call(gy.tickFormat(''));
-    } else {
-      var ax = g.append('g')
-                .attr('class', 'axis axis-x')
-                .call(gx);
-      var ay = g.append('g')
-                .attr('class', 'axis axis-y')
-                .call(gy);
-      if (orientX === 'bottom') {
-        ax.attr('transform', d3.translate(0, innerHeight));
-      }
-      if (orientY === 'right') {
-        ay.attr('transform', d3.translate(innerWidth, 0));
-      }
-    }
-    g.selectAll('.axis')
-     .attr('font-size', fontSize);
-
-    // Add grid lines
-    var gridX = options.gridX;
-    var gridY = options.gridY;
-    if (gridX.show) {
-      g.append('g')
-       .attr('class', 'grid grid-x')
-       .attr('stroke-dasharray', gridX.strokeDash.join())
-       .call(gy.tickSize(-innerWidth, 0).tickFormat(''));
-      g.select('.grid-x')
-       .select('.domain')
-       .attr('stroke-width', 0);
-      g.select('.grid-x')
-       .selectAll('.tick')
-       .attr('stroke-width', function () {
-         var transform = d3.select(this)
-                           .attr('transform');
-         var dy = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[2];
-         return (dy === 0 || dy === innerHeight) ? 0 : null;
-       })
-       .select('line')
-       .attr('stroke', gridX.stroke);
-    }
-    if (gridY.show) {
-      g.append('g')
-       .attr('class', 'grid grid-y')
-       .attr('stroke-dasharray', gridY.strokeDash.join())
-       .attr('transform', d3.translate(0, innerHeight))
-       .call(gx.tickSize(-innerHeight, 0).tickFormat(''));
-      g.select('.grid-y')
-       .select('.domain')
-       .attr('stroke-width', 0);
-      g.select('.grid-y')
-       .selectAll('.tick')
-       .attr('stroke-width', function () {
-         var transform = d3.select(this)
-                           .attr('transform');
-         var dx = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[1];
-         return (dx === 0 || dx === innerWidth) ? 0 : null;
-       })
-       .select('line')
-       .attr('stroke', gridY.stroke);
-    }
+    // Set axes and grids
+    d3.setAxes(g, {
+      width: innerWidth,
+      height: innerHeight,
+      scaleX: x,
+      scaleY: y,
+      axisX: options.axisX,
+      axisY: options.axisY,
+      gridX: options.gridX,
+      gridY: options.gridY,
+      framed: options.framed
+    });
 
     // Set labels
     var labelX = options.labelX;

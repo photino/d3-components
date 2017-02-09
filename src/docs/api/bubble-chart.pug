@@ -20,6 +20,7 @@ block article
 
       &lt;script&gt;
         d3.json('../data/arxiv-keywords.json', function (data) {
+          d3.shuffle(data);
           d3.bubbleChart(data, { id: 'bubble-chart-default' });
           d3.bubbleChart(data, {
             id: 'bubble-chart-gradient',
@@ -59,6 +60,7 @@ block article
 block append foot
   script.
     d3.json('../data/arxiv-keywords.json', function (data) {
+      d3.shuffle(data);
       d3.bubbleChart(data, { id: 'bubble-chart-default' });
       d3.bubbleChart(data, {
         id: 'bubble-chart-gradient',
