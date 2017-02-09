@@ -2347,8 +2347,8 @@ d3.choroplethMap = function (data, options) {
   // Domain
   var domain = options.domain || [];
   var extent = d3.extent(data, function (d) { return d.value; });
-  var min = domain[0] || extent[0];
-  var max = domain[1] || extent[1];
+  var min = domain[0] || extent[0] || 0;
+  var max = domain[1] || extent[1] || 1;
 
   // Create geo projection
   var map = options.map;
