@@ -9,6 +9,7 @@ d3.components = {};
 d3.defaultOptions = {
   id: 'chart',
   renderer: 'svg',
+  standalone: true,
   responsive: true,
   width: 300,
   aspectRatio: 0.618034,
@@ -63,10 +64,11 @@ d3.defaultOptions = {
       interval: 2000
     },
     symbol: {
-      width: '1.294427em',
+      shape: 'circle',
+      width: '0.8em',
       height: '0.8em'
     },
-    dx: '0.5em',
+    dx: '0.4em',
     transform: 'scale(0.85)',
     lineHeight: '1.6em',
     textColor: '#333',
@@ -74,18 +76,28 @@ d3.defaultOptions = {
   },
   axisX: {
     orient: 'bottom',
-    ticks: 8,
-    tickSizeInner: 6,
-    tickSizeOuter: 0,
-    tickPadding: 4,
+    ticks: {
+      number: 8,
+      sizeInner: 6,
+      sizeOuter: 0,
+      padding: 4
+    },
+    domain: {
+      strokeWidth: 1
+    },
     fontSize: '0.85em'
   },
   axisY: {
     orient: 'left',
-    ticks: 6,
-    tickSizeInner: 6,
-    tickSizeOuter: 0,
-    tickPadding: 4,
+    ticks: {
+      number: 6,
+      sizeInner: 6,
+      sizeOuter: 0,
+      padding: 4
+    },
+    domain: {
+      strokeWidth: 1
+    },
     fontSize: '0.85em'
   },
   gridX: {
@@ -385,6 +397,12 @@ d3.regularPolygon = function (n, r) {
 
 // Create a plot
 d3.createPlot = function (chart, options) {
+  // Return the chart if it exists
+  if (!options.standalone) {
+    return d3.select(chart)
+             .select('svg');
+  }
+
   // Create the `svg` element
   var width = options.width;
   var height = options.height;
@@ -397,6 +415,7 @@ d3.createPlot = function (chart, options) {
   var titleHeight = 0;
   var title = options.title;
   if (title.show) {
+    var margin = options.margin;
     var t = svg.append('text')
                .attr('class', 'title')
                .attr('x', title.x)
@@ -410,8 +429,10 @@ d3.createPlot = function (chart, options) {
                .call(d3.wrapText, title);
     var lines = Math.ceil(t.node().getComputedTextLength() / title.wrapWidth);
     titleHeight = lines * title.lineHeight;
+    margin.top += titleHeight;
   }
   title.height = titleHeight;
+
 
   // Create the container
   var transform = d3.translate(width / 2, height / 2 + titleHeight);
@@ -421,11 +442,7 @@ d3.createPlot = function (chart, options) {
              .attr('transform', transform)
              .attr('stroke', options.stroke)
              .attr('stroke-width', options.strokeWidth);
-
-  return {
-    svg: svg,
-    container: g
-  };
+  return svg;
 };
 
 // Get the position relative to the container
@@ -452,6 +469,7 @@ d3.getPosition = function (selection, container) {
 d3.setAxis = function (scale, options) {
   var axis = d3.axisBottom(scale);
   var orient = options.orient;
+  var ticks = options.ticks;
   if (orient === 'top') {
     axis = d3.axisTop(scale);
   } else if (orient === 'left') {
@@ -459,12 +477,12 @@ d3.setAxis = function (scale, options) {
   } else if (orient === 'right') {
     axis = d3.axisRight(scale);
   }
-  axis.ticks(options.ticks)
-      .tickSizeInner(options.tickSizeInner)
-      .tickSizeOuter(options.tickSizeOuter)
-      .tickPadding(options.tickPadding)
-      .tickValues(options.tickValues)
-      .tickFormat(options.tickFormat);
+  axis.ticks(ticks.number)
+      .tickSizeInner(ticks.sizeInner)
+      .tickSizeOuter(ticks.sizeOuter)
+      .tickPadding(ticks.padding)
+      .tickValues(ticks.values)
+      .tickFormat(ticks.format);
   return axis;
 };
 
@@ -477,6 +495,8 @@ d3.setAxes = function (container, options) {
   var axisY = options.axisY;
   var orientX = axisX.orient;
   var orientY = axisY.orient;
+  var domainX = axisX.domain;
+  var domainY = axisY.domain;
   var gx = d3.setAxis(options.scaleX, axisX);
   var gy = d3.setAxis(options.scaleY, axisY);
   g.selectAll('.axis')
@@ -515,11 +535,17 @@ d3.setAxes = function (container, options) {
    .selectAll('text')
    .attr('text-anchor', axisX.textAnchor)
    .attr('transform', axisX.transform);
+  g.select('.axis-x')
+   .select('.domain')
+   .attr('stroke-width', domainX.strokeWidth);
   g.selectAll('.axis-y')
    .attr('font-size', axisY.fontSize)
    .selectAll('text')
    .attr('text-anchor', axisY.textAnchor)
    .attr('transform', axisY.transform);
+  g.select('.axis-y')
+   .select('.domain')
+   .attr('stroke-width', domainY.strokeWidth);
 
   // Grid lines
   var gridX = options.gridX;
@@ -622,6 +648,7 @@ d3.setTooltip = function (chart, options) {
 d3.setLegend = function (container, options) {
   if (options.show) {
     var symbol = options.symbol;
+    var symbolShape = symbol.shape;
     var symbolWidth = Math.round(symbol.width);
     var symbolHeight = Math.round(symbol.height);
     var textColor = options.textColor;
@@ -642,14 +669,23 @@ d3.setLegend = function (container, options) {
                           return 'legend-item' + (d.disabled ? ' disabled' : '');
                         })
                         .attr('transform', options.transform);
-
-    item.append('rect')
-        .attr('width', symbolWidth)
-        .attr('height', symbolHeight)
-        .attr('x', 0)
-        .attr('y', function (d, i) {
-          return lineHeight * (i + 1) - symbolHeight;
-        })
+    if (symbolShape === 'circle') {
+      item.append('circle')
+          .attr('cx', symbolWidth / 2)
+          .attr('cy', function (d, i) {
+            return lineHeight * (i + 1) - symbolHeight / 2;
+          })
+          .attr('r', Math.min(symbolWidth, symbolHeight) / 2);
+    } else if (symbolShape === 'rect') {
+      item.append('rect')
+          .attr('width', symbolWidth)
+          .attr('height', symbolHeight)
+          .attr('x', 0)
+          .attr('y', function (d, i) {
+            return lineHeight * (i + 1) - symbolHeight;
+          });
+    }
+    item.select(symbolShape)
         .attr('fill', function (d) {
           return d.disabled ? disabledTextColor : d.color;
         });
@@ -669,7 +705,7 @@ d3.setLegend = function (container, options) {
       var disabled = !d.disabled;
       var item = d3.select(this)
                    .classed('disabled', disabled);
-      item.select('rect')
+      item.select(symbolShape)
           .attr('fill', disabled ? disabledTextColor : d.color);
       item.select('text')
           .attr('fill', disabled ? disabledTextColor : textColor);
@@ -838,6 +874,30 @@ d3.parseGeoData = function (map, options) {
         }
       }
     }
+  }
+  if (options.mixin) {
+    dataset.forEach(function (d) {
+      var value = d[key];
+      var matched = features.some(function (feature) {
+        var property = String(feature[key] || feature.properties[key]);
+        if (value === property) {
+          d.coordinates = feature.geometry.coordinates;
+          return true;
+        }
+        return false;
+      });
+      if (!matched) {
+        features.some(function (feature) {
+          var property = String(feature[key] || feature.properties[key]);
+          if (/^\W/.test(value) && new RegExp(value).test(property)) {
+            d.coordinates = feature.geometry.coordinates;
+            return true;
+          }
+          return false;
+        });
+      }
+    });
+    return dataset;
   }
   return {
     features: features.map(function (feature, index) {

@@ -34,6 +34,7 @@
           <li><a href="./../api/radar-chart.html">Radar Chart</a></li>
           <li><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
           <li><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
+          <li><a href="./../api/bubble-map.html">Bubble Map</a></li>
         </ul>
       </aside>
       <article class="ui-grid-75 ui-mobile-expand">
@@ -51,21 +52,14 @@
 &lt;div id="bar-chart-stacked"&gt;&lt;/div&gt;
 
 &lt;script&gt;
-  d3.json('../data/china-population.json', function (data) {
+  d3.json('../data/china-cities-population.json', function (data) {
     d3.shuffle(data);
     d3.barChart(data, { id: 'bar-chart-default' });
     d3.barChart(data, {
       id: 'bar-chart-stacked',
       stacked: true,
       horizontal: true,
-      axisX: {
-        tickFormat: d3.format('d')
-      },
-      axisY: {
-        tickFormat: null,
-        textAnchor: 'end'
-      },
-      gridX: {
+      gridY: {
         show: true
       },
       tooltip: {
@@ -87,23 +81,16 @@
     <script src="./../dist/prism-1.4.1.min.js"></script>
     <script src="./../dist/ui-schema-0.4.4.min.js"></script>
     <script src="./../dist/d3-4.5.0.min.js"></script>
-    <script src="./../dist/d3-components-0.0.3.min.js"></script>
+    <script src="./../dist/d3-components-0.0.3.js"></script>
     <script>
-      d3.json('../data/china-population.json', function (data) {
+      d3.json('../data/china-cities-population.json', function (data) {
         d3.shuffle(data);
         d3.barChart(data, { id: 'bar-chart-default' });
         d3.barChart(data, {
           id: 'bar-chart-stacked',
           stacked: true,
           horizontal: true,
-          axisX: {
-            tickFormat: d3.format('d')
-          },
-          axisY: {
-            tickFormat: null,
-            textAnchor: 'end'
-          },
-          gridX: {
+          gridY: {
             show: true
           },
           tooltip: {

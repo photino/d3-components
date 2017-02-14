@@ -31,7 +31,8 @@ gulp.task('concat-js', function () {
       'src/js/bubble-chart.js',
       'src/js/radar-chart.js',
       'src/js/sunburst-chart.js',
-      'src/js/choropleth-map.js'
+      'src/js/choropleth-map.js',
+      'src/js/bubble-map.js'
     ])
     .pipe(concat('d3-components-' + version + '.js'))
     .pipe(gulp.dest('dist/'))

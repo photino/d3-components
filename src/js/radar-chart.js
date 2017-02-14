@@ -174,10 +174,9 @@ d3.radarChart = function (data, options) {
                 .context(context);
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var svg = plot.svg;
-    var g = plot.container;
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container');
 
     // Grids
     var grids = options.grids;
@@ -346,5 +345,4 @@ d3.radarChart = function (data, options) {
     d3.setTooltip(chart, tooltip);
 
   }
-
 };

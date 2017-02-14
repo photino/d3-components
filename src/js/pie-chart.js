@@ -105,10 +105,9 @@ d3.pieChart = function (data, options) {
   var arcs = pie(data);
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var svg = plot.svg;
-    var g = plot.container;
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container');
 
     // Slices
     dispatch.on('init.slices', function (data) {
@@ -191,6 +190,7 @@ d3.pieChart = function (data, options) {
     // Load components
     dispatch.call('init', this, arcs);
     dispatch.call('update', this, g.selectAll('.arc'));
+    dispatch.call('finalize', this);
 
   } else if (renderer === 'canvas') {
     context.translate(width / 2, height / 2);
@@ -211,6 +211,4 @@ d3.pieChart = function (data, options) {
       context.closePath();
     }
   }
-
-  dispatch.call('finalize', this);
 };

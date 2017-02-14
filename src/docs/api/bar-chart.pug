@@ -19,21 +19,14 @@ block article
       &lt;div id="bar-chart-stacked"&gt;&lt;/div&gt;
 
       &lt;script&gt;
-        d3.json('../data/china-population.json', function (data) {
+        d3.json('../data/china-cities-population.json', function (data) {
           d3.shuffle(data);
           d3.barChart(data, { id: 'bar-chart-default' });
           d3.barChart(data, {
             id: 'bar-chart-stacked',
             stacked: true,
             horizontal: true,
-            axisX: {
-              tickFormat: d3.format('d')
-            },
-            axisY: {
-              tickFormat: null,
-              textAnchor: 'end'
-            },
-            gridX: {
+            gridY: {
               show: true
             },
             tooltip: {
@@ -47,21 +40,14 @@ block article
 
 block append foot
   script.
-    d3.json('../data/china-population.json', function (data) {
+    d3.json('../data/china-cities-population.json', function (data) {
       d3.shuffle(data);
       d3.barChart(data, { id: 'bar-chart-default' });
       d3.barChart(data, {
         id: 'bar-chart-stacked',
         stacked: true,
         horizontal: true,
-        axisX: {
-          tickFormat: d3.format('d')
-        },
-        axisY: {
-          tickFormat: null,
-          textAnchor: 'end'
-        },
-        gridX: {
+        gridY: {
           show: true
         },
         tooltip: {

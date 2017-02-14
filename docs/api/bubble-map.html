@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html id="api/choropleth-map" lang="en">
+<html id="api/bubble-map" lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Choropleth Map | D3 Components</title>
+    <title>Bubble Map | D3 Components</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="keywords" content="UI, Schema, HTML, CSS, JS, JavaScript, front-end, framework, web development">
     <meta name="description" content="D3-based visualization components">
@@ -33,74 +33,85 @@
           <li><a href="./../api/bubble-chart.html">Bubble Chart</a></li>
           <li><a href="./../api/radar-chart.html">Radar Chart</a></li>
           <li><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
-          <li class="ui-state-active"><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
-          <li><a href="./../api/bubble-map.html">Bubble Map</a></li>
+          <li><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
+          <li class="ui-state-active"><a href="./../api/bubble-map.html">Bubble Map</a></li>
         </ul>
       </aside>
       <article class="ui-grid-75 ui-mobile-expand">
-        <h3 class="ui-header-primary">Choropleth Map</h3>
+        <h3 class="ui-header-primary">Bubble Map</h3>
         <div class="ui-container-grid">
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="choropleth-map-geojson"></div>
+            <div id="bubble-map-default"></div>
           </div>
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="choropleth-map-topojson"></div>
+            <div id="bubble-map-tile"></div>
           </div>
         </div>
         <div>
-          <pre><code class="language-markup">&lt;div id="choropleth-map-geojson"&gt;&lt;/div&gt;
-&lt;div id="choropleth-map-topojson"&gt;&lt;/div&gt;
+          <pre><code class="language-markup">&lt;div id="bubble-map-default"&gt;&lt;/div&gt;
+&lt;div id="bubble-map-tile"&gt;&lt;/div&gt;
 
 &lt;script&gt;
-  d3.json('../dist/maps/china.geo.json', function (geojson) {
-    d3.json('../data/china-provinces-gdp.json', function (data) {
-      d3.shuffle(data);
-      d3.choroplethMap(data, {
-        id: 'choropleth-map-geojson',
-        map: {
-          name: 'china',
-          data: geojson
-        },
-        tile: {
-          show: true,
-          scale: 2048,
-          zoomable: false,
-          image: {
-            href: function (d) {
-              var server = 'https://' + ['a', 'b', 'c', 'd'][Math.random() * 4 | 0] + '.tiles.mapbox.com/v3/mapbox.natural-earth-2/'
-              return server + d[2] + '/' + d[0] + '/' + d[1] + '.png';
-            }
-          }
-        },
-        colorScale: 'scaleSequential',
-        colorScheme: d3.interpolateReds,
-        tooltip: {
-          autoplay: true,
-          carousel: {
-            sort: 'descending(gdp)'
-          }
-        }
-      });
-    });
-  });
-  d3.json('../dist/maps/world.topo.json', function (topojson) {
+  d3.json('../dist/maps/china.geo.json', function (provinces) {
     d3.choroplethMap([], {
-      id: 'choropleth-map-topojson',
+      id: 'bubble-map-default',
       map: {
-        name: 'world',
-        data: topojson,
-        object: 'countries'
+        name: 'china',
+        data: provinces
+      },
+      tooltip: {
+        show: false
+      }
+    });
+    d3.choroplethMap([], {
+      id: 'bubble-map-tile',
+      map: {
+        name: 'china',
+        data: provinces
       },
       tile: {
         show: true,
+        scale: 2048,
         image: {
           href: function (d) {
-            var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
+            var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
             return server + d[2] + '/' + d[1] + '/' + d[0];
           }
         }
       },
-      coloring: 'topological'
+      stroke: 'none',
+      fill: 'none',
+      tooltip: {
+        show: false
+      }
+    });
+    d3.json('../dist/maps/china-cities.geo.json', function (cities) {
+      d3.json('../data/china-cities-gdp.json', function (data) {
+        d3.shuffle(data);
+        d3.bubbleMap(data, {
+          id: 'bubble-map-default',
+          standalone: false,
+          map: {
+            name: 'china',
+            data: cities
+          }
+        });
+        d3.bubbleMap(data, {
+          id: 'bubble-map-tile',
+          standalone: false,
+          map: {
+            name: 'china',
+            data: cities
+          },
+          tile: {
+            show: true,
+            scale: 2048
+          },
+          tooltip: {
+            autoplay: true
+          }
+        });
+      });
     });
   });
 &lt;/script&gt;
@@ -118,57 +129,67 @@
     <script src="./../dist/d3-components-0.0.3.js"></script>
     <script src="../dist/d3-scale-chromatic-1.1.0.min.js"></script>
     <script src="../dist/d3-tile-0.0.3.min.js"></script>
-    <script src="../dist/topojson-2.2.0.min.js"></script>
     <script>
-      d3.json('../dist/maps/china.geo.json', function (geojson) {
-        d3.json('../data/china-provinces-gdp.json', function (data) {
-          d3.shuffle(data);
-          d3.choroplethMap(data, {
-            id: 'choropleth-map-geojson',
-            map: {
-              name: 'china',
-              data: geojson
-            },
-            tile: {
-              show: true,
-              scale: 2048,
-              zoomable: false,
-              image: {
-                href: function (d) {
-                  var server = 'https://' + ['a', 'b', 'c', 'd'][Math.random() * 4 | 0] + '.tiles.mapbox.com/v3/mapbox.natural-earth-2/'
-                  return server + d[2] + '/' + d[0] + '/' + d[1] + '.png';
-                }
-              }
-            },
-            colorScale: 'scaleSequential',
-            colorScheme: d3.interpolateReds,
-            tooltip: {
-              autoplay: true,
-              carousel: {
-                sort: 'descending(gdp)'
-              }
-            }
-          });
-        });
-      });
-      d3.json('../dist/maps/world.topo.json', function (topojson) {
+      d3.json('../dist/maps/china.geo.json', function (provinces) {
         d3.choroplethMap([], {
-          id: 'choropleth-map-topojson',
+          id: 'bubble-map-default',
           map: {
-            name: 'world',
-            data: topojson,
-            object: 'countries'
+            name: 'china',
+            data: provinces
+          },
+          tooltip: {
+            show: false
+          }
+        });
+        d3.choroplethMap([], {
+          id: 'bubble-map-tile',
+          map: {
+            name: 'china',
+            data: provinces
           },
           tile: {
             show: true,
+            scale: 2048,
             image: {
               href: function (d) {
-                var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
+                var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
                 return server + d[2] + '/' + d[1] + '/' + d[0];
               }
             }
           },
-          coloring: 'topological'
+          stroke: 'none',
+          fill: 'none',
+          tooltip: {
+            show: false
+          }
+        });
+        d3.json('../dist/maps/china-cities.geo.json', function (cities) {
+          d3.json('../data/china-cities-gdp.json', function (data) {
+            d3.shuffle(data);
+            d3.bubbleMap(data, {
+              id: 'bubble-map-default',
+              standalone: false,
+              map: {
+                name: 'china',
+                data: cities
+              }
+            });
+            d3.bubbleMap(data, {
+              id: 'bubble-map-tile',
+              standalone: false,
+              map: {
+                name: 'china',
+                data: cities
+              },
+              tile: {
+                show: true,
+                scale: 2048
+              },
+              tooltip: {
+                autoplay: true
+              }
+            });
+          });
         });
       });
     </script>

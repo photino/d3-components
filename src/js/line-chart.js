@@ -60,11 +60,8 @@ d3.lineChart = function (data, options) {
   var lineHeight = options.lineHeight;
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var svg = plot.svg;
-    var g = plot.container;
-
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container');
   }
-
 };

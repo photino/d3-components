@@ -35,10 +35,14 @@ d3.components.bubbleChart = {
   offsetY: [0, 0],
   framed: false,
   axisX: {
-    tickFormat: d3.format('d')
+    ticks: {
+      format: d3.format('d')
+    }
   },
   axisY: {
-    tickFormat: d3.format('d')
+    ticks: {
+      format: d3.format('d')
+    }
   },
   gridX: {
     show: true
@@ -56,6 +60,7 @@ d3.components.bubbleChart = {
   dots: {
     scale: '2%',
     minRadius: 4,
+    maxRadius: Infinity,
     stroke: '#fff',
     opacity: 0.8,
     gradient: false,
@@ -114,12 +119,10 @@ d3.bubbleChart = function (data, options) {
             .range(options.rangeY || [innerHeight, 0]);
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var transform = d3.translate(margin.left, margin.top + options.title.height);
-    var svg = plot.svg;
-    var g = plot.container
-                .attr('transform', transform);
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container')
+               .attr('transform', d3.translate(margin.left, margin.top));
 
     // Set axes and grids
     d3.setAxes(g, {
@@ -161,6 +164,7 @@ d3.bubbleChart = function (data, options) {
     var dots = options.dots;
     var scale = dots.scale;
     var minRadius = dots.minRadius;
+    var maxRadius = dots.maxRadius;
     var opacity = dots.opacity;
     var hue = dots.hue;
     var saturation = dots.saturation;
@@ -177,7 +181,13 @@ d3.bubbleChart = function (data, options) {
                  return y(d.y);
                })
                .attr('r', function (d) {
-                 return Math.sqrt(d.z / zmax) * scale + minRadius;
+                 var r = 0;
+                 if (maxRadius === Infinity || !maxRadius) {
+                   r = Math.sqrt(d.z / zmax) * scale;
+                 } else if (maxRadius > minRadius) {
+                   r = Math.sqrt((d.z - zmin) / (zmax - zmin)) * (maxRadius - minRadius);
+                 }
+                 return r + minRadius;
                })
                .attr('opacity', opacity)
                .attr('stroke', dots.stroke)
@@ -198,20 +208,19 @@ d3.bubbleChart = function (data, options) {
                  return b.z - a.z;
                });
 
-     if (dots.onclick) {
-       dot.attr('cursor', 'pointer')
-          .on('click', function (d) {
-            if (typeof dots.onclick === 'function') {
-              dots.onclick(d);
-            }
-          });
-     }
+    if (dots.onclick) {
+      dot.attr('cursor', 'pointer')
+         .on('click', function (d) {
+           if (typeof dots.onclick === 'function') {
+             dots.onclick(d);
+           }
+         });
+    }
 
-     // Create the tooltip
-     var tooltip = options.tooltip;
-     tooltip.hoverTarget = dot;
-     d3.setTooltip(chart, tooltip);
+    // Create the tooltip
+    var tooltip = options.tooltip;
+    tooltip.hoverTarget = dot;
+    d3.setTooltip(chart, tooltip);
 
   }
-
 };

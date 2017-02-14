@@ -9,6 +9,7 @@ d3.components = {};
 d3.defaultOptions = {
   id: 'chart',
   renderer: 'svg',
+  standalone: true,
   responsive: true,
   width: 300,
   aspectRatio: 0.618034,
@@ -63,10 +64,11 @@ d3.defaultOptions = {
       interval: 2000
     },
     symbol: {
-      width: '1.294427em',
+      shape: 'circle',
+      width: '0.8em',
       height: '0.8em'
     },
-    dx: '0.5em',
+    dx: '0.4em',
     transform: 'scale(0.85)',
     lineHeight: '1.6em',
     textColor: '#333',
@@ -74,18 +76,28 @@ d3.defaultOptions = {
   },
   axisX: {
     orient: 'bottom',
-    ticks: 8,
-    tickSizeInner: 6,
-    tickSizeOuter: 0,
-    tickPadding: 4,
+    ticks: {
+      number: 8,
+      sizeInner: 6,
+      sizeOuter: 0,
+      padding: 4
+    },
+    domain: {
+      strokeWidth: 1
+    },
     fontSize: '0.85em'
   },
   axisY: {
     orient: 'left',
-    ticks: 6,
-    tickSizeInner: 6,
-    tickSizeOuter: 0,
-    tickPadding: 4,
+    ticks: {
+      number: 6,
+      sizeInner: 6,
+      sizeOuter: 0,
+      padding: 4
+    },
+    domain: {
+      strokeWidth: 1
+    },
     fontSize: '0.85em'
   },
   gridX: {
@@ -385,6 +397,12 @@ d3.regularPolygon = function (n, r) {
 
 // Create a plot
 d3.createPlot = function (chart, options) {
+  // Return the chart if it exists
+  if (!options.standalone) {
+    return d3.select(chart)
+             .select('svg');
+  }
+
   // Create the `svg` element
   var width = options.width;
   var height = options.height;
@@ -397,6 +415,7 @@ d3.createPlot = function (chart, options) {
   var titleHeight = 0;
   var title = options.title;
   if (title.show) {
+    var margin = options.margin;
     var t = svg.append('text')
                .attr('class', 'title')
                .attr('x', title.x)
@@ -410,8 +429,10 @@ d3.createPlot = function (chart, options) {
                .call(d3.wrapText, title);
     var lines = Math.ceil(t.node().getComputedTextLength() / title.wrapWidth);
     titleHeight = lines * title.lineHeight;
+    margin.top += titleHeight;
   }
   title.height = titleHeight;
+
 
   // Create the container
   var transform = d3.translate(width / 2, height / 2 + titleHeight);
@@ -421,11 +442,7 @@ d3.createPlot = function (chart, options) {
              .attr('transform', transform)
              .attr('stroke', options.stroke)
              .attr('stroke-width', options.strokeWidth);
-
-  return {
-    svg: svg,
-    container: g
-  };
+  return svg;
 };
 
 // Get the position relative to the container
@@ -452,6 +469,7 @@ d3.getPosition = function (selection, container) {
 d3.setAxis = function (scale, options) {
   var axis = d3.axisBottom(scale);
   var orient = options.orient;
+  var ticks = options.ticks;
   if (orient === 'top') {
     axis = d3.axisTop(scale);
   } else if (orient === 'left') {
@@ -459,12 +477,12 @@ d3.setAxis = function (scale, options) {
   } else if (orient === 'right') {
     axis = d3.axisRight(scale);
   }
-  axis.ticks(options.ticks)
-      .tickSizeInner(options.tickSizeInner)
-      .tickSizeOuter(options.tickSizeOuter)
-      .tickPadding(options.tickPadding)
-      .tickValues(options.tickValues)
-      .tickFormat(options.tickFormat);
+  axis.ticks(ticks.number)
+      .tickSizeInner(ticks.sizeInner)
+      .tickSizeOuter(ticks.sizeOuter)
+      .tickPadding(ticks.padding)
+      .tickValues(ticks.values)
+      .tickFormat(ticks.format);
   return axis;
 };
 
@@ -477,6 +495,8 @@ d3.setAxes = function (container, options) {
   var axisY = options.axisY;
   var orientX = axisX.orient;
   var orientY = axisY.orient;
+  var domainX = axisX.domain;
+  var domainY = axisY.domain;
   var gx = d3.setAxis(options.scaleX, axisX);
   var gy = d3.setAxis(options.scaleY, axisY);
   g.selectAll('.axis')
@@ -515,11 +535,17 @@ d3.setAxes = function (container, options) {
    .selectAll('text')
    .attr('text-anchor', axisX.textAnchor)
    .attr('transform', axisX.transform);
+  g.select('.axis-x')
+   .select('.domain')
+   .attr('stroke-width', domainX.strokeWidth);
   g.selectAll('.axis-y')
    .attr('font-size', axisY.fontSize)
    .selectAll('text')
    .attr('text-anchor', axisY.textAnchor)
    .attr('transform', axisY.transform);
+  g.select('.axis-y')
+   .select('.domain')
+   .attr('stroke-width', domainY.strokeWidth);
 
   // Grid lines
   var gridX = options.gridX;
@@ -622,6 +648,7 @@ d3.setTooltip = function (chart, options) {
 d3.setLegend = function (container, options) {
   if (options.show) {
     var symbol = options.symbol;
+    var symbolShape = symbol.shape;
     var symbolWidth = Math.round(symbol.width);
     var symbolHeight = Math.round(symbol.height);
     var textColor = options.textColor;
@@ -642,14 +669,23 @@ d3.setLegend = function (container, options) {
                           return 'legend-item' + (d.disabled ? ' disabled' : '');
                         })
                         .attr('transform', options.transform);
-
-    item.append('rect')
-        .attr('width', symbolWidth)
-        .attr('height', symbolHeight)
-        .attr('x', 0)
-        .attr('y', function (d, i) {
-          return lineHeight * (i + 1) - symbolHeight;
-        })
+    if (symbolShape === 'circle') {
+      item.append('circle')
+          .attr('cx', symbolWidth / 2)
+          .attr('cy', function (d, i) {
+            return lineHeight * (i + 1) - symbolHeight / 2;
+          })
+          .attr('r', Math.min(symbolWidth, symbolHeight) / 2);
+    } else if (symbolShape === 'rect') {
+      item.append('rect')
+          .attr('width', symbolWidth)
+          .attr('height', symbolHeight)
+          .attr('x', 0)
+          .attr('y', function (d, i) {
+            return lineHeight * (i + 1) - symbolHeight;
+          });
+    }
+    item.select(symbolShape)
         .attr('fill', function (d) {
           return d.disabled ? disabledTextColor : d.color;
         });
@@ -669,7 +705,7 @@ d3.setLegend = function (container, options) {
       var disabled = !d.disabled;
       var item = d3.select(this)
                    .classed('disabled', disabled);
-      item.select('rect')
+      item.select(symbolShape)
           .attr('fill', disabled ? disabledTextColor : d.color);
       item.select('text')
           .attr('fill', disabled ? disabledTextColor : textColor);
@@ -839,6 +875,30 @@ d3.parseGeoData = function (map, options) {
       }
     }
   }
+  if (options.mixin) {
+    dataset.forEach(function (d) {
+      var value = d[key];
+      var matched = features.some(function (feature) {
+        var property = String(feature[key] || feature.properties[key]);
+        if (value === property) {
+          d.coordinates = feature.geometry.coordinates;
+          return true;
+        }
+        return false;
+      });
+      if (!matched) {
+        features.some(function (feature) {
+          var property = String(feature[key] || feature.properties[key]);
+          if (/^\W/.test(value) && new RegExp(value).test(property)) {
+            d.coordinates = feature.geometry.coordinates;
+            return true;
+          }
+          return false;
+        });
+      }
+    });
+    return dataset;
+  }
   return {
     features: features.map(function (feature, index) {
       var property = String(feature[key] || feature.properties[key] || index);
@@ -931,9 +991,6 @@ d3.components.barChart = {
   paddingMidst: 0,
   align: 0.5,
   framed: false,
-  axisY: {
-    tickFormat: d3.format('d')
-  },
   labelX: {
     show: false,
     text: 'X',
@@ -993,13 +1050,8 @@ d3.barChart = function (data, options) {
   var dataset = [];
 
   // Coordinates and scales
-  var x = d3.scaleBand()
-            .paddingInner(options.paddingInner)
-            .paddingOuter(options.paddingOuter)
-            .rangeRound([0, innerWidth])
-            .align(options.align);
-  var y = d3.scaleLinear()
-            .rangeRound([innerHeight, 0]);
+  var x = null;
+  var y = null;
   if (options.horizontal) {
     x = d3.scaleLinear()
           .rangeRound([0, innerWidth]);
@@ -1008,15 +1060,21 @@ d3.barChart = function (data, options) {
           .paddingOuter(options.paddingOuter)
           .rangeRound([innerHeight, 0])
           .align(options.align);
+  } else {
+    x = d3.scaleBand()
+          .paddingInner(options.paddingInner)
+          .paddingOuter(options.paddingOuter)
+          .rangeRound([0, innerWidth])
+          .align(options.align);
+    y = d3.scaleLinear()
+          .rangeRound([innerHeight, 0]);
   }
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var transform = d3.translate(margin.left, margin.top + options.title.height);
-    var svg = plot.svg;
-    var g = plot.container
-                .attr('transform', transform);
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container')
+               .attr('transform', d3.translate(margin.left, margin.top));
 
     // Process data
     var colors = d3.scaleOrdinal(colorScheme);
@@ -1165,13 +1223,24 @@ d3.barChart = function (data, options) {
 
     // Axes
     dispatch.on('init.axes', function (data) {
+      var axisX = options.axisX;
+      var axisY = options.axisY;
+      if (options.horizontal) {
+        if (axisX.ticks.format === undefined) {
+          axisX.ticks.format = d3.format('d');
+        }
+      } else {
+        if (axisY.ticks.format === undefined) {
+          axisY.ticks.format = d3.format('d');
+        }
+      }
       d3.setAxes(g, {
         width: innerWidth,
         height: innerHeight,
         scaleX: x,
         scaleY: y,
-        axisX: options.axisX,
-        axisY: options.axisY,
+        axisX: axisX,
+        axisY: axisY,
         gridX: options.gridX,
         gridY: options.gridY,
         framed: options.framed
@@ -1218,7 +1287,6 @@ d3.barChart = function (data, options) {
     dispatch.call('finalize', this);
 
   }
-
 };
 
 /*!
@@ -1328,10 +1396,9 @@ d3.pieChart = function (data, options) {
   var arcs = pie(data);
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var svg = plot.svg;
-    var g = plot.container;
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container');
 
     // Slices
     dispatch.on('init.slices', function (data) {
@@ -1414,6 +1481,7 @@ d3.pieChart = function (data, options) {
     // Load components
     dispatch.call('init', this, arcs);
     dispatch.call('update', this, g.selectAll('.arc'));
+    dispatch.call('finalize', this);
 
   } else if (renderer === 'canvas') {
     context.translate(width / 2, height / 2);
@@ -1434,8 +1502,6 @@ d3.pieChart = function (data, options) {
       context.closePath();
     }
   }
-
-  dispatch.call('finalize', this);
 };
 
 /*!
@@ -1500,13 +1566,10 @@ d3.lineChart = function (data, options) {
   var lineHeight = options.lineHeight;
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var svg = plot.svg;
-    var g = plot.container;
-
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container');
   }
-
 };
 
 /*!
@@ -1546,10 +1609,14 @@ d3.components.bubbleChart = {
   offsetY: [0, 0],
   framed: false,
   axisX: {
-    tickFormat: d3.format('d')
+    ticks: {
+      format: d3.format('d')
+    }
   },
   axisY: {
-    tickFormat: d3.format('d')
+    ticks: {
+      format: d3.format('d')
+    }
   },
   gridX: {
     show: true
@@ -1567,6 +1634,7 @@ d3.components.bubbleChart = {
   dots: {
     scale: '2%',
     minRadius: 4,
+    maxRadius: Infinity,
     stroke: '#fff',
     opacity: 0.8,
     gradient: false,
@@ -1625,12 +1693,10 @@ d3.bubbleChart = function (data, options) {
             .range(options.rangeY || [innerHeight, 0]);
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var transform = d3.translate(margin.left, margin.top + options.title.height);
-    var svg = plot.svg;
-    var g = plot.container
-                .attr('transform', transform);
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container')
+               .attr('transform', d3.translate(margin.left, margin.top));
 
     // Set axes and grids
     d3.setAxes(g, {
@@ -1672,6 +1738,7 @@ d3.bubbleChart = function (data, options) {
     var dots = options.dots;
     var scale = dots.scale;
     var minRadius = dots.minRadius;
+    var maxRadius = dots.maxRadius;
     var opacity = dots.opacity;
     var hue = dots.hue;
     var saturation = dots.saturation;
@@ -1688,7 +1755,13 @@ d3.bubbleChart = function (data, options) {
                  return y(d.y);
                })
                .attr('r', function (d) {
-                 return Math.sqrt(d.z / zmax) * scale + minRadius;
+                 var r = 0;
+                 if (maxRadius === Infinity || !maxRadius) {
+                   r = Math.sqrt(d.z / zmax) * scale;
+                 } else if (maxRadius > minRadius) {
+                   r = Math.sqrt((d.z - zmin) / (zmax - zmin)) * (maxRadius - minRadius);
+                 }
+                 return r + minRadius;
                })
                .attr('opacity', opacity)
                .attr('stroke', dots.stroke)
@@ -1709,22 +1782,21 @@ d3.bubbleChart = function (data, options) {
                  return b.z - a.z;
                });
 
-     if (dots.onclick) {
-       dot.attr('cursor', 'pointer')
-          .on('click', function (d) {
-            if (typeof dots.onclick === 'function') {
-              dots.onclick(d);
-            }
-          });
-     }
+    if (dots.onclick) {
+      dot.attr('cursor', 'pointer')
+         .on('click', function (d) {
+           if (typeof dots.onclick === 'function') {
+             dots.onclick(d);
+           }
+         });
+    }
 
-     // Create the tooltip
-     var tooltip = options.tooltip;
-     tooltip.hoverTarget = dot;
-     d3.setTooltip(chart, tooltip);
+    // Create the tooltip
+    var tooltip = options.tooltip;
+    tooltip.hoverTarget = dot;
+    d3.setTooltip(chart, tooltip);
 
   }
-
 };
 
 /*!
@@ -1903,10 +1975,9 @@ d3.radarChart = function (data, options) {
                 .context(context);
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var svg = plot.svg;
-    var g = plot.container;
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container');
 
     // Grids
     var grids = options.grids;
@@ -2075,7 +2146,6 @@ d3.radarChart = function (data, options) {
     d3.setTooltip(chart, tooltip);
 
   }
-
 };
 
 /*!
@@ -2187,10 +2257,9 @@ d3.sunburstChart = function (data, options) {
               .context(context);
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var svg = plot.svg;
-    var g = plot.container;
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container');
 
     // Create the `path` elements
     var colors = d3.scaleOrdinal(colorScheme);
@@ -2235,9 +2304,7 @@ d3.sunburstChart = function (data, options) {
     var tooltip = options.tooltip;
     tooltip.hoverTarget = slice;
     d3.setTooltip(chart, tooltip);
-
   }
-
 };
 
 /*!
@@ -2257,8 +2324,14 @@ d3.components.choroplethMap = {
         type: 'string',
         mappings: [
           'adcode',
+          'city',
           'code',
-          'name'
+          'county',
+          'country',
+          'district',
+          'name',
+          'province',
+          'state'
         ]
       },
       {
@@ -2347,8 +2420,8 @@ d3.choroplethMap = function (data, options) {
   // Domain
   var domain = options.domain || [];
   var extent = d3.extent(data, function (d) { return d.value; });
-  var min = domain[0] || extent[0];
-  var max = domain[1] || extent[1];
+  var min = domain[0] || extent[0] || 0;
+  var max = domain[1] || extent[1] || 1;
 
   // Create geo projection
   var map = options.map;
@@ -2374,7 +2447,7 @@ d3.choroplethMap = function (data, options) {
                .projection(projection);
 
   // Parse geo data
-  var geo = d3.parseGeoData(map, { neighbors: true, data: data });
+  var geo = d3.parseGeoData(map, { data: data, neighbors: true });
   var features = geo.features;
   var neighbors = geo.neighbors;
 
@@ -2398,10 +2471,9 @@ d3.choroplethMap = function (data, options) {
   }
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var svg = plot.svg;
-    var g = plot.container;
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container');
 
     // Tiles
     if (tile.show && d3.tile) {
@@ -2419,12 +2491,19 @@ d3.choroplethMap = function (data, options) {
                      d3.imageTiles(svg.select('.tile'), tile);
                      projection.scale(tile.scale / (2 * Math.PI))
                                .translate(tile.translate);
-                     svg.selectAll('.region')
-                        .attr('d', path);
+                     g.selectAll('.region')
+                      .attr('d', path);
+                     g.selectAll('.dot')
+                      .attr('cx', function (d) {
+                        return projection(d.coordinates)[0]
+                      })
+                      .attr('cy', function (d) {
+                        return projection(d.coordinates)[1]
+                      });
                    });
+      g.attr('transform', d3.translate(0, 0));
       svg.insert('g', ':first-child')
          .attr('class', 'tile');
-      g.attr('transform', d3.translate(0, 0));
       svg.call(zoom)
          .call(zoom.transform, transform);
       if (tile.zoomable === false) {
@@ -2445,13 +2524,18 @@ d3.choroplethMap = function (data, options) {
     }
 
     // Regions
-    var region = g.selectAll('.region')
+    var region = g.append('g')
+                  .attr('class', 'layer')
+                  .selectAll('.region')
                   .data(features)
                   .enter()
                   .append('path')
                   .attr('class', 'region')
                   .attr('d', path)
                   .attr('fill', function (d, i) {
+                    if (d.color) {
+                      return d.color;
+                    }
                     if (fill === 'none') {
                       return fill;
                     }
@@ -2511,6 +2595,13 @@ d3.choroplethMap = function (data, options) {
                       .attr('d', path);
                      g.selectAll('.region')
                       .attr('d', path);
+                     g.selectAll('.dot')
+                      .attr('cx', function (d) {
+                        return projection(d.coordinates)[0]
+                      })
+                      .attr('cy', function (d) {
+                        return projection(d.coordinates)[1]
+                      });
                      g.selectAll('.label')
                       .attr('x', function (d) {
                         d.center = path.centroid(d);
@@ -2530,5 +2621,205 @@ d3.choroplethMap = function (data, options) {
     d3.setTooltip(chart, tooltip);
 
   }
+};
 
+/*!
+ * Bubble Map
+ */
+
+// Register a chart type
+d3.components.bubbleMap = {
+  type: 'bubble map',
+  schema: {
+    type: 'object',
+    entries: [
+      {
+        key: 'id',
+        type: 'string',
+        mappings: [
+          'adcode',
+          'city',
+          'code',
+          'county',
+          'country',
+          'district',
+          'name',
+          'province',
+          'state'
+        ]
+      },
+      {
+        key: 'value',
+        type: 'number',
+        mappings: [
+          'count',
+          'percentage',
+          'ratio'
+        ]
+      },
+      {
+        key: 'lng',
+        type: 'number',
+        mappings: [
+          'lon',
+          'longitude'
+        ]
+      },
+      {
+        key: 'lat',
+        type: 'number',
+        mappings: [
+          'latitude'
+        ]
+      }
+    ]
+  },
+  sort: null,
+  projection: 'geoMercator',
+  tile: {
+    show: false,
+    scale: 512
+  },
+  dots: {
+    scale: '1%',
+    minRadius: 2,
+    maxRadius: Infinity,
+    stroke: '#fff',
+    opacity: 0.8
+  },
+  labels: {
+    show: false
+  },
+  tooltip: {
+    html: function (d) {
+      return d.id + ': ' + d.value;
+    }
+  }
+};
+
+// Bubble map
+d3.bubbleMap = function (data, options) {
+  // Parse plotting data and options
+  data = d3.parseData('bubbleMap', data);
+  options = d3.parseOptions('bubbleMap', options);
+
+  // Register callbacks
+  var dispatch = d3.dispatch('init', 'update', 'finalize');
+
+  // Use the options
+  var chart = options.chart;
+  var renderer = options.renderer;
+  var context = options.context;
+  var width = options.width;
+  var height = options.height;
+  var stroke = options.stroke;
+  var strokeWidth = options.strokeWidth;
+  var colorScheme = options.colorScheme;
+  var fontSize = options.fontSize;
+  var lineHeight = options.lineHeight;
+
+  // Domain
+  var domain = options.domain || [];
+  var extent = d3.extent(data, function (d) { return d.value; });
+  var min = domain[0] || extent[0] || 0;
+  var max = domain[1] || extent[1] || 1;
+
+  // Create geo projection
+  var map = options.map;
+  var tile = options.tile;
+  var projection = d3.geoMercator();
+  if (tile.show && d3.tile) {
+    tile.size = [width, height];
+    tile.center = tile.center || map.center;
+    tile.scale = Math.max(tile.scale, width);
+    projection.scale(1 / (2 * Math.PI))
+              .translate([0, 0])
+              .center([0, 0]);
+  } else {
+    projection = d3[options.projection]()
+                   .scale(height * map.scale)
+                   .translate(map.translate || [0, 0])
+                   .center(map.center);
+  }
+
+  // Parse geo data
+  data = d3.parseGeoData(map, { data: data, mixin: true });
+
+  if (renderer === 'svg') {
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container');
+
+    // Tiles
+    if (tile.show && d3.tile) {
+      var center = projection(tile.center);
+      var transform = d3.zoomIdentity
+                        .translate(width / 2, height / 2)
+                        .scale(tile.scale)
+                        .translate(-center[0], -center[1]);
+      var zoom = d3.zoom()
+                   .on('zoom', function () {
+                     var transform = d3.event.transform;
+                     tile.scale = transform.k;
+                     tile.translate = [transform.x, transform.y];
+                     projection.scale(tile.scale / (2 * Math.PI))
+                               .translate(tile.translate);
+                     g.selectAll('.dot')
+                      .attr('cx', function (d) {
+                        return projection(d.coordinates)[0]
+                      })
+                      .attr('cy', function (d) {
+                        return projection(d.coordinates)[1]
+                      });
+                   });
+      g.call(zoom)
+       .call(zoom.transform, transform);
+      zoom.on('zoom', null);
+    }
+
+    // Circles
+    var colors = d3.scaleOrdinal(colorScheme);
+    var dots = options.dots;
+    var scale = dots.scale;
+    var minRadius = dots.minRadius;
+    var maxRadius = dots.maxRadius;
+    var circle = g.append('g')
+                  .attr('class', 'layer')
+                  .attr('stroke', dots.stroke)
+                  .attr('opacity', dots.opacity)
+                  .selectAll('.dot')
+                  .data(data)
+                  .enter()
+                  .append('circle')
+                  .attr('class', 'dot')
+                  .each(function (d) {
+                    d.coordinates = d.coordinates || [d.lng, d.lat];
+                  })
+                  .attr('cx', function (d) {
+                    return projection(d.coordinates)[0]
+                  })
+                  .attr('cy', function (d) {
+                    return projection(d.coordinates)[1]
+                  })
+                  .attr('r', function (d) {
+                    var r = 0;
+                    if (maxRadius === Infinity || !maxRadius) {
+                      r = Math.sqrt(d.value / max) * scale;
+                    } else if (maxRadius > minRadius) {
+                      r = Math.sqrt((d.value - min) / (max - min)) * (maxRadius - minRadius);
+                    }
+                    return r + minRadius;
+                  })
+                  .attr('fill', function (d) {
+                    return colors(d.value);
+                  })
+                  .sort(function (a, b) {
+                    return b.value - a.value;
+                  });
+
+    // Tooltip
+    var tooltip = options.tooltip;
+    tooltip.hoverTarget = circle;
+    d3.setTooltip(chart, tooltip);
+  }
 };

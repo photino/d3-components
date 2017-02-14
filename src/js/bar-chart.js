@@ -47,9 +47,6 @@ d3.components.barChart = {
   paddingMidst: 0,
   align: 0.5,
   framed: false,
-  axisY: {
-    tickFormat: d3.format('d')
-  },
   labelX: {
     show: false,
     text: 'X',
@@ -109,13 +106,8 @@ d3.barChart = function (data, options) {
   var dataset = [];
 
   // Coordinates and scales
-  var x = d3.scaleBand()
-            .paddingInner(options.paddingInner)
-            .paddingOuter(options.paddingOuter)
-            .rangeRound([0, innerWidth])
-            .align(options.align);
-  var y = d3.scaleLinear()
-            .rangeRound([innerHeight, 0]);
+  var x = null;
+  var y = null;
   if (options.horizontal) {
     x = d3.scaleLinear()
           .rangeRound([0, innerWidth]);
@@ -124,15 +116,21 @@ d3.barChart = function (data, options) {
           .paddingOuter(options.paddingOuter)
           .rangeRound([innerHeight, 0])
           .align(options.align);
+  } else {
+    x = d3.scaleBand()
+          .paddingInner(options.paddingInner)
+          .paddingOuter(options.paddingOuter)
+          .rangeRound([0, innerWidth])
+          .align(options.align);
+    y = d3.scaleLinear()
+          .rangeRound([innerHeight, 0]);
   }
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var transform = d3.translate(margin.left, margin.top + options.title.height);
-    var svg = plot.svg;
-    var g = plot.container
-                .attr('transform', transform);
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container')
+               .attr('transform', d3.translate(margin.left, margin.top));
 
     // Process data
     var colors = d3.scaleOrdinal(colorScheme);
@@ -281,13 +279,24 @@ d3.barChart = function (data, options) {
 
     // Axes
     dispatch.on('init.axes', function (data) {
+      var axisX = options.axisX;
+      var axisY = options.axisY;
+      if (options.horizontal) {
+        if (axisX.ticks.format === undefined) {
+          axisX.ticks.format = d3.format('d');
+        }
+      } else {
+        if (axisY.ticks.format === undefined) {
+          axisY.ticks.format = d3.format('d');
+        }
+      }
       d3.setAxes(g, {
         width: innerWidth,
         height: innerHeight,
         scaleX: x,
         scaleY: y,
-        axisX: options.axisX,
-        axisY: options.axisY,
+        axisX: axisX,
+        axisY: axisY,
         gridX: options.gridX,
         gridY: options.gridY,
         framed: options.framed
@@ -334,5 +343,4 @@ d3.barChart = function (data, options) {
     dispatch.call('finalize', this);
 
   }
-
 };

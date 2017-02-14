@@ -1,0 +1,135 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.473701,
+          31.230416
+        ]
+      },
+      "properties": {
+        "name": "上海市"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.407526,
+          39.90403
+        ]
+      },
+      "properties": {
+        "name": "北京市"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.264434,
+          23.129162
+        ]
+      },
+      "properties": {
+        "name": "广州市"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.057868,
+          22.543099
+        ]
+      },
+      "properties": {
+        "name": "深圳市"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.200983,
+          39.084158
+        ]
+      },
+      "properties": {
+        "name": "天津市"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.551556,
+          29.563009
+        ]
+      },
+      "properties": {
+        "name": "重庆市"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.585315,
+          31.298886
+        ]
+      },
+      "properties": {
+        "name": "苏州市"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.066541,
+          30.572269
+        ]
+      },
+      "properties": {
+        "name": "成都市"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.305392,
+          30.593098
+        ]
+      },
+      "properties": {
+        "name": "武汉市"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.155070,
+          30.274084
+        ]
+      },
+      "properties": {
+        "name": "杭州市"
+      }
+    }
+  ]
+}

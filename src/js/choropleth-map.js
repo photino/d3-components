@@ -15,8 +15,14 @@ d3.components.choroplethMap = {
         type: 'string',
         mappings: [
           'adcode',
+          'city',
           'code',
-          'name'
+          'county',
+          'country',
+          'district',
+          'name',
+          'province',
+          'state'
         ]
       },
       {
@@ -105,8 +111,8 @@ d3.choroplethMap = function (data, options) {
   // Domain
   var domain = options.domain || [];
   var extent = d3.extent(data, function (d) { return d.value; });
-  var min = domain[0] || extent[0];
-  var max = domain[1] || extent[1];
+  var min = domain[0] || extent[0] || 0;
+  var max = domain[1] || extent[1] || 1;
 
   // Create geo projection
   var map = options.map;
@@ -132,7 +138,7 @@ d3.choroplethMap = function (data, options) {
                .projection(projection);
 
   // Parse geo data
-  var geo = d3.parseGeoData(map, { neighbors: true, data: data });
+  var geo = d3.parseGeoData(map, { data: data, neighbors: true });
   var features = geo.features;
   var neighbors = geo.neighbors;
 
@@ -156,10 +162,9 @@ d3.choroplethMap = function (data, options) {
   }
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var svg = plot.svg;
-    var g = plot.container;
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container');
 
     // Tiles
     if (tile.show && d3.tile) {
@@ -177,12 +182,19 @@ d3.choroplethMap = function (data, options) {
                      d3.imageTiles(svg.select('.tile'), tile);
                      projection.scale(tile.scale / (2 * Math.PI))
                                .translate(tile.translate);
-                     svg.selectAll('.region')
-                        .attr('d', path);
+                     g.selectAll('.region')
+                      .attr('d', path);
+                     g.selectAll('.dot')
+                      .attr('cx', function (d) {
+                        return projection(d.coordinates)[0]
+                      })
+                      .attr('cy', function (d) {
+                        return projection(d.coordinates)[1]
+                      });
                    });
+      g.attr('transform', d3.translate(0, 0));
       svg.insert('g', ':first-child')
          .attr('class', 'tile');
-      g.attr('transform', d3.translate(0, 0));
       svg.call(zoom)
          .call(zoom.transform, transform);
       if (tile.zoomable === false) {
@@ -203,13 +215,18 @@ d3.choroplethMap = function (data, options) {
     }
 
     // Regions
-    var region = g.selectAll('.region')
+    var region = g.append('g')
+                  .attr('class', 'layer')
+                  .selectAll('.region')
                   .data(features)
                   .enter()
                   .append('path')
                   .attr('class', 'region')
                   .attr('d', path)
                   .attr('fill', function (d, i) {
+                    if (d.color) {
+                      return d.color;
+                    }
                     if (fill === 'none') {
                       return fill;
                     }
@@ -269,6 +286,13 @@ d3.choroplethMap = function (data, options) {
                       .attr('d', path);
                      g.selectAll('.region')
                       .attr('d', path);
+                     g.selectAll('.dot')
+                      .attr('cx', function (d) {
+                        return projection(d.coordinates)[0]
+                      })
+                      .attr('cy', function (d) {
+                        return projection(d.coordinates)[1]
+                      });
                      g.selectAll('.label')
                       .attr('x', function (d) {
                         d.center = path.centroid(d);
@@ -288,5 +312,4 @@ d3.choroplethMap = function (data, options) {
     d3.setTooltip(chart, tooltip);
 
   }
-
 };

@@ -107,10 +107,9 @@ d3.sunburstChart = function (data, options) {
               .context(context);
 
   if (renderer === 'svg') {
-    // Create the plot
-    var plot = d3.createPlot(chart, options);
-    var svg = plot.svg;
-    var g = plot.container;
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container');
 
     // Create the `path` elements
     var colors = d3.scaleOrdinal(colorScheme);
@@ -155,7 +154,5 @@ d3.sunburstChart = function (data, options) {
     var tooltip = options.tooltip;
     tooltip.hoverTarget = slice;
     d3.setTooltip(chart, tooltip);
-
   }
-
 };
