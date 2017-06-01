@@ -73,6 +73,7 @@
       },
       dots: {
         gradient: true,
+        normalize: 'linear',
         onclick: function (d) {
           window.open('http://arxitics.com/search?q="topological+insulator"&amp;published=' + d.year);
         }
@@ -96,10 +97,10 @@
     <footer class="ui-container-fluid">
       <address class="ui-text-muted ui-mobile-expand"><span>&copy; 2016&ndash;2017 Zan Pan &nbsp;</span><span>Code licensed under <a href="https://github.com/photino/d3-components/blob/master/LICENSE" rel="external" target="_blank">MIT</a>, documentation under <a href="http://creativecommons.org/licenses/by-sa/4.0" rel="external" target="_blank">CC BY-SA 4.0</a>.</span></address>
     </footer>
-    <script src="./../dist/jquery-3.1.1.min.js"></script>
+    <script src="./../dist/jquery-3.2.1.min.js"></script>
     <script src="./../dist/prism-1.4.1.min.js"></script>
     <script src="./../dist/ui-schema-0.4.4.min.js"></script>
-    <script src="./../dist/d3-4.5.0.min.js"></script>
+    <script src="./../dist/d3-4.9.1.min.js"></script>
     <script src="./../dist/d3-components-0.0.3.js"></script>
     <script>
       d3.json('../data/arxiv-keywords.json', function (data) {
@@ -123,6 +124,7 @@
           },
           dots: {
             gradient: true,
+            normalize: 'linear',
             onclick: function (d) {
               window.open('http://arxitics.com/search?q="topological+insulator"&amp;published=' + d.year);
             }
