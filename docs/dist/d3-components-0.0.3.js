@@ -112,6 +112,46 @@ d3.defaultOptions = {
   }
 };
 
+// Create a chart
+d3.createChart = function (chart) {
+  if (d3.type(chart) === 'object') {
+    var plot = d3[chart.type];
+    if (d3.type(plot) === 'function') {
+      if (chart.reload === true) {
+        var interval = Number(chart.interval);
+        chart.reload = false;
+        d3.interval(function () {
+          d3.createChart(chart);
+        }, interval);
+      } else {
+        var data = chart.data;
+        var options = chart.options;
+        var dataType = d3.type(data);
+        if (dataType === 'string') {
+          d3.json(data, function (object) {
+            return plot(object, options);
+          });
+        } else if (dataType === 'object' && data.api) {
+          var type = data.type;
+          var api = data.api;
+          if (type === 'json') {
+            d3.json(api, function (object) {
+              return plot(object, options);
+            });
+          } else if (type === 'csv') {
+            var row = data.row || function (d) { return d; };
+            d3.csv(api, row, function (object) {
+              return plot(object, options);
+            });
+          }
+        } else {
+          return plot(data, options);
+        }
+      }
+    }
+  }
+};
+
 // Parse plotting data
 d3.parseData = function (plot, data) {
   var component = d3.components[plot];
@@ -399,8 +439,11 @@ d3.regularPolygon = function (n, r) {
 d3.createPlot = function (chart, options) {
   // Return the chart if it exists
   if (!options.standalone) {
-    return d3.select(chart)
-             .select('svg');
+    var svg = d3.select(chart)
+                .select('svg');
+    if (svg.node() !== null) {
+      return svg;
+    }
   }
 
   // Create the `svg` element
@@ -646,6 +689,8 @@ d3.setTooltip = function (chart, options) {
 
 // Set the legend
 d3.setLegend = function (container, options) {
+  container.select('.legend')
+           .remove();
   if (options.show) {
     var symbol = options.symbol;
     var symbolShape = symbol.shape;
@@ -1281,7 +1326,6 @@ d3.barChart = function (data, options) {
       d3.setLegend(g, legend);
     });
 
-    // Load components
     dispatch.call('init', this, data);
     dispatch.call('update', this, g.select('.layout'));
     dispatch.call('finalize', this);
@@ -1635,6 +1679,7 @@ d3.components.bubbleChart = {
     scale: '2%',
     minRadius: 4,
     maxRadius: Infinity,
+    normalize: 'sqrt',
     stroke: '#fff',
     opacity: 0.8,
     gradient: false,
@@ -1690,7 +1735,8 @@ d3.bubbleChart = function (data, options) {
             .range(options.rangeX || [0, innerWidth]);
   var y = d3.scaleLinear()
             .domain(options.domainY || [ymin - offsetY[0], ymax + offsetY[1]])
-            .range(options.rangeY || [innerHeight, 0]);
+            .range(options.rangeY || [innerHeight, 0])
+            .nice();
 
   if (renderer === 'svg') {
     // Create canvas
@@ -1739,6 +1785,7 @@ d3.bubbleChart = function (data, options) {
     var scale = dots.scale;
     var minRadius = dots.minRadius;
     var maxRadius = dots.maxRadius;
+    var normalize = dots.normalize;
     var opacity = dots.opacity;
     var hue = dots.hue;
     var saturation = dots.saturation;
@@ -1755,13 +1802,17 @@ d3.bubbleChart = function (data, options) {
                  return y(d.y);
                })
                .attr('r', function (d) {
-                 var r = 0;
+                 var z = 0;
                  if (maxRadius === Infinity || !maxRadius) {
-                   r = Math.sqrt(d.z / zmax) * scale;
+                   z = d.z / zmax;
                  } else if (maxRadius > minRadius) {
-                   r = Math.sqrt((d.z - zmin) / (zmax - zmin)) * (maxRadius - minRadius);
+                   z = (d.z - zmin) / (zmax - zmin);
+                   scale = maxRadius - minRadius;
                  }
-                 return r + minRadius;
+                 if (normalize === 'sqrt') {
+                   z = Math.sqrt(z);
+                 }
+                 return z * scale + minRadius;
                })
                .attr('opacity', opacity)
                .attr('stroke', dots.stroke)

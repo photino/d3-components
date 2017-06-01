@@ -61,6 +61,7 @@ d3.components.bubbleChart = {
     scale: '2%',
     minRadius: 4,
     maxRadius: Infinity,
+    normalize: 'sqrt',
     stroke: '#fff',
     opacity: 0.8,
     gradient: false,
@@ -116,7 +117,8 @@ d3.bubbleChart = function (data, options) {
             .range(options.rangeX || [0, innerWidth]);
   var y = d3.scaleLinear()
             .domain(options.domainY || [ymin - offsetY[0], ymax + offsetY[1]])
-            .range(options.rangeY || [innerHeight, 0]);
+            .range(options.rangeY || [innerHeight, 0])
+            .nice();
 
   if (renderer === 'svg') {
     // Create canvas
@@ -165,6 +167,7 @@ d3.bubbleChart = function (data, options) {
     var scale = dots.scale;
     var minRadius = dots.minRadius;
     var maxRadius = dots.maxRadius;
+    var normalize = dots.normalize;
     var opacity = dots.opacity;
     var hue = dots.hue;
     var saturation = dots.saturation;
@@ -181,13 +184,17 @@ d3.bubbleChart = function (data, options) {
                  return y(d.y);
                })
                .attr('r', function (d) {
-                 var r = 0;
+                 var z = 0;
                  if (maxRadius === Infinity || !maxRadius) {
-                   r = Math.sqrt(d.z / zmax) * scale;
+                   z = d.z / zmax;
                  } else if (maxRadius > minRadius) {
-                   r = Math.sqrt((d.z - zmin) / (zmax - zmin)) * (maxRadius - minRadius);
+                   z = (d.z - zmin) / (zmax - zmin);
+                   scale = maxRadius - minRadius;
                  }
-                 return r + minRadius;
+                 if (normalize === 'sqrt') {
+                   z = Math.sqrt(z);
+                 }
+                 return z * scale + minRadius;
                })
                .attr('opacity', opacity)
                .attr('stroke', dots.stroke)

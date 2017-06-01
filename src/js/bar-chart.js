@@ -337,7 +337,6 @@ d3.barChart = function (data, options) {
       d3.setLegend(g, legend);
     });
 
-    // Load components
     dispatch.call('init', this, data);
     dispatch.call('update', this, g.select('.layout'));
     dispatch.call('finalize', this);

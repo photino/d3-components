@@ -112,6 +112,46 @@ d3.defaultOptions = {
   }
 };
 
+// Create a chart
+d3.createChart = function (chart) {
+  if (d3.type(chart) === 'object') {
+    var plot = d3[chart.type];
+    if (d3.type(plot) === 'function') {
+      if (chart.reload === true) {
+        var interval = Number(chart.interval);
+        chart.reload = false;
+        d3.interval(function () {
+          d3.createChart(chart);
+        }, interval);
+      } else {
+        var data = chart.data;
+        var options = chart.options;
+        var dataType = d3.type(data);
+        if (dataType === 'string') {
+          d3.json(data, function (object) {
+            return plot(object, options);
+          });
+        } else if (dataType === 'object' && data.api) {
+          var type = data.type;
+          var api = data.api;
+          if (type === 'json') {
+            d3.json(api, function (object) {
+              return plot(object, options);
+            });
+          } else if (type === 'csv') {
+            var row = data.row || function (d) { return d; };
+            d3.csv(api, row, function (object) {
+              return plot(object, options);
+            });
+          }
+        } else {
+          return plot(data, options);
+        }
+      }
+    }
+  }
+};
+
 // Parse plotting data
 d3.parseData = function (plot, data) {
   var component = d3.components[plot];
@@ -399,8 +439,11 @@ d3.regularPolygon = function (n, r) {
 d3.createPlot = function (chart, options) {
   // Return the chart if it exists
   if (!options.standalone) {
-    return d3.select(chart)
-             .select('svg');
+    var svg = d3.select(chart)
+                .select('svg');
+    if (svg.node() !== null) {
+      return svg;
+    }
   }
 
   // Create the `svg` element
@@ -646,6 +689,8 @@ d3.setTooltip = function (chart, options) {
 
 // Set the legend
 d3.setLegend = function (container, options) {
+  container.select('.legend')
+           .remove();
   if (options.show) {
     var symbol = options.symbol;
     var symbolShape = symbol.shape;

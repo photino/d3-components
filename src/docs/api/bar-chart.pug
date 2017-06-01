@@ -20,10 +20,12 @@ block article
 
       &lt;script&gt;
         d3.json('../data/china-cities-population.json', function (data) {
-          d3.shuffle(data);
           d3.barChart(data, { id: 'bar-chart-default' });
-          d3.barChart(data, {
+        });
+        d3.json('../data/china-cities-population.json', function (data) {
+          var options = {
             id: 'bar-chart-stacked',
+            standalone: false,
             stacked: true,
             horizontal: true,
             gridY: {
@@ -34,17 +36,24 @@ block article
                 return d.city + ': ' + d.population + ' (' + d.type + ')';
               }
             }
-          });
+          };
+          d3.barChart(data, options);
+          d3.interval(function () {
+            d3.shuffle(data);
+            d3.barChart(data, options);
+          }, 2000);
         });
       &lt;/script&gt;
 
 block append foot
   script.
     d3.json('../data/china-cities-population.json', function (data) {
-      d3.shuffle(data);
       d3.barChart(data, { id: 'bar-chart-default' });
-      d3.barChart(data, {
+    });
+    d3.json('../data/china-cities-population.json', function (data) {
+      var options = {
         id: 'bar-chart-stacked',
+        standalone: false,
         stacked: true,
         horizontal: true,
         gridY: {
@@ -55,5 +64,10 @@ block append foot
             return d.city + ': ' + d.population + ' (' + d.type + ')';
           }
         }
-      });
+      };
+      d3.barChart(data, options);
+      d3.interval(function () {
+        d3.shuffle(data);
+        d3.barChart(data, options);
+      }, 2000);
     });

@@ -25,12 +25,6 @@
     "url": "https://github.com/photino/d3-components/issues"
   },
   "license": "MIT",
-  "engines": {
-    "node": "7.4.0"
-  },
-  "os": [
-    "linux"
-  ],
   "devDependencies": {
     "gulp": "3.9.1",
     "gulp-concat": "2.6.0",
