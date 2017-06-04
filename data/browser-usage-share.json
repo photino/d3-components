@@ -1,0 +1,26 @@
+[
+  {
+    "browser": "Chrome",
+    "percentage": 0.4707
+  },
+  {
+    "browser": "Firefox",
+    "percentage": 0.1543
+  },
+  {
+    "browser": "IE",
+    "percentage": 0.1106
+  },
+  {
+    "browser": "Opera",
+    "percentage": 0.0217
+  },
+  {
+    "browser": "Others",
+    "percentage": 0.038
+  },
+  {
+    "browser": "Safari",
+    "percentage": 0.2047
+  }
+]
