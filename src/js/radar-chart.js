@@ -331,7 +331,7 @@ d3.radarChart = function (data, options) {
     if (!legend.translation) {
       legend.translation = d3.translate(-width / 2, -height / 2);
     }
-    legend.bindingData = dataset;
+    legend.data = dataset;
     legend.onclick = function () {
       s.style('display', function (d) {
         return d.disabled ? 'none' : 'block';
@@ -341,7 +341,7 @@ d3.radarChart = function (data, options) {
 
     // Tooltip
     var tooltip = options.tooltip;
-    tooltip.hoverTarget = dot;
+    tooltip.target = dot;
     d3.setTooltip(chart, tooltip);
 
   }

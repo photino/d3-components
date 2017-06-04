@@ -194,7 +194,7 @@ d3.bubbleMap = function (data, options) {
 
     // Tooltip
     var tooltip = options.tooltip;
-    tooltip.hoverTarget = circle;
+    tooltip.target = circle;
     d3.setTooltip(chart, tooltip);
   }
 };

@@ -64,7 +64,7 @@ d3.defaultOptions = {
       interval: 2000
     },
     symbol: {
-      shape: 'circle',
+      shape: 'rect',
       width: '0.8em',
       height: '0.8em'
     },
@@ -157,7 +157,8 @@ d3.parseData = function (plot, data) {
   var component = d3.components[plot];
   var schema = component.schema || {};
   var hierarchy = schema.hierarchy;
-  if (Array.isArray(data)) {
+  var type = d3.type(data);
+  if (type === 'array') {
     // Normalize data structure
     data = data.filter(function (d) {
       return d !== null && d !== undefined;
@@ -233,9 +234,10 @@ d3.parseData = function (plot, data) {
       });
     }
     return [].concat.apply([], data);
+  } else if (type === 'object') {
+    return d3.parseData(plot, [data])[0];
   }
-
-  return d3.parseData(plot, [data])[0];
+  return data;
 };
 
 // Parse plotting options
@@ -641,9 +643,9 @@ d3.setTooltip = function (chart, options) {
   if (options.show) {
     var tooltip = d3.select('#' + options.id);
     var lineHeight = parseInt(tooltip.style('line-height'));
-    var hoverTarget = options.hoverTarget;
-    var hoverEffect = options.hoverEffect;
-    hoverTarget.on('mouseover', function (d, i) {
+    var target = options.target;
+    var effect = options.effect;
+    target.on('mouseover', function (d, i) {
       var position = d3.mouse(chart);
       var left = position[0];
       var top = position[1];
@@ -659,7 +661,7 @@ d3.setTooltip = function (chart, options) {
       }
       tooltip.style('left', left + 'px')
              .style('top', top + 'px');
-      if (hoverEffect === 'darker') {
+      if (effect === 'darker') {
         d3.select(this)
           .attr('fill', d3.color(d.color).darker());
       }
@@ -673,13 +675,13 @@ d3.setTooltip = function (chart, options) {
     })
     .on('mouseout', function (d) {
       tooltip.style('display', 'none');
-      if (hoverEffect === 'darker') {
+      if (effect === 'darker') {
         d3.select(this)
           .attr('fill', d.color);
       }
     });
     if (options.autoplay) {
-      hoverTarget.call(d3.triggerAction, d3.extend({
+      target.call(d3.triggerAction, d3.extend({
         event: 'mouseover',
         carousel: true
       }, options.carousel));
@@ -704,7 +706,7 @@ d3.setLegend = function (container, options) {
                         .attr('transform', options.translation)
                         .attr('cursor', 'pointer')
                         .selectAll('.legend-item')
-                        .data(options.bindingData)
+                        .data(options.data)
                         .enter()
                         .append('g')
                         .attr('class', function (d) {

@@ -104,7 +104,6 @@ d3.choroplethMap = function (data, options) {
   var stroke = options.stroke;
   var fill = options.fill;
   var strokeWidth = options.strokeWidth;
-  var colorScheme = options.colorScheme;
   var fontSize = options.fontSize;
   var lineHeight = options.lineHeight;
 
@@ -145,6 +144,7 @@ d3.choroplethMap = function (data, options) {
   // Colors
   var coloring = options.coloring;
   var colorScale = options.colorScale;
+  var colorScheme = options.colorScheme;
   var colors = d3.scaleOrdinal(colorScheme);
   if (colorScale === 'scaleSequential') {
     colors = d3.scaleSequential(colorScheme);
@@ -308,7 +308,7 @@ d3.choroplethMap = function (data, options) {
 
     // Tooltip
     var tooltip = options.tooltip;
-    tooltip.hoverTarget = region;
+    tooltip.target = region;
     d3.setTooltip(chart, tooltip);
 
   }

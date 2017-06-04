@@ -226,7 +226,7 @@ d3.bubbleChart = function (data, options) {
 
     // Create the tooltip
     var tooltip = options.tooltip;
-    tooltip.hoverTarget = dot;
+    tooltip.target = dot;
     d3.setTooltip(chart, tooltip);
 
   }

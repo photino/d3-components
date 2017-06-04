@@ -152,7 +152,7 @@ d3.sunburstChart = function (data, options) {
 
     // Create the tooltip
     var tooltip = options.tooltip;
-    tooltip.hoverTarget = slice;
+    tooltip.target = slice;
     d3.setTooltip(chart, tooltip);
   }
 };

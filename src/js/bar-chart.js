@@ -306,8 +306,8 @@ d3.barChart = function (data, options) {
     // Tooltip
     dispatch.on('update.tooltip', function (layout) {
       var tooltip = options.tooltip;
-      tooltip.hoverTarget = layout.selectAll('rect');
-      tooltip.hoverEffect = 'darker';
+      tooltip.target = layout.selectAll('rect');
+      tooltip.effect = 'darker';
       d3.setTooltip(chart, tooltip);
     });
 
@@ -320,7 +320,7 @@ d3.barChart = function (data, options) {
       if (!legend.translation) {
         legend.translation = d3.translate(-margin.left, -margin.top);
       }
-      legend.bindingData = dataset;
+      legend.data = dataset;
       legend.onclick = function (d) {
         var series = d.series;
         var disabled = d.disabled;

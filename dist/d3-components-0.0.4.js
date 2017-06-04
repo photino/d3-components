@@ -64,7 +64,7 @@ d3.defaultOptions = {
       interval: 2000
     },
     symbol: {
-      shape: 'circle',
+      shape: 'rect',
       width: '0.8em',
       height: '0.8em'
     },
@@ -157,7 +157,8 @@ d3.parseData = function (plot, data) {
   var component = d3.components[plot];
   var schema = component.schema || {};
   var hierarchy = schema.hierarchy;
-  if (Array.isArray(data)) {
+  var type = d3.type(data);
+  if (type === 'array') {
     // Normalize data structure
     data = data.filter(function (d) {
       return d !== null && d !== undefined;
@@ -233,9 +234,10 @@ d3.parseData = function (plot, data) {
       });
     }
     return [].concat.apply([], data);
+  } else if (type === 'object') {
+    return d3.parseData(plot, [data])[0];
   }
-
-  return d3.parseData(plot, [data])[0];
+  return data;
 };
 
 // Parse plotting options
@@ -641,9 +643,9 @@ d3.setTooltip = function (chart, options) {
   if (options.show) {
     var tooltip = d3.select('#' + options.id);
     var lineHeight = parseInt(tooltip.style('line-height'));
-    var hoverTarget = options.hoverTarget;
-    var hoverEffect = options.hoverEffect;
-    hoverTarget.on('mouseover', function (d, i) {
+    var target = options.target;
+    var effect = options.effect;
+    target.on('mouseover', function (d, i) {
       var position = d3.mouse(chart);
       var left = position[0];
       var top = position[1];
@@ -659,7 +661,7 @@ d3.setTooltip = function (chart, options) {
       }
       tooltip.style('left', left + 'px')
              .style('top', top + 'px');
-      if (hoverEffect === 'darker') {
+      if (effect === 'darker') {
         d3.select(this)
           .attr('fill', d3.color(d.color).darker());
       }
@@ -673,13 +675,13 @@ d3.setTooltip = function (chart, options) {
     })
     .on('mouseout', function (d) {
       tooltip.style('display', 'none');
-      if (hoverEffect === 'darker') {
+      if (effect === 'darker') {
         d3.select(this)
           .attr('fill', d.color);
       }
     });
     if (options.autoplay) {
-      hoverTarget.call(d3.triggerAction, d3.extend({
+      target.call(d3.triggerAction, d3.extend({
         event: 'mouseover',
         carousel: true
       }, options.carousel));
@@ -704,7 +706,7 @@ d3.setLegend = function (container, options) {
                         .attr('transform', options.translation)
                         .attr('cursor', 'pointer')
                         .selectAll('.legend-item')
-                        .data(options.bindingData)
+                        .data(options.data)
                         .enter()
                         .append('g')
                         .attr('class', function (d) {
@@ -1295,8 +1297,8 @@ d3.barChart = function (data, options) {
     // Tooltip
     dispatch.on('update.tooltip', function (layout) {
       var tooltip = options.tooltip;
-      tooltip.hoverTarget = layout.selectAll('rect');
-      tooltip.hoverEffect = 'darker';
+      tooltip.target = layout.selectAll('rect');
+      tooltip.effect = 'darker';
       d3.setTooltip(chart, tooltip);
     });
 
@@ -1309,7 +1311,7 @@ d3.barChart = function (data, options) {
       if (!legend.translation) {
         legend.translation = d3.translate(-margin.left, -margin.top);
       }
-      legend.bindingData = dataset;
+      legend.data = dataset;
       legend.onclick = function (d) {
         var series = d.series;
         var disabled = d.disabled;
@@ -1364,15 +1366,17 @@ d3.components.pieChart = {
     ]
   },
   sort: null,
-  maxRatio: 0.8,
-  donutRatio: 0,
-  innerRadius: 0,
+  arcs: {
+    maxRatio: 0.8,
+    donutRatio: 0,
+    innerRadius: 0
+  },
   labels: {
     show: false,
     dy: '0.25em',
     stroke: 'none',
     fill: '#fff',
-    centroidRatio: 1.2,
+    centroidRatio: 1,
     minAngle: Math.PI / 10,
     wrapText: false,
     wrapWidth: '5em',
@@ -1419,15 +1423,18 @@ d3.pieChart = function (data, options) {
   var colorScheme = options.colorScheme;
   var fontSize = options.fontSize;
   var lineHeight = options.lineHeight;
-  var maxRatio = options.maxRatio;
-  var donutRatio = options.donutRatio;
-  var outerRadius = options.outerRadius || Math.min(innerWidth, innerHeight) / 2;
-  var innerRadius = options.innerRadius || outerRadius * donutRatio;
+
+  // Arcs
+  var arcs = options.arcs;
+  var maxRatio = arcs.maxRatio;
+  var donutRatio = arcs.donutRatio;
+  var outerRadius = arcs.outerRadius || Math.min(innerWidth, innerHeight) / 2;
+  var innerRadius = arcs.innerRadius || outerRadius * donutRatio;
   if (d3.type(innerRadius) === 'number' && d3.type(outerRadius) === 'number') {
     innerRadius = Math.min(innerRadius, outerRadius * maxRatio);
   }
 
-  // Shape and arcs
+  // Shape and slices
   var pie = d3.pie()
               .sort(options.sort)
               .value(function (d) {
@@ -1437,7 +1444,7 @@ d3.pieChart = function (data, options) {
               .innerRadius(innerRadius)
               .outerRadius(outerRadius)
               .context(context);
-  var arcs = pie(data);
+  var slices = pie(data);
 
   if (renderer === 'svg') {
     // Create canvas
@@ -1445,14 +1452,15 @@ d3.pieChart = function (data, options) {
     var g = svg.select('.container');
 
     // Slices
-    dispatch.on('init.slices', function (data) {
+    dispatch.on('init.slices', function (slices) {
       g.selectAll('.arc')
        .remove();
       g.selectAll('.arc')
-       .data(data)
+       .data(slices)
        .enter()
        .append('g')
-       .attr('class', 'arc');
+       .attr('class', 'arc')
+       .attr('stroke', arcs.stroke);
     });
 
     // Arcs
@@ -1481,11 +1489,12 @@ d3.pieChart = function (data, options) {
              })
              .attr('dy', labels.dy)
              .attr('fill', labels.fill)
+             .attr('stroke', labels.stroke)
              .attr('text-anchor', 'middle')
              .text(labels.text)
-             .attr('opacity', function (d) {
+             .style('display', function (d) {
                var angle = d.endAngle - d.startAngle;
-               return angle >= labels.minAngle ? 1 : 0;
+               return angle < labels.minAngle ? 'none' : 'block';
              })
              .call(d3.wrapText, labels);
       }
@@ -1494,8 +1503,8 @@ d3.pieChart = function (data, options) {
     // Tooltip
     dispatch.on('update.tooltip', function (slice) {
       var tooltip = options.tooltip;
-      tooltip.hoverTarget = slice.selectAll('path');
-      tooltip.hoverEffect = 'darker';
+      tooltip.target = slice.selectAll('path');
+      tooltip.effect = 'darker';
       d3.setTooltip(chart, tooltip);
     });
 
@@ -1505,7 +1514,7 @@ d3.pieChart = function (data, options) {
       if (!legend.translation) {
         legend.translation = d3.translate(-width / 2, -height / 2);
       }
-      legend.bindingData = arcs;
+      legend.data = slices;
       legend.onclick = function (d) {
         var label = d.data.label;
         var disabled = d.data.disabled;
@@ -1523,28 +1532,10 @@ d3.pieChart = function (data, options) {
     });
 
     // Load components
-    dispatch.call('init', this, arcs);
+    dispatch.call('init', this, slices);
     dispatch.call('update', this, g.selectAll('.arc'));
     dispatch.call('finalize', this);
 
-  } else if (renderer === 'canvas') {
-    context.translate(width / 2, height / 2);
-    arcs.forEach(function (d, i) {
-      context.beginPath();
-      arc(d);
-      context.fillStyle = colorScheme[i];
-      context.fill();
-      context.closePath();
-    });
-
-    if (stroke !== 'none') {
-      context.beginPath();
-      arcs.forEach(arc);
-      context.strokeStyle = stroke;
-      context.lineWidth = strokeWidth;
-      context.stroke();
-      context.closePath();
-    }
   }
 };
 
@@ -1844,7 +1835,7 @@ d3.bubbleChart = function (data, options) {
 
     // Create the tooltip
     var tooltip = options.tooltip;
-    tooltip.hoverTarget = dot;
+    tooltip.target = dot;
     d3.setTooltip(chart, tooltip);
 
   }
@@ -2183,7 +2174,7 @@ d3.radarChart = function (data, options) {
     if (!legend.translation) {
       legend.translation = d3.translate(-width / 2, -height / 2);
     }
-    legend.bindingData = dataset;
+    legend.data = dataset;
     legend.onclick = function () {
       s.style('display', function (d) {
         return d.disabled ? 'none' : 'block';
@@ -2193,7 +2184,7 @@ d3.radarChart = function (data, options) {
 
     // Tooltip
     var tooltip = options.tooltip;
-    tooltip.hoverTarget = dot;
+    tooltip.target = dot;
     d3.setTooltip(chart, tooltip);
 
   }
@@ -2353,7 +2344,7 @@ d3.sunburstChart = function (data, options) {
 
     // Create the tooltip
     var tooltip = options.tooltip;
-    tooltip.hoverTarget = slice;
+    tooltip.target = slice;
     d3.setTooltip(chart, tooltip);
   }
 };
@@ -2464,7 +2455,6 @@ d3.choroplethMap = function (data, options) {
   var stroke = options.stroke;
   var fill = options.fill;
   var strokeWidth = options.strokeWidth;
-  var colorScheme = options.colorScheme;
   var fontSize = options.fontSize;
   var lineHeight = options.lineHeight;
 
@@ -2505,6 +2495,7 @@ d3.choroplethMap = function (data, options) {
   // Colors
   var coloring = options.coloring;
   var colorScale = options.colorScale;
+  var colorScheme = options.colorScheme;
   var colors = d3.scaleOrdinal(colorScheme);
   if (colorScale === 'scaleSequential') {
     colors = d3.scaleSequential(colorScheme);
@@ -2668,7 +2659,7 @@ d3.choroplethMap = function (data, options) {
 
     // Tooltip
     var tooltip = options.tooltip;
-    tooltip.hoverTarget = region;
+    tooltip.target = region;
     d3.setTooltip(chart, tooltip);
 
   }
@@ -2870,7 +2861,168 @@ d3.bubbleMap = function (data, options) {
 
     // Tooltip
     var tooltip = options.tooltip;
-    tooltip.hoverTarget = circle;
+    tooltip.target = circle;
     d3.setTooltip(chart, tooltip);
+  }
+};
+
+/*!
+ * Contour Plot
+ * References: https://bl.ocks.org/mbostock/f48ff9c1af4d637c9a518727f5fdfef5
+ *             https://bl.ocks.org/mbostock/bf2f5f02b62b5b3bb92ae1b59b53da36
+ */
+
+// Register a chart type
+d3.components.contourPlot = {
+  type: 'contour plot',
+  schema: {
+    type: 'object',
+    entries: [
+      {
+        key: 'x',
+        type: 'number',
+        mappings: [
+          'lng',
+          'longitude'
+        ]
+      },
+      {
+        key: 'y',
+        type: 'number',
+        mappings: [
+          'lat',
+          'latitude'
+        ]
+      },
+      {
+        key: 'z',
+        type: 'number',
+        mappings: [
+          'count',
+          'percentage',
+          'ratio',
+          'value'
+        ]
+      }
+    ]
+  },
+  colorScale: 'scaleOrdinal',
+  contours: {
+    number: 10,
+    smooth: true,
+    density: 1
+  },
+  labels: {
+    show: false
+  },
+  tooltip: {
+    html: function (d) {
+      var value = Number(d.value.toFixed(3));
+      return d3.format('.3')(value);
+    }
+  }
+};
+
+// Contour plot
+d3.contourPlot = function (data, options) {
+  // Parse plotting data and options
+  data = d3.parseData('contourPlot', data);
+  options = d3.parseOptions('contourPlot', options);
+
+  // Register callbacks
+  var dispatch = d3.dispatch('init', 'update', 'finalize');
+
+  // Use the options
+  var chart = options.chart;
+  var renderer = options.renderer;
+  var context = options.context;
+  var width = options.width;
+  var height = options.height;
+  var innerWidth = options.innerWidth;
+  var innerHeight = options.innerHeight;
+  var margin = options.margin;
+  var stroke = options.stroke;
+  var strokeWidth = options.strokeWidth;
+  var fontSize = options.fontSize;
+  var lineHeight = options.lineHeight;
+
+  // Values
+  var contours = options.contours;
+  var density = contours.density;
+  var size = contours.size || [];
+  var sizeX = size[0] || Math.round(innerWidth * density);
+  var sizeY = size[1] || Math.round(innerHeight * density);
+  var scale = contours.scale || (innerHeight / sizeY);
+  var domainX = options.domainX;
+  var domainY = options.domainY;
+  var dataType = d3.type(data);
+  var values = [];
+  if (dataType === 'function') {
+    var dx = 1 / sizeX;
+    var dy = 1 / sizeY;
+    var extentX = domainX[1] - domainX[0];
+    var extentY = domainY[1] - domainY[0];
+    d3.range(dy / 2, 1, dy).forEach(function (sy) {
+      d3.range(dx / 2, 1, dx).forEach(function (sx) {
+        var x = domainX[0] + sx * extentX;
+        var y = domainY[1] - sy * extentY;
+        values.push(data(x, y));
+      });
+    });
+  } else if (dataType === 'array') {
+    data.sort(function (a, b) {
+      return d3.descending(a.y, b.y) || d3.ascending(a.x, b.x);
+    });
+    values = data.map(function (d) {
+      return d.z || d;
+    });
+  }
+
+  // Thresholds
+  var extentZ = d3.extent(values);
+  var thresholds = options.thresholds;
+  if (d3.type(thresholds) !== 'array') {
+    var zmin = extentZ[0];
+    var zmax = extentZ[1];
+    var step = (zmax - zmin) / contours.number;
+    thresholds = d3.range(zmin, zmax, step);
+  }
+
+  // Colors
+  var colorScale = options.colorScale;
+  var colorScheme = options.colorScheme;
+  var colors = d3.scaleOrdinal(colorScheme);
+  if (colorScale === 'scaleSequential') {
+    colors = d3.scaleSequential(colorScheme)
+               .domain(extentZ);
+  }
+
+  // Contour generator
+  var generator = d3.contours()
+                    .size([sizeX, sizeY])
+                    .thresholds(thresholds)
+                    .smooth(contours.smooth);
+
+  if (renderer === 'svg') {
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container')
+               .attr('transform', d3.translate(margin.left, margin.top));
+
+    // Path
+    var contour = g.selectAll('path')
+                   .data(generator(values))
+                   .enter()
+                   .append('path')
+                   .attr('d', d3.geoPath(d3.geoIdentity().scale(scale)))
+                   .attr('fill', function (d) {
+                     return colors(d.value);
+                   })
+                   .attr('stroke', contours.stroke);
+
+     // Tooltip
+     var tooltip = options.tooltip;
+     tooltip.target = contour;
+     d3.setTooltip(chart, tooltip);
   }
 };

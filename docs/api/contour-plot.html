@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html id="api/line-chart" lang="en">
+<html id="api/contour-plot" lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Line Chart | D3 Components</title>
+    <title>Contour Plot | D3 Components</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="keywords" content="UI, Schema, HTML, CSS, JS, JavaScript, front-end, framework, web development">
     <meta name="description" content="D3-based visualization components">
@@ -29,34 +29,55 @@
         <ul class="ui-list-group ui-block-fluid ui-zoom-large ui-text-capitalize">
           <li><a href="./../api/bar-chart.html">Bar Chart</a></li>
           <li><a href="./../api/pie-chart.html">Pie Chart</a></li>
-          <li class="ui-state-active"><a href="./../api/line-chart.html">Line Chart</a></li>
+          <li><a href="./../api/line-chart.html">Line Chart</a></li>
           <li><a href="./../api/bubble-chart.html">Bubble Chart</a></li>
           <li><a href="./../api/radar-chart.html">Radar Chart</a></li>
           <li><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
           <li><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
           <li><a href="./../api/bubble-map.html">Bubble Map</a></li>
-          <li><a href="./../api/contour-plot.html">Contour Plot</a></li>
+          <li class="ui-state-active"><a href="./../api/contour-plot.html">Contour Plot</a></li>
         </ul>
       </aside>
       <article class="ui-grid-75 ui-mobile-expand">
-        <h3 class="ui-header-primary">Line Chart</h3>
+        <h3 class="ui-header-primary">Contour Plot</h3>
         <div class="ui-container-grid">
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="line-chart-default"></div>
+            <div id="contour-plot-default"></div>
           </div>
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="line-chart-customized"></div>
+            <div id="contour-plot-customized"></div>
           </div>
         </div>
         <div>
-          <pre><code class="language-markup">&lt;div id="line-chart-default"&gt;&lt;/div&gt;
-&lt;div id="line-chart-customized"&gt;&lt;/div&gt;
+          <pre><code class="language-markup">&lt;div id="contour-plot-default"&gt;&lt;/div&gt;
+&lt;div id="contour-plot-customized"&gt;&lt;/div&gt;
 
 &lt;script&gt;
-  var data = [];
-  d3.lineChart(data, { id: 'line-chart-default' });
-  d3.lineChart(data, {
-    id: 'line-chart-customized'
+  d3.json('../data/math-sin-xy.json', function (data) {
+    d3.shuffle(data);
+    d3.contourPlot(data, {
+      id: 'contour-plot-default',
+      domainX: [-1, 1],
+      domainY: [-1, 1],
+      contours: {
+        size: [50, 30]
+      }
+    });
+  });
+  d3.contourPlot(function (x, y) {
+    return Math.sin(x + y) * Math.sin(x - y);
+  }, {
+    id: 'contour-plot-customized',
+    domainX: [-2, 2],
+    domainY: [-2, 2],
+    contours: {
+      number: 12,
+      density: 2,
+      smooth: false,
+      stroke: '#fff'
+    },
+    colorScale: 'scaleSequential',
+    colorScheme: d3.interpolateRdBu
   });
 &lt;/script&gt;
 </code></pre>
@@ -71,11 +92,34 @@
     <script src="./../dist/ui-schema-0.4.4.min.js"></script>
     <script src="./../dist/d3-4.9.1.min.js"></script>
     <script src="./../dist/d3-components-0.0.4.js"></script>
+    <script src="../dist/d3-scale-chromatic-1.1.0.min.js"></script>
+    <script src="../dist/d3-contour-1.1.0.min.js"></script>
     <script>
-      var data = [];
-      d3.lineChart(data, { id: 'line-chart-default' });
-      d3.lineChart(data, {
-        id: 'line-chart-customized'
+      d3.json('../data/math-sin-xy.json', function (data) {
+        d3.shuffle(data);
+        d3.contourPlot(data, {
+          id: 'contour-plot-default',
+          domainX: [-1, 1],
+          domainY: [-1, 1],
+          contours: {
+            size: [50, 30]
+          }
+        });
+      });
+      d3.contourPlot(function (x, y) {
+        return Math.sin(x + y) * Math.sin(x - y);
+      }, {
+        id: 'contour-plot-customized',
+        domainX: [-2, 2],
+        domainY: [-2, 2],
+        contours: {
+          number: 12,
+          density: 2,
+          smooth: false,
+          stroke: '#fff'
+        },
+        colorScale: 'scaleSequential',
+        colorScheme: d3.interpolateRdBu
       });
     </script>
   </body>

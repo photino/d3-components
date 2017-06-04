@@ -29,15 +29,17 @@ d3.components.pieChart = {
     ]
   },
   sort: null,
-  maxRatio: 0.8,
-  donutRatio: 0,
-  innerRadius: 0,
+  arcs: {
+    maxRatio: 0.8,
+    donutRatio: 0,
+    innerRadius: 0
+  },
   labels: {
     show: false,
     dy: '0.25em',
     stroke: 'none',
     fill: '#fff',
-    centroidRatio: 1.2,
+    centroidRatio: 1,
     minAngle: Math.PI / 10,
     wrapText: false,
     wrapWidth: '5em',
@@ -84,15 +86,18 @@ d3.pieChart = function (data, options) {
   var colorScheme = options.colorScheme;
   var fontSize = options.fontSize;
   var lineHeight = options.lineHeight;
-  var maxRatio = options.maxRatio;
-  var donutRatio = options.donutRatio;
-  var outerRadius = options.outerRadius || Math.min(innerWidth, innerHeight) / 2;
-  var innerRadius = options.innerRadius || outerRadius * donutRatio;
+
+  // Arcs
+  var arcs = options.arcs;
+  var maxRatio = arcs.maxRatio;
+  var donutRatio = arcs.donutRatio;
+  var outerRadius = arcs.outerRadius || Math.min(innerWidth, innerHeight) / 2;
+  var innerRadius = arcs.innerRadius || outerRadius * donutRatio;
   if (d3.type(innerRadius) === 'number' && d3.type(outerRadius) === 'number') {
     innerRadius = Math.min(innerRadius, outerRadius * maxRatio);
   }
 
-  // Shape and arcs
+  // Shape and slices
   var pie = d3.pie()
               .sort(options.sort)
               .value(function (d) {
@@ -102,7 +107,7 @@ d3.pieChart = function (data, options) {
               .innerRadius(innerRadius)
               .outerRadius(outerRadius)
               .context(context);
-  var arcs = pie(data);
+  var slices = pie(data);
 
   if (renderer === 'svg') {
     // Create canvas
@@ -110,14 +115,15 @@ d3.pieChart = function (data, options) {
     var g = svg.select('.container');
 
     // Slices
-    dispatch.on('init.slices', function (data) {
+    dispatch.on('init.slices', function (slices) {
       g.selectAll('.arc')
        .remove();
       g.selectAll('.arc')
-       .data(data)
+       .data(slices)
        .enter()
        .append('g')
-       .attr('class', 'arc');
+       .attr('class', 'arc')
+       .attr('stroke', arcs.stroke);
     });
 
     // Arcs
@@ -146,11 +152,12 @@ d3.pieChart = function (data, options) {
              })
              .attr('dy', labels.dy)
              .attr('fill', labels.fill)
+             .attr('stroke', labels.stroke)
              .attr('text-anchor', 'middle')
              .text(labels.text)
-             .attr('opacity', function (d) {
+             .style('display', function (d) {
                var angle = d.endAngle - d.startAngle;
-               return angle >= labels.minAngle ? 1 : 0;
+               return angle < labels.minAngle ? 'none' : 'block';
              })
              .call(d3.wrapText, labels);
       }
@@ -159,8 +166,8 @@ d3.pieChart = function (data, options) {
     // Tooltip
     dispatch.on('update.tooltip', function (slice) {
       var tooltip = options.tooltip;
-      tooltip.hoverTarget = slice.selectAll('path');
-      tooltip.hoverEffect = 'darker';
+      tooltip.target = slice.selectAll('path');
+      tooltip.effect = 'darker';
       d3.setTooltip(chart, tooltip);
     });
 
@@ -170,7 +177,7 @@ d3.pieChart = function (data, options) {
       if (!legend.translation) {
         legend.translation = d3.translate(-width / 2, -height / 2);
       }
-      legend.bindingData = arcs;
+      legend.data = slices;
       legend.onclick = function (d) {
         var label = d.data.label;
         var disabled = d.data.disabled;
@@ -188,27 +195,9 @@ d3.pieChart = function (data, options) {
     });
 
     // Load components
-    dispatch.call('init', this, arcs);
+    dispatch.call('init', this, slices);
     dispatch.call('update', this, g.selectAll('.arc'));
     dispatch.call('finalize', this);
 
-  } else if (renderer === 'canvas') {
-    context.translate(width / 2, height / 2);
-    arcs.forEach(function (d, i) {
-      context.beginPath();
-      arc(d);
-      context.fillStyle = colorScheme[i];
-      context.fill();
-      context.closePath();
-    });
-
-    if (stroke !== 'none') {
-      context.beginPath();
-      arcs.forEach(arc);
-      context.strokeStyle = stroke;
-      context.lineWidth = strokeWidth;
-      context.stroke();
-      context.closePath();
-    }
   }
 };

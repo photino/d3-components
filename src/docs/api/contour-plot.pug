@@ -1,0 +1,78 @@
+extends components
+
+block variables
+  - var pageID = 'api/contour-plot'
+  - var pageTitle = 'Contour Plot'
+  - var prism = true
+
+block article
+  h3.ui-header-primary= pageTitle
+  .ui-container-grid
+    .ui-grid-50.ui-mobile-expand
+      #contour-plot-default
+    .ui-grid-50.ui-mobile-expand
+      #contour-plot-customized
+  div
+    pre: code.language-markup.
+      &lt;div id="contour-plot-default"&gt;&lt;/div&gt;
+      &lt;div id="contour-plot-customized"&gt;&lt;/div&gt;
+
+      &lt;script&gt;
+        d3.json('../data/math-sin-xy.json', function (data) {
+          d3.shuffle(data);
+          d3.contourPlot(data, {
+            id: 'contour-plot-default',
+            domainX: [-1, 1],
+            domainY: [-1, 1],
+            contours: {
+              size: [50, 30]
+            }
+          });
+        });
+        d3.contourPlot(function (x, y) {
+          return Math.sin(x + y) * Math.sin(x - y);
+        }, {
+          id: 'contour-plot-customized',
+          domainX: [-2, 2],
+          domainY: [-2, 2],
+          contours: {
+            number: 12,
+            density: 2,
+            smooth: false,
+            stroke: '#fff'
+          },
+          colorScale: 'scaleSequential',
+          colorScheme: d3.interpolateRdBu
+        });
+      &lt;/script&gt;
+
+block append foot
+  script(src='../dist/d3-scale-chromatic-1.1.0.min.js')
+  script(src='../dist/d3-contour-1.1.0.min.js')
+  script.
+    d3.json('../data/math-sin-xy.json', function (data) {
+      d3.shuffle(data);
+      d3.contourPlot(data, {
+        id: 'contour-plot-default',
+        domainX: [-1, 1],
+        domainY: [-1, 1],
+        contours: {
+          size: [50, 30]
+        }
+      });
+    });
+    d3.contourPlot(function (x, y) {
+      return Math.sin(x + y) * Math.sin(x - y);
+    }, {
+      id: 'contour-plot-customized',
+      domainX: [-2, 2],
+      domainY: [-2, 2],
+      contours: {
+        number: 12,
+        density: 2,
+        smooth: false,
+        stroke: '#fff'
+      },
+      colorScale: 'scaleSequential',
+      colorScheme: d3.interpolateRdBu
+    });

@@ -19,41 +19,41 @@ block article
       &lt;div id="pie-chart-donut"&gt;&lt;/div&gt;
 
       &lt;script&gt;
-        var data = [
-          { browser: 'Chrome', percentage: 0.4707 },
-          { browser: 'Firefox', percentage: 0.1543 },
-          { browser: 'IE', percentage: 0.1106 },
-          { browser: 'Opera', percentage: 0.0217 },
-          { browser: 'Others', percentage: 0.0380 },
-          { browser: 'Safari', percentage: 0.2047 }
-        ];
-        d3.shuffle(data);
-        d3.pieChart(data, { id: 'pie-chart-default' });
-        d3.pieChart(data, {
-          id: 'pie-chart-donut',
-          renderer: 'canvas',
-          sort: 'descending(percentage)',
-          donutRatio: 0.5,
-          stroke: '#fff'
+        d3.json('../data/browser-usage-share.json', function (data) {
+          d3.pieChart(data, { id: 'pie-chart-default' });
+        });
+        d3.json('../data/browser-usage-share.json', function (data) {
+          d3.shuffle(data);
+          d3.pieChart(data, {
+            id: 'pie-chart-donut',
+            sort: 'descending(percentage)',
+            arcs: {
+              donutRatio: 0.5,
+              stroke: '#fff'
+            },
+            labels: {
+              show: true
+            }
+          });
         });
       &lt;/script&gt;
 
 block append foot
   script.
-    var data = [
-      { browser: 'Chrome', percentage: 0.4707 },
-      { browser: 'Firefox', percentage: 0.1543 },
-      { browser: 'IE', percentage: 0.1106 },
-      { browser: 'Opera', percentage: 0.0217 },
-      { browser: 'Others', percentage: 0.0380 },
-      { browser: 'Safari', percentage: 0.2047 }
-    ];
-    d3.shuffle(data);
-    d3.pieChart(data, { id: 'pie-chart-default' });
-    d3.pieChart(data, {
-      id: 'pie-chart-donut',
-      renderer: 'canvas',
-      sort: 'descending(percentage)',
-      donutRatio: 0.5,
-      stroke: '#fff'
+    d3.json('../data/browser-usage-share.json', function (data) {
+      d3.pieChart(data, { id: 'pie-chart-default' });
+    });
+    d3.json('../data/browser-usage-share.json', function (data) {
+      d3.shuffle(data);
+      d3.pieChart(data, {
+        id: 'pie-chart-donut',
+        sort: 'descending(percentage)',
+        arcs: {
+          donutRatio: 0.5,
+          stroke: '#fff'
+        },
+        labels: {
+          show: true
+        }
+      });
     });
