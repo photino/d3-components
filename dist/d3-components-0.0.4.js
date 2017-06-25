@@ -75,6 +75,7 @@ d3.defaultOptions = {
     disabledTextColor: '#ccc'
   },
   axisX: {
+    show: true,
     orient: 'bottom',
     ticks: {
       number: 8,
@@ -88,6 +89,7 @@ d3.defaultOptions = {
     fontSize: '0.85em'
   },
   axisY: {
+    show: true,
     orient: 'left',
     ticks: {
       number: 6,
@@ -271,9 +273,7 @@ d3.parseOptions = function (plot, options) {
 
   // Set the tooltip
   var chart = canvas.node();
-  var tooltip = d3.extend({
-    id: id + '-tooltip'
-  }, options.tooltip);
+  var tooltip = d3.extend({ id: id + '-tooltip' }, options.tooltip);
   options.tooltip = tooltip;
   chart.style.position = 'relative';
   if (tooltip.show) {
@@ -326,7 +326,7 @@ d3.parseOptions = function (plot, options) {
   if (options.hasOwnProperty('map')) {
     var map = options.map || {};
     var name = map.name || 'world';
-    options.map = d3.extend(d3.maps[name], map);
+    options.map = d3.extend(d3.mapData[name], map);
   }
 
   // Set the margins
@@ -547,50 +547,62 @@ d3.setAxes = function (container, options) {
   g.selectAll('.axis')
    .remove();
   if (options.framed) {
-    g.append('g')
-     .attr('class', 'axis axis-x')
-     .attr('transform', d3.translate(0, height))
-     .call(gx);
-    g.append('g')
-     .attr('class', 'axis axis-y')
-     .call(gy);
-    g.append('g')
-     .attr('class', 'axis axis-x')
-     .call(gx.tickFormat(''));
-    g.append('g')
-     .attr('class', 'axis axis-y')
-     .attr('transform', d3.translate(width, 0))
-     .call(gy.tickFormat(''));
-  } else {
-    var ax = g.append('g')
-              .attr('class', 'axis axis-x')
-              .call(gx);
-    var ay = g.append('g')
-              .attr('class', 'axis axis-y')
-              .call(gy);
-    if (orientX === 'bottom') {
-      ax.attr('transform', d3.translate(0, height));
+    if (axisX.show) {
+      g.append('g')
+       .attr('class', 'axis axis-x')
+       .attr('transform', d3.translate(0, height))
+       .call(gx);
+      g.append('g')
+       .attr('class', 'axis axis-x')
+       .call(gx.tickFormat(''));
     }
-    if (orientY === 'right') {
-      ay.attr('transform', d3.translate(width, 0));
+    if (axisY.show) {
+      g.append('g')
+       .attr('class', 'axis axis-y')
+       .call(gy);
+      g.append('g')
+       .attr('class', 'axis axis-y')
+       .attr('transform', d3.translate(width, 0))
+       .call(gy.tickFormat(''));
+    }
+  } else {
+    if (axisX.show) {
+      var ax = g.append('g')
+                .attr('class', 'axis axis-x')
+                .call(gx);
+      if (orientX === 'bottom') {
+        ax.attr('transform', d3.translate(0, height));
+      }
+    }
+    if (axisY.show) {
+      var ay = g.append('g')
+                .attr('class', 'axis axis-y')
+                .call(gy);
+      if (orientY === 'right') {
+        ay.attr('transform', d3.translate(width, 0));
+      }
     }
   }
-  g.selectAll('.axis-x')
-   .attr('font-size', axisX.fontSize)
-   .selectAll('text')
-   .attr('text-anchor', axisX.textAnchor)
-   .attr('transform', axisX.transform);
-  g.select('.axis-x')
-   .select('.domain')
-   .attr('stroke-width', domainX.strokeWidth);
-  g.selectAll('.axis-y')
-   .attr('font-size', axisY.fontSize)
-   .selectAll('text')
-   .attr('text-anchor', axisY.textAnchor)
-   .attr('transform', axisY.transform);
-  g.select('.axis-y')
-   .select('.domain')
-   .attr('stroke-width', domainY.strokeWidth);
+  if (axisX.show) {
+    g.selectAll('.axis-x')
+     .attr('font-size', axisX.fontSize)
+     .selectAll('text')
+     .attr('text-anchor', axisX.textAnchor)
+     .attr('transform', axisX.transform);
+    g.select('.axis-x')
+     .select('.domain')
+     .attr('stroke-width', domainX.strokeWidth);
+  }
+  if (axisY.show) {
+    g.selectAll('.axis-y')
+     .attr('font-size', axisY.fontSize)
+     .selectAll('text')
+     .attr('text-anchor', axisY.textAnchor)
+     .attr('transform', axisY.transform);
+    g.select('.axis-y')
+     .select('.domain')
+     .attr('stroke-width', domainY.strokeWidth);
+  }
 
   // Grid lines
   var gridX = options.gridX;
@@ -611,7 +623,7 @@ d3.setAxes = function (container, options) {
        var transform = d3.select(this)
                          .attr('transform');
        var dy = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[2];
-       return (dy === 0 || dy === height) ? 0 : null;
+       return (Math.abs(dy) < 1 || Math.abs(dy - height) < 1) ? 0 : null;
      })
      .select('line')
      .attr('stroke', gridX.stroke);
@@ -631,7 +643,7 @@ d3.setAxes = function (container, options) {
        var transform = d3.select(this)
                          .attr('transform');
        var dx = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[1];
-       return (dx === 0 || dx === width) ? 0 : null;
+       return (Math.abs(dx) < 1 || Math.abs(dx - width) < 1) ? 0 : null;
      })
      .select('line')
      .attr('stroke', gridY.stroke);
@@ -977,7 +989,7 @@ d3.parseGeoData = function (map, options) {
 };
 
 // Built-in map data
-d3.maps = {
+d3.mapData = {
   world: {
     center: [0, 0],
     scale: 0.25
@@ -1541,6 +1553,8 @@ d3.pieChart = function (data, options) {
 
 /*!
  * Line Chart
+ * References: https://bl.ocks.org/mbostock/3883245
+ *             https://bl.ocks.org/mbostock/3884955
  */
 
 // Register a chart type
@@ -1550,31 +1564,46 @@ d3.components.lineChart = {
     type: 'object',
     entries: [
       {
-        key: 'label',
-        type: 'string',
+        key: 'x',
+        type: 'number',
         mappings: [
-          'category',
+          'year',
           'name'
         ]
       },
       {
-        key: 'value',
+        key: 'y',
         type: 'number',
         mappings: [
           'count',
           'percentage',
-          'ratio'
+          'ratio',
+          'value'
         ]
       }
     ]
   },
   sort: null,
-  labels: {
-    show: false
+  lines: {
+    curve: 'curveLinear',
+    density: 1,
+    stroke: '#1f77b4',
+    strokeWidth: 1,
+    fill: 'none'
+  },
+  dots: {
+    show: false,
+    radius: 3,
+    stroke: '#1f77b4',
+    strokeWidth: 1,
+    fill: '#fff'
   },
   tooltip: {
-    html: function (d, i) {
-      return 'Datum ' + i;
+    html: function (d) {
+      var f = d3.format('.3');
+      var x = Number(d.x.toFixed(3));
+      var y = Number(d.y.toFixed(3));
+      return 'x: ' + f(x) + ', y: ' + f(y);
     }
   }
 };
@@ -1594,17 +1623,113 @@ d3.lineChart = function (data, options) {
   var context = options.context;
   var width = options.width;
   var height = options.height;
+  var innerWidth = options.innerWidth;
+  var innerHeight = options.innerHeight;
+  var margin = options.margin;
   var stroke = options.stroke;
   var strokeWidth = options.strokeWidth;
   var colorScheme = options.colorScheme;
   var fontSize = options.fontSize;
   var lineHeight = options.lineHeight;
 
+  // Values
+  var lines = options.lines;
+  var sizeX = Math.round(innerWidth * lines.density);
+  var domainX = options.domainX;
+  var domainY = options.domainY;
+  var dataType = d3.type(data);
+  var dataset = [];
+  if (dataType === 'function') {
+    var xmin = domainX[0];
+    var xmax = domainX[1];
+    var dx = (xmax - xmin) / sizeX;
+    d3.range(xmin, xmax + dx / 2, dx).forEach(function (x) {
+      var y = data(x);
+      dataset.push({ x: x, y: y });
+    });
+  } else if (dataType === 'array') {
+    data.sort(function (a, b) {
+      return d3.ascending(a.x, b.x);
+    });
+    dataset = data;
+  }
+  if (domainX === undefined) {
+    domainX = d3.extent(dataset, function (d) { return d.x; });
+  }
+  if (domainY === undefined) {
+    domainY = d3.extent(dataset, function (d) { return d.y; });
+  }
+
+  // Layout
+  var x = d3.scaleLinear()
+            .domain(domainX)
+            .rangeRound([0, innerWidth])
+            .nice();
+  var y = d3.scaleLinear()
+            .domain(domainY)
+            .rangeRound([innerHeight, 0])
+            .nice();
+  var line = d3.line()
+               .x(function (d) { return x(d.x); })
+               .y(function (d) { return y(d.y); })
+               .curve(d3[lines.curve]);
+
   if (renderer === 'svg') {
     // Create canvas
     var svg = d3.createPlot(chart, options);
-    var g = svg.select('.container');
-  }
+    var g = svg.select('.container')
+               .attr('transform', d3.translate(margin.left, margin.top));
+
+    // Set axes and grids
+    d3.setAxes(g, {
+      width: innerWidth,
+      height: innerHeight,
+      scaleX: x,
+      scaleY: y,
+      axisX: options.axisX,
+      axisY: options.axisY,
+      gridX: options.gridX,
+      gridY: options.gridY,
+      framed: options.framed
+    });
+
+    // Lines
+    g.append('g')
+     .attr('class', 'lines')
+     .append('path')
+     .datum(dataset)
+     .attr('d', line)
+     .attr('stroke', lines.stroke)
+     .attr('stroke-width', lines.strokeWidth)
+     .attr('fill', lines.fill);
+    }
+
+    // Dots
+    var dots = options.dots;
+    if (dots.show) {
+      g.append('g')
+       .attr('class', 'dots')
+       .selectAll('.dot')
+       .data(dataset)
+       .enter()
+       .append('circle')
+       .attr('class', 'dot')
+       .attr('cx', function (d) {
+         return x(d.x);
+       })
+       .attr('cy', function (d) {
+         return y(d.y);
+       })
+       .attr('r', dots.radius)
+       .attr('stroke', dots.stroke)
+       .attr('stroke-width', dots.strokeWidth)
+       .attr('fill', dots.fill);
+    }
+
+    // Tooltip
+    var tooltip = options.tooltip;
+    tooltip.target = g.selectAll('.dot');
+    d3.setTooltip(chart, tooltip);
 };
 
 /*!
@@ -2116,23 +2241,23 @@ d3.radarChart = function (data, options) {
                    .attr('pointer-events', 'visible');
                 });
    if (dots.show) {
-     var dot = s.selectAll('.dot')
-                .data(function (d) {
-                  return d.data;
-                })
-                .enter()
-                .append('circle')
-                .attr('class', 'dot')
-                .attr('cx', function (d, i) {
-                  return rscale(d.value) * Math.sin(theta * i);
-                })
-                .attr('cy', function (d, i) {
-                  return -rscale(d.value) * Math.cos(theta * i);
-                })
-                .attr('r', dots.radius)
-                .attr('stroke', dots.stroke)
-                .attr('stroke-width', dots.strokeWidth)
-                .attr('fill', dots.fill);
+      s.selectAll('.dot')
+       .data(function (d) {
+         return d.data;
+       })
+       .enter()
+       .append('circle')
+       .attr('class', 'dot')
+       .attr('cx', function (d, i) {
+         return rscale(d.value) * Math.sin(theta * i);
+       })
+       .attr('cy', function (d, i) {
+         return -rscale(d.value) * Math.cos(theta * i);
+       })
+       .attr('r', dots.radius)
+       .attr('stroke', dots.stroke)
+       .attr('stroke-width', dots.strokeWidth)
+       .attr('fill', dots.fill);
    }
 
     // Labels
@@ -2184,7 +2309,7 @@ d3.radarChart = function (data, options) {
 
     // Tooltip
     var tooltip = options.tooltip;
-    tooltip.target = dot;
+    tooltip.target = s.selectAll('.dot');
     d3.setTooltip(chart, tooltip);
 
   }
@@ -2912,9 +3037,6 @@ d3.components.contourPlot = {
     smooth: true,
     density: 1
   },
-  labels: {
-    show: false
-  },
   tooltip: {
     html: function (d) {
       var value = Number(d.value.toFixed(3));
@@ -2978,6 +3100,16 @@ d3.contourPlot = function (data, options) {
     });
   }
 
+  // Axes
+  var x = d3.scaleLinear()
+            .domain(domainX)
+            .rangeRound([0, innerWidth])
+            .nice();
+  var y = d3.scaleLinear()
+            .domain(domainY)
+            .rangeRound([innerHeight, 0])
+            .nice();
+
   // Thresholds
   var extentZ = d3.extent(values);
   var thresholds = options.thresholds;
@@ -3010,19 +3142,39 @@ d3.contourPlot = function (data, options) {
                .attr('transform', d3.translate(margin.left, margin.top));
 
     // Path
-    var contour = g.selectAll('path')
-                   .data(generator(values))
-                   .enter()
-                   .append('path')
-                   .attr('d', d3.geoPath(d3.geoIdentity().scale(scale)))
-                   .attr('fill', function (d) {
-                     return colors(d.value);
-                   })
-                   .attr('stroke', contours.stroke);
+    g.append('g')
+     .attr('class', 'contours')
+     .attr('transform', function () {
+       var sx = (innerWidth / innerHeight) / (sizeX / sizeY);
+       return sx === 1 ? null : 'scale(' + sx + ',1)';
+     })
+     .selectAll('path')
+     .data(generator(values))
+     .enter()
+     .append('path')
+     .attr('class', 'contour')
+     .attr('d', d3.geoPath(d3.geoIdentity().scale(scale)))
+     .attr('fill', function (d) {
+       return colors(d.value);
+     })
+     .attr('stroke', contours.stroke);
 
-     // Tooltip
-     var tooltip = options.tooltip;
-     tooltip.target = contour;
-     d3.setTooltip(chart, tooltip);
+    // Set axes and grids
+    d3.setAxes(g, {
+      width: innerWidth,
+      height: innerHeight,
+      scaleX: x,
+      scaleY: y,
+      axisX: options.axisX,
+      axisY: options.axisY,
+      gridX: options.gridX,
+      gridY: options.gridY,
+      framed: options.framed
+    });
+
+    // Tooltip
+    var tooltip = options.tooltip;
+    tooltip.target = g.selectAll('.contour');
+    d3.setTooltip(chart, tooltip);
   }
 };
