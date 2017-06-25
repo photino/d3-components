@@ -19,17 +19,45 @@ block article
       &lt;div id="line-chart-customized"&gt;&lt;/div&gt;
 
       &lt;script&gt;
-        var data = [];
-        d3.lineChart(data, { id: 'line-chart-default' });
-        d3.lineChart(data, {
-          id: 'line-chart-customized'
+        d3.json('../data/math-sin-x2.json', function (data) {
+          d3.shuffle(data);
+          d3.lineChart(data, { id: 'line-chart-default' });
+        });
+        d3.lineChart(function (x) {
+          return Math.sin(Math.PI * x);
+        }, {
+          id: 'line-chart-customized',
+          domainX: [-3, 3],
+          lines: {
+            curve: 'curveCardinal',
+            density: 0.1,
+            fill: '#ff7f0e'
+          },
+          dots: {
+            show: true
+          },
+          framed: true
         });
       &lt;/script&gt;
 
 block append foot
   script.
-    var data = [];
-    d3.lineChart(data, { id: 'line-chart-default' });
-    d3.lineChart(data, {
-      id: 'line-chart-customized'
+    d3.json('../data/math-sin-x2.json', function (data) {
+      d3.shuffle(data);
+      d3.lineChart(data, { id: 'line-chart-default' });
+    });
+    d3.lineChart(function (x) {
+      return Math.sin(Math.PI * x);
+    }, {
+      id: 'line-chart-customized',
+      domainX: [-3, 3],
+      lines: {
+        curve: 'curveCardinal',
+        density: 0.1,
+        fill: '#ff7f0e'
+      },
+      dots: {
+        show: true
+      },
+      framed: true
     });

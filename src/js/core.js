@@ -75,6 +75,7 @@ d3.defaultOptions = {
     disabledTextColor: '#ccc'
   },
   axisX: {
+    show: true,
     orient: 'bottom',
     ticks: {
       number: 8,
@@ -88,6 +89,7 @@ d3.defaultOptions = {
     fontSize: '0.85em'
   },
   axisY: {
+    show: true,
     orient: 'left',
     ticks: {
       number: 6,
@@ -271,9 +273,7 @@ d3.parseOptions = function (plot, options) {
 
   // Set the tooltip
   var chart = canvas.node();
-  var tooltip = d3.extend({
-    id: id + '-tooltip'
-  }, options.tooltip);
+  var tooltip = d3.extend({ id: id + '-tooltip' }, options.tooltip);
   options.tooltip = tooltip;
   chart.style.position = 'relative';
   if (tooltip.show) {
@@ -326,7 +326,7 @@ d3.parseOptions = function (plot, options) {
   if (options.hasOwnProperty('map')) {
     var map = options.map || {};
     var name = map.name || 'world';
-    options.map = d3.extend(d3.maps[name], map);
+    options.map = d3.extend(d3.mapData[name], map);
   }
 
   // Set the margins
@@ -547,50 +547,62 @@ d3.setAxes = function (container, options) {
   g.selectAll('.axis')
    .remove();
   if (options.framed) {
-    g.append('g')
-     .attr('class', 'axis axis-x')
-     .attr('transform', d3.translate(0, height))
-     .call(gx);
-    g.append('g')
-     .attr('class', 'axis axis-y')
-     .call(gy);
-    g.append('g')
-     .attr('class', 'axis axis-x')
-     .call(gx.tickFormat(''));
-    g.append('g')
-     .attr('class', 'axis axis-y')
-     .attr('transform', d3.translate(width, 0))
-     .call(gy.tickFormat(''));
-  } else {
-    var ax = g.append('g')
-              .attr('class', 'axis axis-x')
-              .call(gx);
-    var ay = g.append('g')
-              .attr('class', 'axis axis-y')
-              .call(gy);
-    if (orientX === 'bottom') {
-      ax.attr('transform', d3.translate(0, height));
+    if (axisX.show) {
+      g.append('g')
+       .attr('class', 'axis axis-x')
+       .attr('transform', d3.translate(0, height))
+       .call(gx);
+      g.append('g')
+       .attr('class', 'axis axis-x')
+       .call(gx.tickFormat(''));
     }
-    if (orientY === 'right') {
-      ay.attr('transform', d3.translate(width, 0));
+    if (axisY.show) {
+      g.append('g')
+       .attr('class', 'axis axis-y')
+       .call(gy);
+      g.append('g')
+       .attr('class', 'axis axis-y')
+       .attr('transform', d3.translate(width, 0))
+       .call(gy.tickFormat(''));
+    }
+  } else {
+    if (axisX.show) {
+      var ax = g.append('g')
+                .attr('class', 'axis axis-x')
+                .call(gx);
+      if (orientX === 'bottom') {
+        ax.attr('transform', d3.translate(0, height));
+      }
+    }
+    if (axisY.show) {
+      var ay = g.append('g')
+                .attr('class', 'axis axis-y')
+                .call(gy);
+      if (orientY === 'right') {
+        ay.attr('transform', d3.translate(width, 0));
+      }
     }
   }
-  g.selectAll('.axis-x')
-   .attr('font-size', axisX.fontSize)
-   .selectAll('text')
-   .attr('text-anchor', axisX.textAnchor)
-   .attr('transform', axisX.transform);
-  g.select('.axis-x')
-   .select('.domain')
-   .attr('stroke-width', domainX.strokeWidth);
-  g.selectAll('.axis-y')
-   .attr('font-size', axisY.fontSize)
-   .selectAll('text')
-   .attr('text-anchor', axisY.textAnchor)
-   .attr('transform', axisY.transform);
-  g.select('.axis-y')
-   .select('.domain')
-   .attr('stroke-width', domainY.strokeWidth);
+  if (axisX.show) {
+    g.selectAll('.axis-x')
+     .attr('font-size', axisX.fontSize)
+     .selectAll('text')
+     .attr('text-anchor', axisX.textAnchor)
+     .attr('transform', axisX.transform);
+    g.select('.axis-x')
+     .select('.domain')
+     .attr('stroke-width', domainX.strokeWidth);
+  }
+  if (axisY.show) {
+    g.selectAll('.axis-y')
+     .attr('font-size', axisY.fontSize)
+     .selectAll('text')
+     .attr('text-anchor', axisY.textAnchor)
+     .attr('transform', axisY.transform);
+    g.select('.axis-y')
+     .select('.domain')
+     .attr('stroke-width', domainY.strokeWidth);
+  }
 
   // Grid lines
   var gridX = options.gridX;
@@ -611,7 +623,7 @@ d3.setAxes = function (container, options) {
        var transform = d3.select(this)
                          .attr('transform');
        var dy = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[2];
-       return (dy === 0 || dy === height) ? 0 : null;
+       return (Math.abs(dy) < 1 || Math.abs(dy - height) < 1) ? 0 : null;
      })
      .select('line')
      .attr('stroke', gridX.stroke);
@@ -631,7 +643,7 @@ d3.setAxes = function (container, options) {
        var transform = d3.select(this)
                          .attr('transform');
        var dx = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[1];
-       return (dx === 0 || dx === width) ? 0 : null;
+       return (Math.abs(dx) < 1 || Math.abs(dx - width) < 1) ? 0 : null;
      })
      .select('line')
      .attr('stroke', gridY.stroke);
@@ -977,7 +989,7 @@ d3.parseGeoData = function (map, options) {
 };
 
 // Built-in map data
-d3.maps = {
+d3.mapData = {
   world: {
     center: [0, 0],
     scale: 0.25

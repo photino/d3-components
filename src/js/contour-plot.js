@@ -44,9 +44,6 @@ d3.components.contourPlot = {
     smooth: true,
     density: 1
   },
-  labels: {
-    show: false
-  },
   tooltip: {
     html: function (d) {
       var value = Number(d.value.toFixed(3));
@@ -110,6 +107,16 @@ d3.contourPlot = function (data, options) {
     });
   }
 
+  // Axes
+  var x = d3.scaleLinear()
+            .domain(domainX)
+            .rangeRound([0, innerWidth])
+            .nice();
+  var y = d3.scaleLinear()
+            .domain(domainY)
+            .rangeRound([innerHeight, 0])
+            .nice();
+
   // Thresholds
   var extentZ = d3.extent(values);
   var thresholds = options.thresholds;
@@ -142,19 +149,39 @@ d3.contourPlot = function (data, options) {
                .attr('transform', d3.translate(margin.left, margin.top));
 
     // Path
-    var contour = g.selectAll('path')
-                   .data(generator(values))
-                   .enter()
-                   .append('path')
-                   .attr('d', d3.geoPath(d3.geoIdentity().scale(scale)))
-                   .attr('fill', function (d) {
-                     return colors(d.value);
-                   })
-                   .attr('stroke', contours.stroke);
+    g.append('g')
+     .attr('class', 'contours')
+     .attr('transform', function () {
+       var sx = (innerWidth / innerHeight) / (sizeX / sizeY);
+       return sx === 1 ? null : 'scale(' + sx + ',1)';
+     })
+     .selectAll('path')
+     .data(generator(values))
+     .enter()
+     .append('path')
+     .attr('class', 'contour')
+     .attr('d', d3.geoPath(d3.geoIdentity().scale(scale)))
+     .attr('fill', function (d) {
+       return colors(d.value);
+     })
+     .attr('stroke', contours.stroke);
 
-     // Tooltip
-     var tooltip = options.tooltip;
-     tooltip.target = contour;
-     d3.setTooltip(chart, tooltip);
+    // Set axes and grids
+    d3.setAxes(g, {
+      width: innerWidth,
+      height: innerHeight,
+      scaleX: x,
+      scaleY: y,
+      axisX: options.axisX,
+      axisY: options.axisY,
+      gridX: options.gridX,
+      gridY: options.gridY,
+      framed: options.framed
+    });
+
+    // Tooltip
+    var tooltip = options.tooltip;
+    tooltip.target = g.selectAll('.contour');
+    d3.setTooltip(chart, tooltip);
   }
 };

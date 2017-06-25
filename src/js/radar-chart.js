@@ -273,23 +273,23 @@ d3.radarChart = function (data, options) {
                    .attr('pointer-events', 'visible');
                 });
    if (dots.show) {
-     var dot = s.selectAll('.dot')
-                .data(function (d) {
-                  return d.data;
-                })
-                .enter()
-                .append('circle')
-                .attr('class', 'dot')
-                .attr('cx', function (d, i) {
-                  return rscale(d.value) * Math.sin(theta * i);
-                })
-                .attr('cy', function (d, i) {
-                  return -rscale(d.value) * Math.cos(theta * i);
-                })
-                .attr('r', dots.radius)
-                .attr('stroke', dots.stroke)
-                .attr('stroke-width', dots.strokeWidth)
-                .attr('fill', dots.fill);
+      s.selectAll('.dot')
+       .data(function (d) {
+         return d.data;
+       })
+       .enter()
+       .append('circle')
+       .attr('class', 'dot')
+       .attr('cx', function (d, i) {
+         return rscale(d.value) * Math.sin(theta * i);
+       })
+       .attr('cy', function (d, i) {
+         return -rscale(d.value) * Math.cos(theta * i);
+       })
+       .attr('r', dots.radius)
+       .attr('stroke', dots.stroke)
+       .attr('stroke-width', dots.strokeWidth)
+       .attr('fill', dots.fill);
    }
 
     // Labels
@@ -341,7 +341,7 @@ d3.radarChart = function (data, options) {
 
     // Tooltip
     var tooltip = options.tooltip;
-    tooltip.target = dot;
+    tooltip.target = s.selectAll('.dot');
     d3.setTooltip(chart, tooltip);
 
   }
