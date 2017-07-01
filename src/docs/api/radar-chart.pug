@@ -7,69 +7,74 @@ block variables
   - var prism = true
 
 block article
-  h3.ui-header-primary= pageTitle
+  h3.ui-header-primary
+    span= pageTitle
+    label.ui-float-right(for='radar-chart-src')
+      i.ui-zoom-small(data-schema-icon='code')
   .ui-container-grid
     .ui-grid-50.ui-mobile-expand
       #radar-chart-default
     .ui-grid-50.ui-mobile-expand
       #radar-chart-circular
-  div
-    pre: code.language-markup.
-      &lt;div id="radar-chart-default"&gt;&lt;/div&gt;
-      &lt;div id="radar-chart-circular"&gt;&lt;/div&gt;
+  .ui-toggle-target
+    input#radar-chart-src(type='checkbox' checked)
+    div
+      pre: code.language-markup.
+        &lt;div id="radar-chart-default"&gt;&lt;/div&gt;
+        &lt;div id="radar-chart-circular"&gt;&lt;/div&gt;
 
-      &lt;script&gt;
-        d3.radarChart([
-          { axis: 'Computing power', value: 90 },
-          { axis: 'Investments', value: 66 },
-          { axis: 'Big data', value: 45 },
-          { axis: 'Innovations', value: 72 },
-          { axis: 'Demands', value: 42 }
-        ], { id: 'radar-chart-default' });
-        d3.radarChart([
-          { axis: 'Innovations', value: 92, city: 'Shenzhen' },
-          { axis: 'Computing power', value: 90, city: 'Hangzhou' },
-          { axis: 'Investments', value: 85, city: 'Shenzhen' },
-          { axis: 'Computing power', value: 78, city: 'Shenzhen' },
-          { axis: 'Innovations', value: 72, city: 'Hangzhou' },
-          { axis: 'Investments', value: 66, city: 'Hangzhou' },
-          { axis: 'Demands', value: 60, city: 'Shenzhen' },
-          { axis: 'Big data', value: 45, city: 'Hangzhou' },
-          { axis: 'Demands', value: 42, city: 'Hangzhou' },
-          { axis: 'Big data', value: 30, city: 'Shenzhen' }
-        ], {
-          id: 'radar-chart-circular',
-          title: {
-            show: true,
-            text: 'Cloud Indexes of China Cities'
-          },
-          axes: [
-            'Computing power',
-            'Investments',
-            'Big data',
-            'Innovations',
-            'Demands'
-          ],
-          series: [
-            'Hangzhou',
-            'Shenzhen'
-          ],
-          maxValue: 100,
-          levels: 5,
-          curve: 'curveCardinalClosed',
-          grids: {
-            shape: 'circle'
-          },
-          tooltip: {
-            html: function (d) {
-              return d.axis + ': ' + d.value + ' (' + d.city + ')';
+        &lt;script&gt;
+          d3.radarChart([
+            { axis: 'Computing power', value: 90 },
+            { axis: 'Investments', value: 66 },
+            { axis: 'Big data', value: 45 },
+            { axis: 'Innovations', value: 72 },
+            { axis: 'Demands', value: 42 }
+          ], { id: 'radar-chart-default' });
+          d3.radarChart([
+            { axis: 'Innovations', value: 92, city: 'Shenzhen' },
+            { axis: 'Computing power', value: 90, city: 'Hangzhou' },
+            { axis: 'Investments', value: 85, city: 'Shenzhen' },
+            { axis: 'Computing power', value: 78, city: 'Shenzhen' },
+            { axis: 'Innovations', value: 72, city: 'Hangzhou' },
+            { axis: 'Investments', value: 66, city: 'Hangzhou' },
+            { axis: 'Demands', value: 60, city: 'Shenzhen' },
+            { axis: 'Big data', value: 45, city: 'Hangzhou' },
+            { axis: 'Demands', value: 42, city: 'Hangzhou' },
+            { axis: 'Big data', value: 30, city: 'Shenzhen' }
+          ], {
+            id: 'radar-chart-circular',
+            title: {
+              show: true,
+              text: 'Cloud Indexes of China Cities'
+            },
+            axes: [
+              'Computing power',
+              'Investments',
+              'Big data',
+              'Innovations',
+              'Demands'
+            ],
+            series: [
+              'Hangzhou',
+              'Shenzhen'
+            ],
+            maxValue: 100,
+            levels: 5,
+            curve: 'curveCardinalClosed',
+            grids: {
+              shape: 'circle'
+            },
+            tooltip: {
+              html: function (d) {
+                return d.axis + ': ' + d.value + ' (' + d.city + ')';
+              }
+            },
+            legend: {
+              autoplay: true
             }
-          },
-          legend: {
-            autoplay: true
-          }
-        });
-      &lt;/script&gt;
+          });
+        &lt;/script&gt;
 
 block append foot
   script.

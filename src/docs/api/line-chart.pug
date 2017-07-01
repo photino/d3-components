@@ -7,38 +7,43 @@ block variables
   - var prism = true
 
 block article
-  h3.ui-header-primary= pageTitle
+  h3.ui-header-primary
+    span= pageTitle
+    label.ui-float-right(for='line-chart-src')
+      i.ui-zoom-small(data-schema-icon='code')
   .ui-container-grid
     .ui-grid-50.ui-mobile-expand
       #line-chart-default
     .ui-grid-50.ui-mobile-expand
       #line-chart-customized
-  div
-    pre: code.language-markup.
-      &lt;div id="line-chart-default"&gt;&lt;/div&gt;
-      &lt;div id="line-chart-customized"&gt;&lt;/div&gt;
+  .ui-toggle-target
+    input#line-chart-src(type='checkbox' checked)
+    div
+      pre: code.language-markup.
+        &lt;div id="line-chart-default"&gt;&lt;/div&gt;
+        &lt;div id="line-chart-customized"&gt;&lt;/div&gt;
 
-      &lt;script&gt;
-        d3.json('../data/math-sin-x2.json', function (data) {
-          d3.shuffle(data);
-          d3.lineChart(data, { id: 'line-chart-default' });
-        });
-        d3.lineChart(function (x) {
-          return Math.sin(Math.PI * x);
-        }, {
-          id: 'line-chart-customized',
-          domainX: [-3, 3],
-          lines: {
-            curve: 'curveCardinal',
-            density: 0.1,
-            fill: '#ff7f0e'
-          },
-          dots: {
-            show: true
-          },
-          framed: true
-        });
-      &lt;/script&gt;
+        &lt;script&gt;
+          d3.json('../data/math-sin-x2.json', function (data) {
+            d3.shuffle(data);
+            d3.lineChart(data, { id: 'line-chart-default' });
+          });
+          d3.lineChart(function (x) {
+            return Math.sin(Math.PI * x);
+          }, {
+            id: 'line-chart-customized',
+            domainX: [-3, 3],
+            lines: {
+              curve: 'curveCardinal',
+              density: 0.1,
+              fill: '#ff7f0e'
+            },
+            dots: {
+              show: true
+            },
+            framed: true
+          });
+        &lt;/script&gt;
 
 block append foot
   script.

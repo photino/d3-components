@@ -50,12 +50,14 @@ d3.components.bubbleChart = {
   labelX: {
     show: false,
     text: 'X',
-    dy: '2.8em'
+    dy: '2.8em',
+    fill: 'currentColor'
   },
   labelY: {
     show: false,
     text: 'Y',
-    dy: '-3em'
+    dy: '-3em',
+    fill: 'currentColor'
   },
   dots: {
     scale: '2%',
@@ -145,19 +147,21 @@ d3.bubbleChart = function (data, options) {
     if (labelX.show) {
       g.append('text')
        .attr('class', 'label label-x')
-       .attr('text-anchor', 'end')
        .attr('x', innerWidth)
        .attr('y', innerHeight)
        .attr('dy', labelX.dy)
+       .attr('fill', labelX.fill)
+       .attr('text-anchor', 'end')
        .text(labelX.text);
     }
     if (labelY.show) {
       g.append('text')
        .attr('class', 'label label-y')
-       .attr('text-anchor', 'end')
        .attr('y', 0)
        .attr('dy', labelY.dy)
        .attr('transform', 'rotate(-90)')
+       .attr('fill', labelY.fill)
+       .attr('text-anchor', 'end')
        .text(labelY.text);
     }
 

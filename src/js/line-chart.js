@@ -40,7 +40,7 @@ d3.components.lineChart = {
   },
   dots: {
     show: false,
-    radius: 3,
+    radius: '0.5%',
     stroke: '#1f77b4',
     strokeWidth: 1,
     fill: '#fff'

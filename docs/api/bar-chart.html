@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Bar Chart | D3 Components</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="keywords" content="UI, Schema, HTML, CSS, JS, JavaScript, front-end, framework, web development">
+    <meta name="keywords" content="Data visualization, D3.js, SVG">
     <meta name="description" content="D3-based visualization components">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./../dist/ui-schema-0.4.4.min.css" media="all">
@@ -14,19 +14,19 @@
     <header class="ui-header-navbar ui-container-fluid ui-container-grid">
       <div class="ui-navbar-brand">
         <h2><a href="./../index.html" accesskey="h">D3 Components</a></h2>
-      </div>
+      </div><a class="ui-navbar-text ui-float-right" accesskey="t" data-schema-toggle="body" data-schema-toggler="ui-theme-dark" data-schema-storage="dark" data-schema-init><i class="ui-zoom-large" data-schema-icon="adjust"></i></a>
       <nav class="ui-navbar-nav">
         <ul>
-          <li><a href="./../api.html">API</a></li>
-          <li><a href="./../gallery.html">Gallery</a></li>
-          <li><a href="https://github.com/photino/d3-components" rel="external" target="_blank">GitHub</a></li>
+          <li><a href="./../api.html" accesskey="a"><i class="ui-phone-visible" data-schema-icon="cubes" title="API"></i><span class="ui-phone-hidden">API</span></a></li>
+          <li><a href="./../gallery.html" accesskey="e"><i class="ui-phone-visible" data-schema-icon="image" title="Gallery"></i><span class="ui-phone-hidden">Gallery</span></a></li>
+          <li><a href="https://github.com/photino/d3-components" rel="external" target="_blank" accesskey="g"><i class="ui-phone-visible" data-schema-icon="github" title="GitHub"></i><span class="ui-phone-hidden">GitHub</span></a></li>
         </ul>
       </nav>
     </header>
     <main class="ui-container-fluid ui-container-grid">
       <aside class="ui-grid-25 ui-mobile-expand ui-sticky-top">
         <h3 class="ui-header-primary">Components</h3>
-        <ul class="ui-list-group ui-block-fluid ui-zoom-large ui-text-capitalize">
+        <ul class="ui-list-group ui-block-fluid ui-zoom-large">
           <li class="ui-state-active"><a href="./../api/bar-chart.html">Bar Chart</a></li>
           <li><a href="./../api/pie-chart.html">Pie Chart</a></li>
           <li><a href="./../api/line-chart.html">Line Chart</a></li>
@@ -39,7 +39,9 @@
         </ul>
       </aside>
       <article class="ui-grid-75 ui-mobile-expand">
-        <h3 class="ui-header-primary">Bar Chart</h3>
+        <h3 class="ui-header-primary"><span>Bar Chart</span>
+          <label class="ui-float-right" for="bar-chart-src"><i class="ui-zoom-small" data-schema-icon="code"></i></label>
+        </h3>
         <div class="ui-container-grid">
           <div class="ui-grid-50 ui-mobile-expand">
             <div id="bar-chart-default"></div>
@@ -48,8 +50,10 @@
             <div id="bar-chart-stacked"></div>
           </div>
         </div>
-        <div>
-          <pre><code class="language-markup">&lt;div id="bar-chart-default"&gt;&lt;/div&gt;
+        <div class="ui-toggle-target">
+          <input id="bar-chart-src" type="checkbox" checked>
+          <div>
+            <pre><code class="language-markup">&lt;div id="bar-chart-default"&gt;&lt;/div&gt;
 &lt;div id="bar-chart-stacked"&gt;&lt;/div&gt;
 
 &lt;script&gt;
@@ -79,6 +83,7 @@
   });
 &lt;/script&gt;
 </code></pre>
+          </div>
         </div>
       </article>
     </main>
@@ -88,8 +93,11 @@
     <script src="./../dist/jquery-3.2.1.min.js"></script>
     <script src="./../dist/prism-1.4.1.min.js"></script>
     <script src="./../dist/ui-schema-0.4.4.min.js"></script>
+    <script src="./../dist/icons/brands.js"></script>
+    <script src="./../dist/icons/devices.js"></script>
+    <script src="./../dist/icons/editor.js"></script>
     <script src="./../dist/d3-4.9.1.min.js"></script>
-    <script src="./../dist/d3-components-0.0.4.js"></script>
+    <script src="./../dist/d3-components-0.0.5.js"></script>
     <script>
       d3.json('../data/china-cities-population.json', function (data) {
         d3.barChart(data, { id: 'bar-chart-default' });

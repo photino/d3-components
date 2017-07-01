@@ -63,6 +63,12 @@ gulp.task('compile-docs', function () {
       pretty: true
     }))
     .pipe(gulp.dest('docs/api/'));
+
+  gulp.src('src/docs/gallery/!(links).pug')
+    .pipe(pug({
+      pretty: true
+    }))
+    .pipe(gulp.dest('docs/gallery/'));
 });
 
 gulp.task('watch', function () {

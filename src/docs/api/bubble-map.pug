@@ -7,81 +7,86 @@ block variables
   - var prism = true
 
 block article
-  h3.ui-header-primary= pageTitle
+  h3.ui-header-primary
+    span= pageTitle
+    label.ui-float-right(for='bubble-map-src')
+      i.ui-zoom-small(data-schema-icon='code')
   .ui-container-grid
     .ui-grid-50.ui-mobile-expand
       #bubble-map-default
     .ui-grid-50.ui-mobile-expand
       #bubble-map-tile
-  div
-    pre: code.language-markup.
-      &lt;div id="bubble-map-default"&gt;&lt;/div&gt;
-      &lt;div id="bubble-map-tile"&gt;&lt;/div&gt;
+  .ui-toggle-target
+    input#bubble-map-src(type='checkbox' checked)
+    div
+      pre: code.language-markup.
+        &lt;div id="bubble-map-default"&gt;&lt;/div&gt;
+        &lt;div id="bubble-map-tile"&gt;&lt;/div&gt;
 
-      &lt;script&gt;
-        d3.json('../dist/maps/china.geo.json', function (provinces) {
-          d3.choroplethMap([], {
-            id: 'bubble-map-default',
-            map: {
-              name: 'china',
-              data: provinces
-            },
-            tooltip: {
-              show: false
-            }
-          });
-          d3.choroplethMap([], {
-            id: 'bubble-map-tile',
-            map: {
-              name: 'china',
-              data: provinces
-            },
-            tile: {
-              show: true,
-              scale: 2048,
-              image: {
-                href: function (d) {
-                  var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
-                  return server + d[2] + '/' + d[1] + '/' + d[0];
-                }
+        &lt;script&gt;
+          d3.json('../dist/maps/china.geo.json', function (provinces) {
+            d3.choroplethMap([], {
+              id: 'bubble-map-default',
+              map: {
+                name: 'china',
+                data: provinces
+              },
+              tooltip: {
+                show: false
               }
-            },
-            stroke: 'none',
-            fill: 'none',
-            tooltip: {
-              show: false
-            }
-          });
-          d3.json('../dist/maps/china-cities.geo.json', function (cities) {
-            d3.json('../data/china-cities-gdp.json', function (data) {
-              d3.shuffle(data);
-              d3.bubbleMap(data, {
-                id: 'bubble-map-default',
-                standalone: false,
-                map: {
-                  name: 'china',
-                  data: cities
+            });
+            d3.choroplethMap([], {
+              id: 'bubble-map-tile',
+              map: {
+                name: 'china',
+                data: provinces
+              },
+              tile: {
+                show: true,
+                scale: 2048,
+                image: {
+                  href: function (d) {
+                    var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
+                    return server + d[2] + '/' + d[1] + '/' + d[0];
+                  }
                 }
-              });
-              d3.bubbleMap(data, {
-                id: 'bubble-map-tile',
-                standalone: false,
-                map: {
-                  name: 'china',
-                  data: cities
-                },
-                tile: {
-                  show: true,
-                  scale: 2048
-                },
-                tooltip: {
-                  autoplay: true
-                }
+              },
+              stroke: 'none',
+              fill: 'none',
+              tooltip: {
+                show: false
+              }
+            });
+            d3.json('../dist/maps/china-cities.geo.json', function (cities) {
+              d3.json('../data/china-cities-gdp.json', function (data) {
+                d3.shuffle(data);
+                d3.bubbleMap(data, {
+                  id: 'bubble-map-default',
+                  standalone: false,
+                  map: {
+                    name: 'china',
+                    data: cities
+                  }
+                });
+                d3.bubbleMap(data, {
+                  id: 'bubble-map-tile',
+                  standalone: false,
+                  map: {
+                    name: 'china',
+                    data: cities
+                  },
+                  tile: {
+                    show: true,
+                    scale: 2048
+                  },
+                  tooltip: {
+                    autoplay: true
+                  }
+                });
               });
             });
           });
-        });
-      &lt;/script&gt;
+        &lt;/script&gt;
 
 block append foot
   script(src='../dist/d3-scale-chromatic-1.1.0.min.js')

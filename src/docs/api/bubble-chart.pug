@@ -7,56 +7,61 @@ block variables
   - var prism = true
 
 block article
-  h3.ui-header-primary= pageTitle
+  h3.ui-header-primary
+    span= pageTitle
+    label.ui-float-right(for='bubble-chart-src')
+      i.ui-zoom-small(data-schema-icon='code')
   .ui-container-grid
     .ui-grid-50.ui-mobile-expand
       #bubble-chart-default
     .ui-grid-50.ui-mobile-expand
       #bubble-chart-gradient
-  div
-    pre: code.language-markup.
-      &lt;div id="bubble-chart-default"&gt;&lt;/div&gt;
-      &lt;div id="bubble-chart-gradient"&gt;&lt;/div&gt;
+  .ui-toggle-target
+    input#bubble-chart-src(type='checkbox' checked)
+    div
+      pre: code.language-markup.
+        &lt;div id="bubble-chart-default"&gt;&lt;/div&gt;
+        &lt;div id="bubble-chart-gradient"&gt;&lt;/div&gt;
 
-      &lt;script&gt;
-        d3.json('../data/arxiv-keywords.json', function (data) {
-          d3.shuffle(data);
-          d3.bubbleChart(data, { id: 'bubble-chart-default' });
-          d3.bubbleChart(data, {
-            id: 'bubble-chart-gradient',
-            domainX: [2003, 2017],
-            domainY: [0, 600],
-            framed: true,
-            gridY: {
-              show: true
-            },
-            labelX: {
-              show: true,
-              text: 'Published year'
-            },
-            labelY: {
-              show: true,
-              text: 'Article counts'
-            },
-            dots: {
-              gradient: true,
-              normalize: 'linear',
-              onclick: function (d) {
-                window.open('http://arxitics.com/search?q="topological+insulator"&amp;published=' + d.year);
+        &lt;script&gt;
+          d3.json('../data/arxiv-keywords.json', function (data) {
+            d3.shuffle(data);
+            d3.bubbleChart(data, { id: 'bubble-chart-default' });
+            d3.bubbleChart(data, {
+              id: 'bubble-chart-gradient',
+              domainX: [2003, 2017],
+              domainY: [0, 600],
+              framed: true,
+              gridY: {
+                show: true
+              },
+              labelX: {
+                show: true,
+                text: 'Published year'
+              },
+              labelY: {
+                show: true,
+                text: 'Article counts'
+              },
+              dots: {
+                gradient: true,
+                normalize: 'linear',
+                onclick: function (d) {
+                  window.open('http://arxitics.com/search?q="topological+insulator"&amp;published=' + d.year);
+                }
+              },
+              tooltip: {
+                html: function (d) {
+                  var year = d.year;
+                  var count = d.count;
+                  var authors = d.authors;
+                  return authors + ' author' + (authors &gt; 1 ? 's' : '') + ' published ' +
+                    count + ' article' + (count &gt; 1 ? 's' : '') + ' in ' + year;
+                }
               }
-            },
-            tooltip: {
-              html: function (d) {
-                var year = d.year;
-                var count = d.count;
-                var authors = d.authors;
-                return authors + ' author' + (authors &gt; 1 ? 's' : '') + ' published ' +
-                  count + ' article' + (count &gt; 1 ? 's' : '') + ' in ' + year;
-              }
-            }
+            });
           });
-        });
-      &lt;/script&gt;
+        &lt;/script&gt;
 
 block append foot
   script.
@@ -83,7 +88,7 @@ block append foot
           gradient: true,
           normalize: 'linear',
           onclick: function (d) {
-            window.open('http://arxitics.com/search?q="topological+insulator"&amp;published=' + d.year);
+            window.open('http://arxitics.com/search?q="topological+insulator"&published=' + d.year);
           }
         },
         tooltip: {

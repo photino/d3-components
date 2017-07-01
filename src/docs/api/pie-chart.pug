@@ -7,36 +7,41 @@ block variables
   - var prism = true
 
 block article
-  h3.ui-header-primary= pageTitle
+  h3.ui-header-primary
+    span= pageTitle
+    label.ui-float-right(for='pie-chart-src')
+      i.ui-zoom-small(data-schema-icon='code')
   .ui-container-grid
     .ui-grid-50.ui-mobile-expand
       #pie-chart-default
     .ui-grid-50.ui-mobile-expand
       #pie-chart-donut
-  div
-    pre: code.language-markup.
-      &lt;div id="pie-chart-default"&gt;&lt;/div&gt;
-      &lt;div id="pie-chart-donut"&gt;&lt;/div&gt;
+  .ui-toggle-target
+    input#pie-chart-src(type='checkbox' checked)
+    div
+      pre: code.language-markup.
+        &lt;div id="pie-chart-default"&gt;&lt;/div&gt;
+        &lt;div id="pie-chart-donut"&gt;&lt;/div&gt;
 
-      &lt;script&gt;
-        d3.json('../data/browser-usage-share.json', function (data) {
-          d3.pieChart(data, { id: 'pie-chart-default' });
-        });
-        d3.json('../data/browser-usage-share.json', function (data) {
-          d3.shuffle(data);
-          d3.pieChart(data, {
-            id: 'pie-chart-donut',
-            sort: 'descending(percentage)',
-            arcs: {
-              donutRatio: 0.5,
-              stroke: '#fff'
-            },
-            labels: {
-              show: true
-            }
+        &lt;script&gt;
+          d3.json('../data/browser-usage-share.json', function (data) {
+            d3.pieChart(data, { id: 'pie-chart-default' });
           });
-        });
-      &lt;/script&gt;
+          d3.json('../data/browser-usage-share.json', function (data) {
+            d3.shuffle(data);
+            d3.pieChart(data, {
+              id: 'pie-chart-donut',
+              sort: 'descending(percentage)',
+              arcs: {
+                donutRatio: 0.5,
+                stroke: '#fff'
+              },
+              labels: {
+                show: true
+              }
+            });
+          });
+        &lt;/script&gt;
 
 block append foot
   script.

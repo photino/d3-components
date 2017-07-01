@@ -1,0 +1,12 @@
+
+extends ../layout
+
+mixin link(page, text)
+  li(class={'ui-state-active': pageID === page})
+    a(href=appDocs + '/gallery/' + page + '.html')= text
+
+block aside
+  h3.ui-header-primary Examples
+  ul.ui-list-group.ui-block-fluid.ui-zoom-large
+    +link('list-components', 'List of Components')
+    +link('china-map', 'Map of China')

@@ -7,75 +7,80 @@ block variables
   - var prism = true
 
 block article
-  h3.ui-header-primary= pageTitle
+  h3.ui-header-primary
+    span= pageTitle
+    label.ui-float-right(for='choropleth-map-src')
+      i.ui-zoom-small(data-schema-icon='code')
   .ui-container-grid
     .ui-grid-50.ui-mobile-expand
       #choropleth-map-geojson
     .ui-grid-50.ui-mobile-expand
       #choropleth-map-topojson
-  div
-    pre: code.language-markup.
-      &lt;div id="choropleth-map-geojson"&gt;&lt;/div&gt;
-      &lt;div id="choropleth-map-topojson"&gt;&lt;/div&gt;
+  .ui-toggle-target
+    input#choropleth-map-src(type='checkbox' checked)
+    div
+      pre: code.language-markup.
+        &lt;div id="choropleth-map-geojson"&gt;&lt;/div&gt;
+        &lt;div id="choropleth-map-topojson"&gt;&lt;/div&gt;
 
-      &lt;script&gt;
-        d3.json('../dist/maps/china.geo.json', function (geojson) {
-          d3.json('../data/china-provinces-gdp.json', function (data) {
-            d3.shuffle(data);
-            d3.choroplethMap(data, {
-              id: 'choropleth-map-geojson',
+        &lt;script&gt;
+          d3.json('../dist/maps/china.geo.json', function (geojson) {
+            d3.json('../data/china-provinces-gdp.json', function (data) {
+              d3.shuffle(data);
+              d3.choroplethMap(data, {
+                id: 'choropleth-map-geojson',
+                map: {
+                  name: 'china',
+                  data: geojson
+                },
+                tile: {
+                  show: true,
+                  scale: 2048,
+                  zoomable: false,
+                  image: {
+                    href: function (d) {
+                      var server = 'https://' + ['a', 'b', 'c', 'd'][Math.random() * 4 | 0] + '.tiles.mapbox.com/v3/mapbox.natural-earth-2/'
+                      return server + d[2] + '/' + d[0] + '/' + d[1] + '.png';
+                    }
+                  }
+                },
+                colorScale: 'scaleSequential',
+                colorScheme: d3.interpolateReds,
+                tooltip: {
+                  autoplay: true,
+                  carousel: {
+                    sort: 'descending(gdp)'
+                  }
+                }
+              });
+            });
+          });
+          d3.json('../dist/maps/world.topo.json', function (topojson) {
+            d3.choroplethMap([], {
+              id: 'choropleth-map-topojson',
               map: {
-                name: 'china',
-                data: geojson
+                name: 'world',
+                data: topojson,
+                object: 'countries'
               },
               tile: {
                 show: true,
-                scale: 2048,
-                zoomable: false,
                 image: {
                   href: function (d) {
-                    var server = 'https://' + ['a', 'b', 'c', 'd'][Math.random() * 4 | 0] + '.tiles.mapbox.com/v3/mapbox.natural-earth-2/'
-                    return server + d[2] + '/' + d[0] + '/' + d[1] + '.png';
+                    var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
+                    return server + d[2] + '/' + d[1] + '/' + d[0];
                   }
                 }
               },
-              colorScale: 'scaleSequential',
-              colorScheme: d3.interpolateReds,
-              tooltip: {
-                autoplay: true,
-                carousel: {
-                  sort: 'descending(gdp)'
-                }
-              }
+              coloring: 'topological'
             });
           });
-        });
-        d3.json('../dist/maps/world.topo.json', function (topojson) {
-          d3.choroplethMap([], {
-            id: 'choropleth-map-topojson',
-            map: {
-              name: 'world',
-              data: topojson,
-              object: 'countries'
-            },
-            tile: {
-              show: true,
-              image: {
-                href: function (d) {
-                  var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
-                  return server + d[2] + '/' + d[1] + '/' + d[0];
-                }
-              }
-            },
-            coloring: 'topological'
-          });
-        });
-      &lt;/script&gt;
+        &lt;/script&gt;
 
 block append foot
-  script(src='../dist/d3-scale-chromatic-1.1.0.min.js')
-  script(src='../dist/d3-tile-0.0.3.min.js')
-  script(src='../dist/topojson-2.2.0.min.js')
+  script(src=appDist + '/d3-scale-chromatic-1.1.0.min.js')
+  script(src=appDist + '/d3-tile-0.0.3.min.js')
+  script(src=appDist + '/topojson-2.2.0.min.js')
   script.
     d3.json('../dist/maps/china.geo.json', function (geojson) {
       d3.json('../data/china-provinces-gdp.json', function (data) {

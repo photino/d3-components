@@ -2,12 +2,13 @@
 block variables
 
 - var locale = 'en'
-- var version = '0.0.4'
+- var version = '0.0.5'
 - var appTitle = 'D3 Components'
-- var appKeywords = 'UI, Schema, HTML, CSS, JS, JavaScript, front-end, framework, web development'
+- var appKeywords = 'Data visualization, D3.js, SVG'
 - var appDescription = 'D3-based visualization components'
 - var appDocs = '.' + (pageID || '').replace(/[^\/]/g, '').replace(/\//g, '/..')
 - var appDist = appDocs + '/dist'
+- var appIcons = appDocs + '/dist/icons'
 
 doctype html
 
@@ -31,14 +32,22 @@ html(id=pageID lang=locale)
         block header
           .ui-navbar-brand
             h2: a(href=appDocs + '/index.html' accesskey='h')= appTitle
+          a.ui-navbar-text.ui-float-right(accesskey='t' data-schema-toggle='body' data-schema-toggler='ui-theme-dark' data-schema-storage='dark' data-schema-init)
+            i.ui-zoom-large(data-schema-icon='adjust')
           nav.ui-navbar-nav
             ul
               li
-                a(href=appDocs + '/api.html') API
+                a(href=appDocs + '/api.html' accesskey='a')
+                  i.ui-phone-visible(data-schema-icon='cubes' title='API')
+                  span.ui-phone-hidden API
               li
-                a(href=appDocs + '/gallery.html') Gallery
+                a(href=appDocs + '/gallery.html' accesskey='e')
+                  i.ui-phone-visible(data-schema-icon='image' title='Gallery')
+                  span.ui-phone-hidden Gallery
               li
-                a(href='https://github.com/photino/d3-components' rel='external' target='_blank') GitHub
+                a(href='https://github.com/photino/d3-components' rel='external' target='_blank' accesskey='g')
+                  i.ui-phone-visible(data-schema-icon='github' title='GitHub')
+                  span.ui-phone-hidden GitHub
       main.ui-container-fluid.ui-container-grid
         if standalone
           block main
@@ -58,5 +67,8 @@ html(id=pageID lang=locale)
         if prism
           script(src=appDist + '/prism-1.4.1.min.js')
         script(src=appDist + '/ui-schema-0.4.4.min.js')
+        script(src=appIcons + '/brands.js')
+        script(src=appIcons + '/devices.js')
+        script(src=appIcons + '/editor.js')
         script(src=appDist + '/d3-4.9.1.min.js')
         script(src=appDist + '/d3-components-' + version + '.js')

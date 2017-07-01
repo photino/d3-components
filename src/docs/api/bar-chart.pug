@@ -7,43 +7,48 @@ block variables
   - var prism = true
 
 block article
-  h3.ui-header-primary= pageTitle
+  h3.ui-header-primary
+    span= pageTitle
+    label.ui-float-right(for='bar-chart-src')
+      i.ui-zoom-small(data-schema-icon='code')
   .ui-container-grid
     .ui-grid-50.ui-mobile-expand
       #bar-chart-default
     .ui-grid-50.ui-mobile-expand
       #bar-chart-stacked
-  div
-    pre: code.language-markup.
-      &lt;div id="bar-chart-default"&gt;&lt;/div&gt;
-      &lt;div id="bar-chart-stacked"&gt;&lt;/div&gt;
+  .ui-toggle-target
+    input#bar-chart-src(type='checkbox' checked)
+    div
+      pre: code.language-markup.
+        &lt;div id="bar-chart-default"&gt;&lt;/div&gt;
+        &lt;div id="bar-chart-stacked"&gt;&lt;/div&gt;
 
-      &lt;script&gt;
-        d3.json('../data/china-cities-population.json', function (data) {
-          d3.barChart(data, { id: 'bar-chart-default' });
-        });
-        d3.json('../data/china-cities-population.json', function (data) {
-          var options = {
-            id: 'bar-chart-stacked',
-            standalone: false,
-            stacked: true,
-            horizontal: true,
-            gridY: {
-              show: true
-            },
-            tooltip: {
-              html: function (d) {
-                return d.city + ': ' + d.population + ' (' + d.type + ')';
+        &lt;script&gt;
+          d3.json('../data/china-cities-population.json', function (data) {
+            d3.barChart(data, { id: 'bar-chart-default' });
+          });
+          d3.json('../data/china-cities-population.json', function (data) {
+            var options = {
+              id: 'bar-chart-stacked',
+              standalone: false,
+              stacked: true,
+              horizontal: true,
+              gridY: {
+                show: true
+              },
+              tooltip: {
+                html: function (d) {
+                  return d.city + ': ' + d.population + ' (' + d.type + ')';
+                }
               }
-            }
-          };
-          d3.barChart(data, options);
-          d3.interval(function () {
-            d3.shuffle(data);
+            };
             d3.barChart(data, options);
-          }, 2000);
-        });
-      &lt;/script&gt;
+            d3.interval(function () {
+              d3.shuffle(data);
+              d3.barChart(data, options);
+            }, 2000);
+          });
+        &lt;/script&gt;
 
 block append foot
   script.

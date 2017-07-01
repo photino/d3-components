@@ -1,0 +1,246 @@
+extends ../layout
+
+block variables
+  - var pageID = 'gallery/list-components'
+  - var pageTitle = 'List of Components'
+  - var minimal = true
+
+block append head
+  style.
+    body {
+      background-color: #303;
+      color: #fff;
+    }
+    .ui-mobile-expand > div {
+      border: 1px solid #ccc;
+    }
+block body
+  .ui-container-grid
+    .ui-grid-33.ui-mobile-expand
+      #bar-chart-stacked
+    .ui-grid-33.ui-mobile-expand
+      #pie-chart-donut
+    .ui-grid-33.ui-mobile-expand
+      #line-chart-customized
+  .ui-container-grid
+    .ui-grid-33.ui-mobile-expand
+      #bubble-chart-gradient
+    .ui-grid-33.ui-mobile-expand
+      #radar-chart-circular
+    .ui-grid-33.ui-mobile-expand
+      #sunburst-chart-sorted
+  .ui-container-grid
+    .ui-grid-33.ui-mobile-expand
+      #choropleth-map-geojson
+    .ui-grid-33.ui-mobile-expand
+      #bubble-map-tile
+    .ui-grid-33.ui-mobile-expand
+      #contour-plot-customized
+  script(src=appDist + '/jquery-3.2.1.min.js')
+  script(src=appDist + '/ui-schema-0.4.4.min.js')
+  script(src=appDist + '/d3-4.9.1.min.js')
+  script(src=appDist + '/d3-components-' + version + '.js')
+  script(src=appDist + '/d3-scale-chromatic-1.1.0.min.js')
+  script(src=appDist + '/d3-tile-0.0.3.min.js')
+  script(src=appDist + '/d3-contour-1.1.0.min.js')
+  script.
+    d3.json('../data/china-cities-population.json', function (data) {
+      d3.barChart(data, {
+        id: 'bar-chart-stacked',
+        stacked: true,
+        horizontal: true
+      });
+    });
+    d3.json('../data/browser-usage-share.json', function (data) {
+      d3.shuffle(data);
+      d3.pieChart(data, {
+        id: 'pie-chart-donut',
+        sort: 'descending(percentage)',
+        arcs: {
+          donutRatio: 0.5,
+          stroke: '#fff'
+        }
+      });
+    });
+    d3.lineChart(function (x) {
+      return Math.sin(Math.PI * x);
+    }, {
+      id: 'line-chart-customized',
+      domainX: [-3, 3],
+      lines: {
+        curve: 'curveCardinal',
+        density: 0.1,
+        fill: '#ff7f0e'
+      },
+      dots: {
+        show: true
+      },
+      framed: true
+    });
+    d3.json('../data/arxiv-keywords.json', function (data) {
+      d3.bubbleChart(data, {
+        id: 'bubble-chart-gradient',
+        domainX: [2003, 2017],
+        domainY: [0, 600],
+        framed: true,
+        gridY: {
+          show: true
+        },
+        labelX: {
+          show: true,
+          text: 'Published year'
+        },
+        labelY: {
+          show: true,
+          text: 'Article counts'
+        },
+        dots: {
+          gradient: true,
+          normalize: 'linear',
+          onclick: function (d) {
+            window.open('http://arxitics.com/search?q="topological+insulator"&published=' + d.year);
+          }
+        },
+        tooltip: {
+          html: function (d) {
+            var year = d.year;
+            var count = d.count;
+            var authors = d.authors;
+            return authors + ' author' + (authors > 1 ? 's' : '') + ' published ' +
+              count + ' article' + (count > 1 ? 's' : '') + ' in ' + year;
+          }
+        }
+      });
+    });
+    d3.radarChart([
+      { axis: 'Innovations', value: 92, city: 'Shenzhen' },
+      { axis: 'Computing power', value: 90, city: 'Hangzhou' },
+      { axis: 'Investments', value: 85, city: 'Shenzhen' },
+      { axis: 'Computing power', value: 78, city: 'Shenzhen' },
+      { axis: 'Innovations', value: 72, city: 'Hangzhou' },
+      { axis: 'Investments', value: 66, city: 'Hangzhou' },
+      { axis: 'Demands', value: 60, city: 'Shenzhen' },
+      { axis: 'Big data', value: 45, city: 'Hangzhou' },
+      { axis: 'Demands', value: 42, city: 'Hangzhou' },
+      { axis: 'Big data', value: 30, city: 'Shenzhen' }
+    ], {
+      id: 'radar-chart-circular',
+      axes: [
+        'Computing power',
+        'Investments',
+        'Big data',
+        'Innovations',
+        'Demands'
+      ],
+      series: [
+        'Hangzhou',
+        'Shenzhen'
+      ],
+      maxValue: 100,
+      levels: 5,
+      curve: 'curveCardinalClosed',
+      grids: {
+        shape: 'circle'
+      },
+      tooltip: {
+        html: function (d) {
+          return d.axis + ': ' + d.value + ' (' + d.city + ')';
+        }
+      }
+    });
+    d3.json('../data/arxiv-categories.json', function (data) {
+      d3.sunburstChart(data, {
+        id: 'sunburst-chart-sorted',
+        sort: 'descending(count)',
+        tooltip: {
+          html: function (d) {
+            var category = d.data.category;
+            var count = d.data.count;
+            var total = (d.parent || d).data.count;
+            var percent = (100 * count / total).toPrecision(3) + '%';
+            return category + ': ' + count + ' (' + percent + ')';
+          }
+        }
+      });
+    });
+    d3.json('../dist/maps/china.geo.json', function (geojson) {
+      d3.json('../data/china-provinces-gdp.json', function (data) {
+        d3.choroplethMap(data, {
+          id: 'choropleth-map-geojson',
+          map: {
+            name: 'china',
+            data: geojson
+          },
+          tile: {
+            show: true,
+            scale: 2048,
+            zoomable: false,
+            image: {
+              href: function (d) {
+                var server = 'https://' + ['a', 'b', 'c', 'd'][Math.random() * 4 | 0] + '.tiles.mapbox.com/v3/mapbox.natural-earth-2/'
+                return server + d[2] + '/' + d[0] + '/' + d[1] + '.png';
+              }
+            }
+          },
+          colorScale: 'scaleSequential',
+          colorScheme: d3.interpolateReds
+        });
+      });
+    });
+    d3.json('../dist/maps/china.geo.json', function (provinces) {
+      d3.choroplethMap([], {
+        id: 'bubble-map-tile',
+        map: {
+          name: 'china',
+          data: provinces
+        },
+        tile: {
+          show: true,
+          scale: 2048,
+          zoomable: false,
+          image: {
+            href: function (d) {
+              var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
+              return server + d[2] + '/' + d[1] + '/' + d[0];
+            }
+          }
+        },
+        stroke: 'none',
+        fill: 'none',
+        tooltip: {
+          show: false
+        }
+      });
+      d3.json('../dist/maps/china-cities.geo.json', function (cities) {
+        d3.json('../data/china-cities-gdp.json', function (data) {
+          d3.bubbleMap(data, {
+            id: 'bubble-map-tile',
+            standalone: false,
+            map: {
+              name: 'china',
+              data: cities
+            },
+            tile: {
+              show: true,
+              scale: 2048
+            }
+          });
+        });
+      });
+    });
+    d3.contourPlot(function (x, y) {
+      return Math.sin(x + y) * Math.sin(x - y);
+    }, {
+      id: 'contour-plot-customized',
+      domainX: [-2, 2],
+      domainY: [-2, 2],
+      contours: {
+        number: 12,
+        density: 2,
+        smooth: false,
+        stroke: '#fff'
+      },
+      colorScale: 'scaleSequential',
+      colorScheme: d3.interpolateRdBu,
+      framed: true
+    });

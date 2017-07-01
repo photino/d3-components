@@ -56,7 +56,7 @@ d3.components.bubbleMap = {
     scale: 512
   },
   dots: {
-    scale: '1%',
+    scale: '0.5%',
     minRadius: 2,
     maxRadius: Infinity,
     stroke: '#fff',

@@ -63,7 +63,7 @@ d3.components.radarChart = {
   },
   dots: {
     show: true,
-    radius: 3,
+    radius: '0.5%',
     strokeWidth: 1,
     fill: '#fff'
   },
@@ -74,7 +74,8 @@ d3.components.radarChart = {
     wrapText: false,
     wrapWidth: '10em',
     lineHeight: '1.2em',
-    verticalAlign: 'middle'
+    verticalAlign: 'middle',
+    fill: 'currentColor'
   },
   legend: {
     show: null,
@@ -317,6 +318,7 @@ d3.radarChart = function (data, options) {
          }
          return anchor;
        })
+       .attr('fill', labels.fill)
        .text(function (d) {
          return d;
        })

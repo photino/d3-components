@@ -11,7 +11,8 @@ d3.defaultOptions = {
   renderer: 'svg',
   standalone: true,
   responsive: true,
-  width: 300,
+  width: 400,
+  height: 250,
   aspectRatio: 0.618034,
   color: '#1f77b4',
   colorScheme: d3.schemeCategory10,
@@ -28,7 +29,7 @@ d3.defaultOptions = {
     wrapWidth: '90%',
     lineHeight: '2em',
     stroke: 'none',
-    fill: '#333',
+    fill: 'currentColor',
     fontSize: '1.4em',
     fontWeight: 'bold',
     textAnchor: 'middle',
@@ -53,6 +54,7 @@ d3.defaultOptions = {
       backgroundColor: '#fff',
       border: '1px solid #999',
       borderRadius: '0.2em',
+      color: '#333',
       fontSize: '85%',
       opacity: 0.8
     }
@@ -71,7 +73,7 @@ d3.defaultOptions = {
     dx: '0.4em',
     transform: 'scale(0.85)',
     lineHeight: '1.6em',
-    textColor: '#333',
+    textColor: 'currentColor',
     disabledTextColor: '#ccc'
   },
   axisX: {
@@ -84,9 +86,12 @@ d3.defaultOptions = {
       padding: 4
     },
     domain: {
+      stroke: 'currentColor',
       strokeWidth: 1
     },
-    fontSize: '0.85em'
+    fontSize: '0.85em',
+    stroke: 'currentColor',
+    fill: 'currentColor'
   },
   axisY: {
     show: true,
@@ -98,9 +103,12 @@ d3.defaultOptions = {
       padding: 4
     },
     domain: {
+      stroke: 'currentColor',
       strokeWidth: 1
     },
-    fontSize: '0.85em'
+    fontSize: '0.85em',
+    stroke: 'currentColor',
+    fill: 'currentColor'
   },
   gridX: {
     show: false,
@@ -454,7 +462,8 @@ d3.createPlot = function (chart, options) {
   var svg = d3.select(chart)
               .append('svg')
               .attr('class', options.type)
-              .attr('width', width);
+              .attr('width', width)
+              .attr('display', 'block');
 
   // Set the title
   var titleHeight = 0;
@@ -478,7 +487,6 @@ d3.createPlot = function (chart, options) {
   }
   title.height = titleHeight;
 
-
   // Create the container
   var transform = d3.translate(width / 2, height / 2 + titleHeight);
   var g = svg.attr('height', height + titleHeight)
@@ -492,22 +500,21 @@ d3.createPlot = function (chart, options) {
 
 // Get the position relative to the container
 d3.getPosition = function (selection, container) {
-    var node = d3.select(selection).node();
-    var position = node.getBoundingClientRect();
-    var tagName = container.tagName;
-    while (node.parentElement.tagName !== tagName) {
-      node = node.parentElement;
-    }
+  var node = d3.select(selection).node();
+  var position = node.getBoundingClientRect();
+  var tagName = container.tagName;
+  while (node.parentElement.tagName !== tagName) {
+    node = node.parentElement;
+  }
 
-    // Get the container position
-    var containerPosition = node.parentElement.getBoundingClientRect();
-    return {
-      top: position.top - containerPosition.top,
-      left: position.left - containerPosition.left,
-      width: position.width,
-      height: position.height
-    };
-
+  // Get the container position
+  var containerPosition = node.parentElement.getBoundingClientRect();
+  return {
+    top: position.top - containerPosition.top,
+    left: position.left - containerPosition.left,
+    width: position.width,
+    height: position.height
+  };
 };
 
 // Set an axis
@@ -588,9 +595,15 @@ d3.setAxes = function (container, options) {
      .attr('font-size', axisX.fontSize)
      .selectAll('text')
      .attr('text-anchor', axisX.textAnchor)
-     .attr('transform', axisX.transform);
-    g.select('.axis-x')
+     .attr('transform', axisX.transform)
+     .attr('fill', axisX.fill);
+    g.selectAll('.axis-x')
+     .selectAll('line')
+     .attr('stroke', axisX.stroke)
+     .attr('stroke-width', axisX.strokeWidth);
+    g.selectAll('.axis-x')
      .select('.domain')
+     .attr('stroke', domainX.stroke)
      .attr('stroke-width', domainX.strokeWidth);
   }
   if (axisY.show) {
@@ -598,9 +611,15 @@ d3.setAxes = function (container, options) {
      .attr('font-size', axisY.fontSize)
      .selectAll('text')
      .attr('text-anchor', axisY.textAnchor)
-     .attr('transform', axisY.transform);
-    g.select('.axis-y')
+     .attr('transform', axisY.transform)
+     .attr('fill', axisY.fill);
+    g.selectAll('.axis-y')
+     .selectAll('line')
+     .attr('stroke', axisY.stroke)
+     .attr('stroke-width', axisY.strokeWidth);
+    g.selectAll('.axis-y')
      .select('.domain')
+     .attr('stroke', domainX.stroke)
      .attr('stroke-width', domainY.strokeWidth);
   }
 
@@ -874,7 +893,7 @@ d3.triggerAction = function (selection, options) {
 d3.imageTiles = function (selection, options) {
   var tileImage = options.image;
   var tileSize = tileImage.size;
-  var tiles = d3.tile ()
+  var tiles = d3.tile()
                 .size(options.size)
                 .scale(options.scale)
                 .translate(options.translate)();
@@ -1593,7 +1612,7 @@ d3.components.lineChart = {
   },
   dots: {
     show: false,
-    radius: 3,
+    radius: '0.5%',
     stroke: '#1f77b4',
     strokeWidth: 1,
     fill: '#fff'
@@ -1784,12 +1803,14 @@ d3.components.bubbleChart = {
   labelX: {
     show: false,
     text: 'X',
-    dy: '2.8em'
+    dy: '2.8em',
+    fill: 'currentColor'
   },
   labelY: {
     show: false,
     text: 'Y',
-    dy: '-3em'
+    dy: '-3em',
+    fill: 'currentColor'
   },
   dots: {
     scale: '2%',
@@ -1879,19 +1900,21 @@ d3.bubbleChart = function (data, options) {
     if (labelX.show) {
       g.append('text')
        .attr('class', 'label label-x')
-       .attr('text-anchor', 'end')
        .attr('x', innerWidth)
        .attr('y', innerHeight)
        .attr('dy', labelX.dy)
+       .attr('fill', labelX.fill)
+       .attr('text-anchor', 'end')
        .text(labelX.text);
     }
     if (labelY.show) {
       g.append('text')
        .attr('class', 'label label-y')
-       .attr('text-anchor', 'end')
        .attr('y', 0)
        .attr('dy', labelY.dy)
        .attr('transform', 'rotate(-90)')
+       .attr('fill', labelY.fill)
+       .attr('text-anchor', 'end')
        .text(labelY.text);
     }
 
@@ -2031,7 +2054,7 @@ d3.components.radarChart = {
   },
   dots: {
     show: true,
-    radius: 3,
+    radius: '0.5%',
     strokeWidth: 1,
     fill: '#fff'
   },
@@ -2042,7 +2065,8 @@ d3.components.radarChart = {
     wrapText: false,
     wrapWidth: '10em',
     lineHeight: '1.2em',
-    verticalAlign: 'middle'
+    verticalAlign: 'middle',
+    fill: 'currentColor'
   },
   legend: {
     show: null,
@@ -2285,6 +2309,7 @@ d3.radarChart = function (data, options) {
          }
          return anchor;
        })
+       .attr('fill', labels.fill)
        .text(function (d) {
          return d;
        })
@@ -2848,7 +2873,7 @@ d3.components.bubbleMap = {
     scale: 512
   },
   dots: {
-    scale: '1%',
+    scale: '0.5%',
     minRadius: 2,
     maxRadius: Infinity,
     stroke: '#fff',
