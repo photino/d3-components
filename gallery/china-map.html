@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html id="gallery/china-map" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Map of China | D3 Components</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="Data visualization, D3.js, SVG">
+    <meta name="description" content="D3-based visualization components">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./../dist/ui-schema-0.4.4.min.css" media="all">
+    <style>
+      body {
+        background-color: #00192e;
+        color: #fff;
+      }
+      #container-china-map {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
+      #container-cities-population {
+        width: 25vw;
+        padding: 1vh 1vw;
+        position: fixed;
+        top: 5vh;
+        left: 1vw;
+        background-color: #002f47;
+        opacity: 0.75;
+        border-radius: 1em;
+      }
+    </style>
+  </head>
+  <div id="container-china-map">
+    <div id="bubble-map-tile"></div>
+  </div>
+  <div id="container-cities-population">
+    <div id="bar-chart-stacked"></div>
+  </div>
+  <script src="./../dist/jquery-3.2.1.min.js"></script>
+  <script src="./../dist/ui-schema-0.4.4.min.js"></script>
+  <script src="./../dist/d3-4.9.1.min.js"></script>
+  <script src="./../dist/d3-components-0.0.5.js"></script>
+  <script src="./../dist/d3-scale-chromatic-1.1.0.min.js"></script>
+  <script src="./../dist/d3-tile-0.0.3.min.js"></script>
+  <script src="./../dist/d3-contour-1.1.0.min.js"></script>
+  <script>
+    d3.json('../dist/maps/china.geo.json', function (provinces) {
+      d3.choroplethMap([], {
+        id: 'bubble-map-tile',
+        map: {
+          name: 'china',
+          data: provinces,
+          center: [100, 30]
+        },
+        tile: {
+          show: true,
+          scale: 5120,
+          zoomable: false,
+          image: {
+            href: function (d) {
+              var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
+              return server + d[2] + '/' + d[1] + '/' + d[0];
+            }
+          }
+        },
+        stroke: 'none',
+        fill: 'none',
+        tooltip: {
+          show: false
+        }
+      });
+      d3.json('../dist/maps/china-cities.geo.json', function (cities) {
+        d3.json('../data/china-cities-gdp.json', function (data) {
+          d3.bubbleMap(data, {
+            id: 'bubble-map-tile',
+            standalone: false,
+            map: {
+              name: 'china',
+              data: cities,
+              center: [100, 30]
+            },
+            tile: {
+              show: true,
+              scale: 5120
+            }
+          });
+        });
+      });
+    });
+    d3.json('../data/china-cities-population.json', function (data) {
+      d3.barChart(data, {
+        id: 'bar-chart-stacked',
+        stacked: true,
+        horizontal: true,
+        aspectRatio: 0.85,
+        tooltip: {
+          html: function (d) {
+            return d.category + ': ' + d.value + '万';
+          }
+        }
+      });
+    });
+  </script>
+</html>
