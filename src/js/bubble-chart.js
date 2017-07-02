@@ -47,18 +47,6 @@ d3.components.bubbleChart = {
   gridX: {
     show: true
   },
-  labelX: {
-    show: false,
-    text: 'X',
-    dy: '2.8em',
-    fill: 'currentColor'
-  },
-  labelY: {
-    show: false,
-    text: 'Y',
-    dy: '-3em',
-    fill: 'currentColor'
-  },
   dots: {
     scale: '2%',
     minRadius: 4,
@@ -142,28 +130,12 @@ d3.bubbleChart = function (data, options) {
     });
 
     // Set labels
-    var labelX = options.labelX;
-    var labelY = options.labelY;
-    if (labelX.show) {
-      g.append('text')
-       .attr('class', 'label label-x')
-       .attr('x', innerWidth)
-       .attr('y', innerHeight)
-       .attr('dy', labelX.dy)
-       .attr('fill', labelX.fill)
-       .attr('text-anchor', 'end')
-       .text(labelX.text);
-    }
-    if (labelY.show) {
-      g.append('text')
-       .attr('class', 'label label-y')
-       .attr('y', 0)
-       .attr('dy', labelY.dy)
-       .attr('transform', 'rotate(-90)')
-       .attr('fill', labelY.fill)
-       .attr('text-anchor', 'end')
-       .text(labelY.text);
-    }
+    d3.setLabels(g, {
+      width: innerWidth,
+      height: innerHeight,
+      labelX: options.labelX,
+      labelY: options.labelY
+    });
 
     // Add dots
     var colors = d3.scaleOrdinal(colorScheme);

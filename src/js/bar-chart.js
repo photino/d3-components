@@ -47,16 +47,6 @@ d3.components.barChart = {
   paddingMidst: 0,
   align: 0.5,
   framed: false,
-  labelX: {
-    show: false,
-    text: 'X',
-    dy: '2.8em'
-  },
-  labelY: {
-    show: false,
-    text: 'Y',
-    dy: '-3em'
-  },
   legend: {
     show: null,
     text: function (d) {
@@ -300,6 +290,16 @@ d3.barChart = function (data, options) {
         gridX: options.gridX,
         gridY: options.gridY,
         framed: options.framed
+      });
+    });
+
+    // Set labels
+    dispatch.on('init.labels', function (data) {
+      d3.setLabels(g, {
+        width: innerWidth,
+        height: innerHeight,
+        labelX: options.labelX,
+        labelY: options.labelY
       });
     });
 

@@ -40,6 +40,15 @@ block article
                 html: function (d) {
                   return d.city + ': ' + d.population + ' (' + d.type + ')';
                 }
+              },
+              legend: {
+                display: 'inline-block',
+                symbol: {
+                  shape: 'circle'
+                }
+              },
+              margin: {
+                top: '2.5em'
               }
             };
             d3.barChart(data, options);
@@ -68,6 +77,15 @@ block append foot
           html: function (d) {
             return d.city + ': ' + d.population + ' (' + d.type + ')';
           }
+        },
+        legend: {
+          display: 'inline-block',
+          symbol: {
+            shape: 'circle'
+          }
+        },
+        margin: {
+          top: '2.5em'
         }
       };
       d3.barChart(data, options);

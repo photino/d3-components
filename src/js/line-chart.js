@@ -140,6 +140,14 @@ d3.lineChart = function (data, options) {
       framed: options.framed
     });
 
+    // Set labels
+    d3.setLabels(g, {
+      width: innerWidth,
+      height: innerHeight,
+      labelX: options.labelX,
+      labelY: options.labelY
+    });
+
     // Lines
     g.append('g')
      .attr('class', 'lines')

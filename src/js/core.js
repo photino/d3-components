@@ -65,6 +65,10 @@ d3.defaultOptions = {
       delay: 2000,
       interval: 2000
     },
+    type: 'checkbox',
+    display: 'block',
+    maxWidth: '6.8em',
+    columns: 5,
     symbol: {
       shape: 'rect',
       width: '0.8em',
@@ -119,6 +123,21 @@ d3.defaultOptions = {
     show: false,
     stroke: '#ccc',
     strokeDash: [6, 4]
+  },
+  labelX: {
+    show: false,
+    text: 'X',
+    dy: '2.8em',
+    fill: 'currentColor',
+    textAnchor: 'end'
+  },
+  labelY: {
+    show: false,
+    text: 'Y',
+    dy: '-3em',
+    fill: 'currentColor',
+    textAnchor: 'end',
+    transform: 'rotate(-90)'
   }
 };
 
@@ -669,6 +688,53 @@ d3.setAxes = function (container, options) {
   }
 };
 
+// Set labels
+d3.setLabels = function (container, options) {
+  var g = container;
+  var width = options.width;
+  var height = options.height;
+  var labelX = options.labelX;
+  var labelY = options.labelY;
+  var anchorX = labelX.textAnchor;
+  var anchorY = labelY.textAnchor;
+  g.selectAll('.label')
+   .remove();
+  if (labelX.show) {
+    var tx = 0;
+    if (anchorX === 'middle') {
+      tx = width / 2;
+    } else if (anchorX === 'end') {
+      tx = width;
+    }
+    g.append('text')
+     .attr('class', 'label label-x')
+     .attr('x', tx)
+     .attr('y', height)
+     .attr('dy', labelX.dy)
+     .attr('transform', labelX.transform)
+     .attr('fill', labelX.fill)
+     .attr('text-anchor', anchorX)
+     .text(labelX.text);
+  }
+  if (labelY.show) {
+    var ty = height;
+    if (anchorY === 'middle') {
+      ty = height / 2;
+    } else if (anchorY === 'end') {
+      ty = 0;
+    }
+    g.append('text')
+     .attr('class', 'label label-y')
+     .attr('x', -ty)
+     .attr('y', 0)
+     .attr('dy', labelY.dy)
+     .attr('transform', labelY.transform)
+     .attr('fill', labelY.fill)
+     .attr('text-anchor', anchorY)
+     .text(labelY.text);
+  }
+};
+
 // Set the tooltip
 d3.setTooltip = function (chart, options) {
   if (options.show) {
@@ -725,6 +791,10 @@ d3.setLegend = function (container, options) {
   container.select('.legend')
            .remove();
   if (options.show) {
+    var type = options.type;
+    var display = options.display;
+    var maxWidth = options.maxWidth;
+    var columns = options.columns;
     var symbol = options.symbol;
     var symbolShape = symbol.shape;
     var symbolWidth = Math.round(symbol.width);
@@ -749,8 +819,16 @@ d3.setLegend = function (container, options) {
                         .attr('transform', options.transform);
     if (symbolShape === 'circle') {
       item.append('circle')
-          .attr('cx', symbolWidth / 2)
+          .attr('cx', function (d, i) {
+            if (display === 'inline-block') {
+              return maxWidth * (i % columns) + symbolWidth / 2;
+            }
+            return symbolWidth / 2;
+          })
           .attr('cy', function (d, i) {
+            if (display === 'inline-block') {
+              i = Math.floor(i / columns);
+            }
             return lineHeight * (i + 1) - symbolHeight / 2;
           })
           .attr('r', Math.min(symbolWidth, symbolHeight) / 2);
@@ -758,8 +836,16 @@ d3.setLegend = function (container, options) {
       item.append('rect')
           .attr('width', symbolWidth)
           .attr('height', symbolHeight)
-          .attr('x', 0)
+          .attr('x', function (d, i) {
+            if (display === 'inline-block') {
+              return maxWidth * (i % columns);
+            }
+            return 0;
+          })
           .attr('y', function (d, i) {
+            if (display === 'inline-block') {
+              i = Math.floor(i / columns);
+            }
             return lineHeight * (i + 1) - symbolHeight;
           });
     }
@@ -770,8 +856,16 @@ d3.setLegend = function (container, options) {
 
     item.append('text')
         .text(options.text)
-        .attr('x', symbolWidth)
+        .attr('x', function (d, i) {
+          if (display === 'inline-block') {
+            return maxWidth * (i % columns) + symbolWidth;
+          }
+          return symbolWidth;
+        })
         .attr('y', function (d, i) {
+          if (display === 'inline-block') {
+            i = Math.floor(i / columns);
+          }
           return lineHeight * (i + 1);
         })
         .attr('dx', options.dx)
@@ -780,14 +874,18 @@ d3.setLegend = function (container, options) {
         });
 
     item.on('click', function (d) {
-      var disabled = !d.disabled;
+      var disabled = d.disabled;
+      if (type === 'checkbox') {
+        d.disabled = !disabled;
+      } else if (type === 'radio') {
+        d.disabled = false;
+      }
       var item = d3.select(this)
-                   .classed('disabled', disabled);
+                   .classed('disabled', d.disabled);
       item.select(symbolShape)
-          .attr('fill', disabled ? disabledTextColor : d.color);
+          .attr('fill', d.disabled ? disabledTextColor : d.color);
       item.select('text')
-          .attr('fill', disabled ? disabledTextColor : textColor);
-      d.disabled = disabled;
+          .attr('fill', d.disabled ? disabledTextColor : textColor);
       options.onclick(d);
     });
     if (options.autoplay) {
