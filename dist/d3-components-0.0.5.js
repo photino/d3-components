@@ -994,12 +994,11 @@ d3.imageTiles = function (selection, options) {
   var tiles = d3.tile()
                 .size(options.size)
                 .scale(options.scale)
-                .translate(options.translate)();
+                .translate(options.translate)
+                .wrap(options.wrap)();
   var image = selection.selectAll('image')
-                       .data(tiles.filter(function (d) {
-                         return d[0] < Math.pow(2, d[2]);
-                       }), function (d) {
-                         return d;
+                       .data(tiles, function (d) {
+                         return [d.tx, d.ty, d.z];
                        });
 
   selection.attr('transform', function () {
@@ -1020,10 +1019,10 @@ d3.imageTiles = function (selection, options) {
        .append('image')
        .attr('xlink:href', tileImage.href)
        .attr('x', function (d) {
-         return d[0] * tileSize;
+         return d.tx;
        })
        .attr('y', function (d) {
-         return d[1] * tileSize;
+         return d.ty;
        })
        .attr('width', tileSize + 1)
        .attr('height', tileSize + 1);
@@ -1109,7 +1108,7 @@ d3.parseGeoData = function (map, options) {
 d3.mapData = {
   world: {
     center: [0, 0],
-    scale: 0.25
+    scale: 1.0
   },
   china: {
     key: 'name',
@@ -1120,9 +1119,9 @@ d3.mapData = {
 
 /*!
  * Bar Chart
- * References: http://bl.ocks.org/d3noob/8952219
+ * References: https://bl.ocks.org/d3noob/8952219
  *             https://bl.ocks.org/mbostock/3885304
- *             http://bl.ocks.org/mbostock/3943967
+ *             https://bl.ocks.org/mbostock/3943967
  */
 
 // Register a chart type
@@ -1466,7 +1465,7 @@ d3.barChart = function (data, options) {
 
 /*!
  * Pie Chart
- * References: http://bl.ocks.org/dbuezas/9306799
+ * References: https://bl.ocks.org/dbuezas/9306799
  */
 
 // Register a chart type
@@ -2069,9 +2068,9 @@ d3.bubbleChart = function (data, options) {
 
 /*!
  * Radar Chart
- * References: http://bl.ocks.org/nbremer/6506614
- *             http://bl.ocks.org/nbremer/21746a9668ffdf6d8242
- *             http://bl.ocks.org/tpreusse/2bc99d74a461b8c0acb1
+ * References: https://bl.ocks.org/nbremer/6506614
+ *             https://bl.ocks.org/nbremer/21746a9668ffdf6d8242
+ *             https://bl.ocks.org/tpreusse/2bc99d74a461b8c0acb1
  */
 
 // Register a chart type
@@ -2420,7 +2419,7 @@ d3.radarChart = function (data, options) {
 
 /*!
  * Sunburst Chart
- * References: http://bl.ocks.org/maybelinot/5552606564ef37b5de7e47ed2b7dc099
+ * References: https://bl.ocks.org/maybelinot/5552606564ef37b5de7e47ed2b7dc099
  */
 
 // Register a chart type
@@ -2600,6 +2599,7 @@ d3.components.choroplethMap = {
           'country',
           'district',
           'name',
+          'nation',
           'province',
           'state'
         ]
@@ -2632,6 +2632,7 @@ d3.components.choroplethMap = {
   graticules: {
     show: false,
     step: [10, 10],
+    precision: 1,
     stroke: '#ccc'
   },
   tile: {
@@ -2785,7 +2786,8 @@ d3.choroplethMap = function (data, options) {
     var graticules = options.graticules;
     if (graticules.show) {
       var graticule = d3.geoGraticule()
-                        .step(graticules.step);
+                        .step(graticules.step)
+                        .precision(graticules.precision);
       g.append('path')
        .datum(graticule)
        .attr('class', 'graticule')
@@ -2794,36 +2796,36 @@ d3.choroplethMap = function (data, options) {
     }
 
     // Regions
-    var region = g.append('g')
-                  .attr('class', 'layer')
-                  .selectAll('.region')
-                  .data(features)
-                  .enter()
-                  .append('path')
-                  .attr('class', 'region')
-                  .attr('d', path)
-                  .attr('fill', function (d, i) {
-                    if (d.color) {
-                      return d.color;
-                    }
-                    if (fill === 'none') {
-                      return fill;
-                    }
-                    if (coloring === 'topological' && neighbors.length) {
-                      d.value = (d3.max(neighbors[i], function (n) {
-                        return features[n].value;
-                      }) | 0) + 1;
-                    } else {
-                      d.value = d.data.value;
-                    }
-                    if (d.value === undefined || d.value === null) {
-                      return fill;
-                    }
-                    if (colorScale === 'scaleSequential') {
-                      d.value = (d.value - min) / max;
-                    }
-                    return colors(d.value);
-                  });
+    g.append('g')
+     .attr('class', 'layer')
+     .selectAll('.region')
+     .data(features)
+     .enter()
+     .append('path')
+     .attr('class', 'region')
+     .attr('d', path)
+     .attr('fill', function (d, i) {
+       if (d.color) {
+         return d.color;
+       }
+       if (fill === 'none') {
+         return fill;
+       }
+       if (coloring === 'topological' && neighbors.length) {
+         d.value = (d3.max(neighbors[i], function (n) {
+           return features[n].value;
+         }) | 0) + 1;
+       } else {
+         d.value = d.data.value;
+       }
+       if (d.value === undefined || d.value === null) {
+         return fill;
+       }
+       if (colorScale === 'scaleSequential') {
+         d.value = (d.value - min) / max;
+       }
+       return colors(d.value);
+     });
 
     // Labels
     var labels = options.labels;
@@ -2887,7 +2889,7 @@ d3.choroplethMap = function (data, options) {
 
     // Tooltip
     var tooltip = options.tooltip;
-    tooltip.target = region;
+    tooltip.target = g.selectAll('.region');
     d3.setTooltip(chart, tooltip);
 
   }
@@ -3279,5 +3281,255 @@ d3.contourPlot = function (data, options) {
     var tooltip = options.tooltip;
     tooltip.target = g.selectAll('.contour');
     d3.setTooltip(chart, tooltip);
+  }
+};
+
+/*!
+ * Terrestrial Globe
+ * References: https://bl.ocks.org/mbostock/4282586
+ *             https://bl.ocks.org/mbostock/3757125
+ *             https://bl.ocks.org/patricksurry/5721459
+ *             https://bl.ocks.org/KoGor/5994804
+ */
+
+// Register a chart type
+d3.components.terrestrialGlobe = {
+  type: 'terrestrial globe',
+  schema: {
+    type: 'object',
+    entries: [
+      {
+        key: 'id',
+        type: 'string',
+        mappings: [
+          'country',
+          'nation'
+        ]
+      },
+      {
+        key: 'value',
+        type: 'number',
+        mappings: [
+          'count',
+          'percentage',
+          'ratio'
+        ]
+      },
+      {
+        key: 'series',
+        type: 'string',
+        mappings: [
+          'group',
+          'type'
+        ]
+      }
+    ]
+  },
+  levels: 5,
+  projection: 'geoOrthographic',
+  coloring: 'ordinal',
+  colorScale: 'scaleOrdinal',
+  sphere: {
+    show: true,
+    stroke: 'none',
+    fill: '#1f77b4'
+  },
+  graticules: {
+    show: false,
+    step: [10, 10],
+    precision: 1,
+    stroke: '#ccc'
+  },
+  tooltip: {
+    html: function (d) {
+      return d.data.id + ': ' + d.data.value
+    }
+  },
+  rotation: {
+    enable: true,
+    autoplay: false,
+    sensitivity: 0.25,
+    velocity: [0.01, 0, 0]
+  },
+  stroke: '#666',
+  fill: '#fff',
+  colorScheme: d3.schemeCategory20c
+};
+
+// Terrestrial globe
+d3.terrestrialGlobe = function (data, options) {
+  // Parse plotting data and options
+  data = d3.parseData('terrestrialGlobe', data);
+  options = d3.parseOptions('terrestrialGlobe', options);
+
+  // Register callbacks
+  var dispatch = d3.dispatch('init', 'update', 'finalize');
+
+  // Use the options
+  var chart = options.chart;
+  var id = options.id;
+  var renderer = options.renderer;
+  var context = options.context;
+  var width = options.width;
+  var height = options.height;
+  var stroke = options.stroke;
+  var fill = options.fill;
+  var strokeWidth = options.strokeWidth;
+  var fontSize = options.fontSize;
+  var lineHeight = options.lineHeight;
+
+  // Create geo projection
+  var map = options.map;
+  var center = map.center || [0, 0];
+  var radius = Math.min(width, height) / 2;
+  var projection = d3[options.projection]()
+                     .scale(map.scale * radius)
+                     .translate(map.translate || [0, 0])
+                     .rotate(map.rotate || [-center[0], -center[1]])
+                     .clipAngle(90);
+
+  // Create geo path
+  var path = d3.geoPath()
+               .projection(projection);
+
+  // Parse geo data
+  var geo = d3.parseGeoData(map, { data: data, neighbors: true });
+  var features = geo.features;
+  var neighbors = geo.neighbors;
+
+  // Colors
+  var coloring = options.coloring;
+  var colorScale = options.colorScale;
+  var colorScheme = options.colorScheme;
+  var colors = d3.scaleOrdinal(colorScheme);
+  if (colorScale === 'scaleSequential') {
+    colors = d3.scaleSequential(colorScheme);
+  } else if (colorScale === 'scaleThreshold') {
+    var thresholds = options.thresholds || [];
+    if (!thresholds.length) {
+      var levels = options.levels;
+      var step = (max - min) / levels;
+      thresholds = d3.range(levels)
+                     .map(function (i) { return step * i + min; });
+    }
+    colors = d3.scaleThreshold()
+               .domain(thresholds)
+               .range(colorScheme);
+  }
+
+  if (renderer === 'svg') {
+    // Create canvas
+    var svg = d3.createPlot(chart, options);
+    var g = svg.select('.container');
+
+    // Sphere
+    var sphere = options.sphere;
+    if (sphere.show) {
+      g.append('g')
+       .attr('class', 'layer')
+       .append('path')
+       .datum({type: 'Sphere'})
+       .attr('class', 'sphere')
+       .attr('d', path)
+       .attr('stroke', sphere.stroke)
+       .attr('stroke-width', sphere.strokeWidth)
+       .attr('fill', sphere.fill);
+    }
+
+    // Graticules
+    var graticules = options.graticules;
+    if (graticules.show) {
+      var graticule = d3.geoGraticule()
+                        .step(graticules.step)
+                        .precision(graticules.precision);
+      g.append('g')
+       .attr('class', 'layer')
+       .append('path')
+       .datum(graticule)
+       .attr('class', 'graticule')
+       .attr('d', path)
+       .attr('stroke', graticules.stroke)
+       .attr('fill', 'none');
+    }
+
+    // Regions
+    g.append('g')
+     .attr('class', 'layer')
+     .selectAll('.region')
+     .data(features)
+     .enter()
+     .append('path')
+     .attr('class', 'region')
+     .attr('d', path)
+     .attr('fill', function (d, i) {
+       if (d.color) {
+         return d.color;
+       }
+       if (fill === 'none') {
+         return fill;
+       }
+       if (coloring === 'topological' && neighbors.length) {
+         d.value = (d3.max(neighbors[i], function (n) {
+           return features[n].value;
+         }) | 0) + 1;
+       } else {
+         d.value = d.data.value;
+       }
+       if (d.value === undefined || d.value === null) {
+         return fill;
+       }
+       if (colorScale === 'scaleSequential') {
+         d.value = (d.value - min) / max;
+       }
+       return colors(d.value);
+     });
+
+     // Rotation
+     var rotation = options.rotation;
+     if (rotation.enable) {
+       if (rotation.autoplay) {
+         var velocity = rotation.velocity;
+         d3.timer(function (elapsed) {
+           var angles = velocity.map(function (v) {
+             return v * elapsed;
+           });
+           projection.rotate(angles);
+           g.selectAll('.graticule')
+            .attr('d', path);
+           g.selectAll('.region')
+            .attr('d', path);
+         });
+       } else {
+         var sensitivity = rotation.sensitivity;
+         var drag = d3.drag()
+                      .subject(function () {
+                        var r = projection.rotate();
+                        return {
+                          x: r[0] / sensitivity,
+                          y: -r[1] / sensitivity
+                        };
+                      })
+                      .on('drag', function () {
+                        var angles = [
+                          d3.event.x * sensitivity,
+                          -d3.event.y * sensitivity,
+                          projection.rotate()[2]
+                        ];
+                        projection.rotate(angles);
+                        g.selectAll('.graticule')
+                         .attr('d', path);
+                        g.selectAll('.region')
+                         .attr('d', path);
+                      });
+         g.select('.sphere')
+          .call(drag);
+       }
+     }
+
+     // Tooltip
+     var tooltip = options.tooltip;
+     tooltip.target = g.selectAll('.region');
+     d3.setTooltip(chart, tooltip);
+
   }
 };
