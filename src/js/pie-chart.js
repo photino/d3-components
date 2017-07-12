@@ -1,6 +1,6 @@
 /*!
  * Pie Chart
- * References: http://bl.ocks.org/dbuezas/9306799
+ * References: https://bl.ocks.org/dbuezas/9306799
  */
 
 // Register a chart type

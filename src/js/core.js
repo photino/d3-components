@@ -994,12 +994,11 @@ d3.imageTiles = function (selection, options) {
   var tiles = d3.tile()
                 .size(options.size)
                 .scale(options.scale)
-                .translate(options.translate)();
+                .translate(options.translate)
+                .wrap(options.wrap)();
   var image = selection.selectAll('image')
-                       .data(tiles.filter(function (d) {
-                         return d[0] < Math.pow(2, d[2]);
-                       }), function (d) {
-                         return d;
+                       .data(tiles, function (d) {
+                         return [d.tx, d.ty, d.z];
                        });
 
   selection.attr('transform', function () {
@@ -1020,10 +1019,10 @@ d3.imageTiles = function (selection, options) {
        .append('image')
        .attr('xlink:href', tileImage.href)
        .attr('x', function (d) {
-         return d[0] * tileSize;
+         return d.tx;
        })
        .attr('y', function (d) {
-         return d[1] * tileSize;
+         return d.ty;
        })
        .attr('width', tileSize + 1)
        .attr('height', tileSize + 1);
@@ -1109,7 +1108,7 @@ d3.parseGeoData = function (map, options) {
 d3.mapData = {
   world: {
     center: [0, 0],
-    scale: 0.25
+    scale: 1.0
   },
   china: {
     key: 'name',

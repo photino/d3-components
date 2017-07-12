@@ -21,6 +21,7 @@ d3.components.choroplethMap = {
           'country',
           'district',
           'name',
+          'nation',
           'province',
           'state'
         ]
@@ -53,6 +54,7 @@ d3.components.choroplethMap = {
   graticules: {
     show: false,
     step: [10, 10],
+    precision: 1,
     stroke: '#ccc'
   },
   tile: {
@@ -206,7 +208,8 @@ d3.choroplethMap = function (data, options) {
     var graticules = options.graticules;
     if (graticules.show) {
       var graticule = d3.geoGraticule()
-                        .step(graticules.step);
+                        .step(graticules.step)
+                        .precision(graticules.precision);
       g.append('path')
        .datum(graticule)
        .attr('class', 'graticule')
@@ -215,36 +218,36 @@ d3.choroplethMap = function (data, options) {
     }
 
     // Regions
-    var region = g.append('g')
-                  .attr('class', 'layer')
-                  .selectAll('.region')
-                  .data(features)
-                  .enter()
-                  .append('path')
-                  .attr('class', 'region')
-                  .attr('d', path)
-                  .attr('fill', function (d, i) {
-                    if (d.color) {
-                      return d.color;
-                    }
-                    if (fill === 'none') {
-                      return fill;
-                    }
-                    if (coloring === 'topological' && neighbors.length) {
-                      d.value = (d3.max(neighbors[i], function (n) {
-                        return features[n].value;
-                      }) | 0) + 1;
-                    } else {
-                      d.value = d.data.value;
-                    }
-                    if (d.value === undefined || d.value === null) {
-                      return fill;
-                    }
-                    if (colorScale === 'scaleSequential') {
-                      d.value = (d.value - min) / max;
-                    }
-                    return colors(d.value);
-                  });
+    g.append('g')
+     .attr('class', 'layer')
+     .selectAll('.region')
+     .data(features)
+     .enter()
+     .append('path')
+     .attr('class', 'region')
+     .attr('d', path)
+     .attr('fill', function (d, i) {
+       if (d.color) {
+         return d.color;
+       }
+       if (fill === 'none') {
+         return fill;
+       }
+       if (coloring === 'topological' && neighbors.length) {
+         d.value = (d3.max(neighbors[i], function (n) {
+           return features[n].value;
+         }) | 0) + 1;
+       } else {
+         d.value = d.data.value;
+       }
+       if (d.value === undefined || d.value === null) {
+         return fill;
+       }
+       if (colorScale === 'scaleSequential') {
+         d.value = (d.value - min) / max;
+       }
+       return colors(d.value);
+     });
 
     // Labels
     var labels = options.labels;
@@ -308,7 +311,7 @@ d3.choroplethMap = function (data, options) {
 
     // Tooltip
     var tooltip = options.tooltip;
-    tooltip.target = region;
+    tooltip.target = g.selectAll('.region');
     d3.setTooltip(chart, tooltip);
 
   }

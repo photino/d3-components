@@ -1,8 +1,8 @@
 /*!
  * Radar Chart
- * References: http://bl.ocks.org/nbremer/6506614
- *             http://bl.ocks.org/nbremer/21746a9668ffdf6d8242
- *             http://bl.ocks.org/tpreusse/2bc99d74a461b8c0acb1
+ * References: https://bl.ocks.org/nbremer/6506614
+ *             https://bl.ocks.org/nbremer/21746a9668ffdf6d8242
+ *             https://bl.ocks.org/tpreusse/2bc99d74a461b8c0acb1
  */
 
 // Register a chart type

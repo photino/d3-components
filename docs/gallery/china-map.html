@@ -47,7 +47,7 @@
     <script src="./../dist/d3-4.9.1.min.js"></script>
     <script src="./../dist/d3-components-0.0.5.js"></script>
     <script src="./../dist/d3-scale-chromatic-1.1.0.min.js"></script>
-    <script src="./../dist/d3-tile-0.0.3.min.js"></script>
+    <script src="./../dist/d3-tile-0.0.4.min.js"></script>
     <script src="./../dist/d3-contour-1.1.0.min.js"></script>
     <script>
       d3.json('../dist/maps/china.geo.json', function (provinces) {
@@ -65,7 +65,7 @@
             image: {
               href: function (d) {
                 var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
-                return server + d[2] + '/' + d[1] + '/' + d[0];
+                return server + d.z + '/' + d.y + '/' + d.x;
               }
             }
           },

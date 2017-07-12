@@ -1,8 +1,8 @@
 /*!
  * Bar Chart
- * References: http://bl.ocks.org/d3noob/8952219
+ * References: https://bl.ocks.org/d3noob/8952219
  *             https://bl.ocks.org/mbostock/3885304
- *             http://bl.ocks.org/mbostock/3943967
+ *             https://bl.ocks.org/mbostock/3943967
  */
 
 // Register a chart type

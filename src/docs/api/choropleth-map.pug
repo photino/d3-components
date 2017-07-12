@@ -40,7 +40,7 @@ block article
                   image: {
                     href: function (d) {
                       var server = 'https://' + ['a', 'b', 'c', 'd'][Math.random() * 4 | 0] + '.tiles.mapbox.com/v3/mapbox.natural-earth-2/'
-                      return server + d[2] + '/' + d[0] + '/' + d[1] + '.png';
+                      return server + d.z + '/' + d.x + '/' + d.y + '.png';
                     }
                   }
                 },
@@ -68,7 +68,7 @@ block article
                 image: {
                   href: function (d) {
                     var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
-                    return server + d[2] + '/' + d[1] + '/' + d[0];
+                    return server + d.z + '/' + d.y + '/' + d.x;
                   }
                 }
               },
@@ -79,7 +79,7 @@ block article
 
 block append foot
   script(src=appDist + '/d3-scale-chromatic-1.1.0.min.js')
-  script(src=appDist + '/d3-tile-0.0.3.min.js')
+  script(src=appDist + '/d3-tile-0.0.4.min.js')
   script(src=appDist + '/topojson-2.2.0.min.js')
   script.
     d3.json('../dist/maps/china.geo.json', function (geojson) {
@@ -98,7 +98,7 @@ block append foot
             image: {
               href: function (d) {
                 var server = 'https://' + ['a', 'b', 'c', 'd'][Math.random() * 4 | 0] + '.tiles.mapbox.com/v3/mapbox.natural-earth-2/'
-                return server + d[2] + '/' + d[0] + '/' + d[1] + '.png';
+                return server + d.z + '/' + d.x + '/' + d.y + '.png';
               }
             }
           },
@@ -126,7 +126,7 @@ block append foot
           image: {
             href: function (d) {
               var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
-              return server + d[2] + '/' + d[1] + '/' + d[0];
+              return server + d.z + '/' + d.y + '/' + d.x;
             }
           }
         },

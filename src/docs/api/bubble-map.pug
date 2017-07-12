@@ -47,7 +47,7 @@ block article
                 image: {
                   href: function (d) {
                     var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
-                    return server + d[2] + '/' + d[1] + '/' + d[0];
+                    return server + d.z + '/' + d.y + '/' + d.x;
                   }
                 }
               },
@@ -90,7 +90,7 @@ block article
 
 block append foot
   script(src='../dist/d3-scale-chromatic-1.1.0.min.js')
-  script(src='../dist/d3-tile-0.0.3.min.js')
+  script(src='../dist/d3-tile-0.0.4.min.js')
   script.
     d3.json('../dist/maps/china.geo.json', function (provinces) {
       d3.choroplethMap([], {
@@ -115,7 +115,7 @@ block append foot
           image: {
             href: function (d) {
               var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
-              return server + d[2] + '/' + d[1] + '/' + d[0];
+              return server + d.z + '/' + d.y + '/' + d.x;
             }
           }
         },
