@@ -55,7 +55,7 @@
     <script src="./../dist/jquery-3.2.1.min.js"></script>
     <script src="./../dist/ui-schema-0.4.5.min.js"></script>
     <script src="./../dist/d3-4.9.1.min.js"></script>
-    <script src="./../dist/d3-components-0.0.5.js"></script>
+    <script src="./../dist/d3-components-0.0.5.min.js"></script>
     <script src="./../dist/d3-scale-chromatic-1.1.0.min.js"></script>
     <script src="./../dist/d3-tile-0.0.4.min.js"></script>
     <script src="./../dist/d3-contour-1.1.0.min.js"></script>
@@ -128,41 +128,32 @@
           }
         });
       });
-      d3.radarChart([
-        { axis: 'Innovations', value: 92, city: 'Shenzhen' },
-        { axis: 'Computing power', value: 90, city: 'Hangzhou' },
-        { axis: 'Investments', value: 85, city: 'Shenzhen' },
-        { axis: 'Computing power', value: 78, city: 'Shenzhen' },
-        { axis: 'Innovations', value: 72, city: 'Hangzhou' },
-        { axis: 'Investments', value: 66, city: 'Hangzhou' },
-        { axis: 'Demands', value: 60, city: 'Shenzhen' },
-        { axis: 'Big data', value: 45, city: 'Hangzhou' },
-        { axis: 'Demands', value: 42, city: 'Hangzhou' },
-        { axis: 'Big data', value: 30, city: 'Shenzhen' }
-      ], {
-        id: 'radar-chart-circular',
-        axes: [
-          'Computing power',
-          'Investments',
-          'Big data',
-          'Innovations',
-          'Demands'
-        ],
-        series: [
-          'Hangzhou',
-          'Shenzhen'
-        ],
-        maxValue: 100,
-        levels: 5,
-        curve: 'curveCardinalClosed',
-        grids: {
-          shape: 'circle'
-        },
-        tooltip: {
-          html: function (d) {
-            return d.axis + ': ' + d.value + ' (' + d.city + ')';
+      d3.json('../data/cloud-index-cities.json', function (data) {
+        d3.radarChart(data, {
+          id: 'radar-chart-circular',
+          axes: [
+            'Computing power',
+            'Investments',
+            'Big data',
+            'Innovations',
+            'Demands'
+          ],
+          series: [
+            'Hangzhou',
+            'Shenzhen'
+          ],
+          maxValue: 100,
+          levels: 5,
+          curve: 'curveCardinalClosed',
+          grids: {
+            shape: 'circle'
+          },
+          tooltip: {
+            html: function (d) {
+              return d.axis + ': ' + d.value + ' (' + d.city + ')';
+            }
           }
-        }
+        });
       });
       d3.json('../data/arxiv-categories.json', function (data) {
         d3.sunburstChart(data, {

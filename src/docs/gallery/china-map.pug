@@ -39,7 +39,7 @@ block body
     script(src=appDist + '/jquery-3.2.1.min.js')
     script(src=appDist + '/ui-schema-0.4.4.min.js')
     script(src=appDist + '/d3-4.9.1.min.js')
-    script(src=appDist + '/d3-components-' + version + '.js')
+    script(src=appDist + '/d3-components-' + version + '.min.js')
     script(src=appDist + '/d3-scale-chromatic-1.1.0.min.js')
     script(src=appDist + '/d3-tile-0.0.4.min.js')
     script(src=appDist + '/d3-contour-1.1.0.min.js')
@@ -61,7 +61,8 @@ block body
                 var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
                 return server + d.z + '/' + d.y + '/' + d.x;
               }
-            }
+            },
+            wrap: true
           },
           stroke: 'none',
           fill: 'none',

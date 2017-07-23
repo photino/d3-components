@@ -1,0 +1,66 @@
+[
+  {
+    "date": "1990-12-25",
+    "name": "Nexus",
+    "icon": "https://upload.wikimedia.org/wikipedia/commons/8/8c/WorldWideWeb_Icon.png",
+    "width": 62,
+    "height": 55,
+    "color": "#aaaaaa"
+  },
+  {
+    "date": "1994-12-15",
+    "name": "Netscape",
+    "icon": "https://upload.wikimedia.org/wikipedia/commons/0/08/Netscape_icon.svg",
+    "width": 128,
+    "height": 128,
+    "color": "#156a73"
+  },
+  {
+    "date": "1995-08-16",
+    "name": "Internet Explorer",
+    "icon": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Internet_Explorer_10_logo.svg",
+    "width": 223,
+    "height": 219,
+    "color": "#1ebbee"
+  },
+  {
+    "date": "1996-07-14",
+    "name": "Opera",
+    "icon": "https://upload.wikimedia.org/wikipedia/commons/4/49/Opera_2015_icon.svg",
+    "width": 512,
+    "height": 512,
+    "color": "#cc0f16"
+  },
+  {
+    "date": "2002-09-23",
+    "name": "Firefox",
+    "icon": "https://upload.wikimedia.org/wikipedia/commons/7/76/Mozilla_Firefox_logo_2013.svg",
+    "width": 512,
+    "height": 512,
+    "color": "#e66000"
+  },
+  {
+    "date": "2003-01-07",
+    "name": "Safari",
+    "icon": "https://upload.wikimedia.org/wikipedia/en/6/61/Apple_Safari.png",
+    "width": 64,
+    "height": 64,
+    "color": "#2f90e6"
+  },
+  {
+    "date": "2008-09-02",
+    "name": "Chrome",
+    "icon": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Google_Chrome_for_Android_Icon_2016.svg",
+    "width": 512,
+    "height": 512,
+    "color": "#419f44"
+  },
+  {
+    "date": "2015-07-29",
+    "name": "Edge",
+    "icon": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Microsoft_Edge_logo.svg",
+    "width": 512,
+    "height": 546,
+    "color": "#3177bc"
+  }
+]

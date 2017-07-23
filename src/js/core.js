@@ -540,7 +540,7 @@ d3.getPosition = function (selection, container) {
 d3.setAxis = function (scale, options) {
   var axis = d3.axisBottom(scale);
   var orient = options.orient;
-  var ticks = options.ticks;
+  var ticks = options.ticks || {};
   if (orient === 'top') {
     axis = d3.axisTop(scale);
   } else if (orient === 'left') {
@@ -562,10 +562,10 @@ d3.setAxes = function (container, options) {
   var g = container;
   var width = options.width;
   var height = options.height;
-  var axisX = options.axisX;
-  var axisY = options.axisY;
-  var orientX = axisX.orient;
-  var orientY = axisY.orient;
+  var axisX = options.axisX || {};
+  var axisY = options.axisY || {};
+  var orientX = axisX.orient || 'bottom';
+  var orientY = axisY.orient || 'left';
   var domainX = axisX.domain;
   var domainY = axisY.domain;
   var gx = d3.setAxis(options.scaleX, axisX);
@@ -643,8 +643,8 @@ d3.setAxes = function (container, options) {
   }
 
   // Grid lines
-  var gridX = options.gridX;
-  var gridY = options.gridY;
+  var gridX = options.gridX || {};
+  var gridY = options.gridY || {};
   g.selectAll('.grid')
    .remove();
   if (gridX.show) {

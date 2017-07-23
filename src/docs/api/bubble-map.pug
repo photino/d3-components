@@ -49,7 +49,8 @@ block article
                     var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
                     return server + d.z + '/' + d.y + '/' + d.x;
                   }
-                }
+                },
+                wrap: true
               },
               stroke: 'none',
               fill: 'none',
@@ -117,7 +118,8 @@ block append foot
               var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
               return server + d.z + '/' + d.y + '/' + d.x;
             }
-          }
+          },
+          wrap: true
         },
         stroke: 'none',
         fill: 'none',

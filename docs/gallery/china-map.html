@@ -45,7 +45,7 @@
     <script src="./../dist/jquery-3.2.1.min.js"></script>
     <script src="./../dist/ui-schema-0.4.4.min.js"></script>
     <script src="./../dist/d3-4.9.1.min.js"></script>
-    <script src="./../dist/d3-components-0.0.5.js"></script>
+    <script src="./../dist/d3-components-0.0.5.min.js"></script>
     <script src="./../dist/d3-scale-chromatic-1.1.0.min.js"></script>
     <script src="./../dist/d3-tile-0.0.4.min.js"></script>
     <script src="./../dist/d3-contour-1.1.0.min.js"></script>
@@ -67,7 +67,8 @@
                 var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
                 return server + d.z + '/' + d.y + '/' + d.x;
               }
-            }
+            },
+            wrap: true
           },
           stroke: 'none',
           fill: 'none',

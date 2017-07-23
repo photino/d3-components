@@ -1,0 +1,78 @@
+
+extends components
+
+block variables
+  - var pageID = 'api/timeline-diagram'
+  - var pageTitle = 'Timeline Diagram'
+  - var prism = true
+
+block article
+  h3.ui-header-primary
+    span= pageTitle
+    label.ui-float-right(for='timeline-diagram-src')
+      i.ui-zoom-small(data-schema-icon='code')
+  .ui-container-grid
+    .ui-grid-50.ui-mobile-expand
+      #timeline-diagram-default
+    .ui-grid-50.ui-mobile-expand
+      #timeline-diagram-customized
+  .ui-toggle-target
+    input#timeline-diagram-src(type='checkbox' checked)
+    div
+      pre: code.language-markup.
+        &lt;div id="timeline-diagram-default"&gt;&lt;/div&gt;
+        &lt;div id="timeline-diagram-customized"&gt;&lt;/div&gt;
+
+        &lt;script&gt;
+          d3.json('../data/historical-web-browsers.json', function (data) {
+            d3.shuffle(data);
+            d3.timelineDiagram(data, { id: 'timeline-diagram-default' });
+          });
+          d3.json('../data/historical-web-browsers.json', function (data) {
+            d3.shuffle(data);
+            d3.timelineDiagram(data, {
+              id: 'timeline-diagram-customized',
+              domain: ['1994', '2017'],
+              axis: {
+                label: false,
+                ticks: {
+                  sizeInner: 6,
+                  format: d3.timeFormat('%Y')
+                }
+              },
+              connectors: {
+                dx: '2.5%'
+              },
+              knots: {
+                multicolor: true
+              }
+            });
+          });
+        &lt;/script&gt;
+
+block append foot
+  script.
+    d3.json('../data/historical-web-browsers.json', function (data) {
+      d3.shuffle(data);
+      d3.timelineDiagram(data, { id: 'timeline-diagram-default' });
+    });
+    d3.json('../data/historical-web-browsers.json', function (data) {
+      d3.shuffle(data);
+      d3.timelineDiagram(data, {
+        id: 'timeline-diagram-customized',
+        domain: ['1994', '2017'],
+        axis: {
+          label: false,
+          ticks: {
+            sizeInner: 6,
+            format: d3.timeFormat('%Y')
+          }
+        },
+        connectors: {
+          dx: '2.5%'
+        },
+        knots: {
+          multicolor: true
+        }
+      });
+    });

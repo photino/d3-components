@@ -37,6 +37,7 @@
           <li><a href="./../api/bubble-map.html">Bubble Map</a></li>
           <li><a href="./../api/contour-plot.html">Contour Plot</a></li>
           <li><a href="./../api/terrestrial-globe.html">Terrestrial Globe</a></li>
+          <li><a href="./../api/timeline-diagram.html">Timeline Diagram</a></li>
         </ul>
       </aside>
       <article class="ui-grid-75 ui-mobile-expand">
@@ -58,55 +59,43 @@
 &lt;div id="radar-chart-circular"&gt;&lt;/div&gt;
 
 &lt;script&gt;
-  d3.radarChart([
-    { axis: 'Computing power', value: 90 },
-    { axis: 'Investments', value: 66 },
-    { axis: 'Big data', value: 45 },
-    { axis: 'Innovations', value: 72 },
-    { axis: 'Demands', value: 42 }
-  ], { id: 'radar-chart-default' });
-  d3.radarChart([
-    { axis: 'Innovations', value: 92, city: 'Shenzhen' },
-    { axis: 'Computing power', value: 90, city: 'Hangzhou' },
-    { axis: 'Investments', value: 85, city: 'Shenzhen' },
-    { axis: 'Computing power', value: 78, city: 'Shenzhen' },
-    { axis: 'Innovations', value: 72, city: 'Hangzhou' },
-    { axis: 'Investments', value: 66, city: 'Hangzhou' },
-    { axis: 'Demands', value: 60, city: 'Shenzhen' },
-    { axis: 'Big data', value: 45, city: 'Hangzhou' },
-    { axis: 'Demands', value: 42, city: 'Hangzhou' },
-    { axis: 'Big data', value: 30, city: 'Shenzhen' }
-  ], {
-    id: 'radar-chart-circular',
-    title: {
-      show: true,
-      text: 'Cloud Indexes of China Cities'
-    },
-    axes: [
-      'Computing power',
-      'Investments',
-      'Big data',
-      'Innovations',
-      'Demands'
-    ],
-    series: [
-      'Hangzhou',
-      'Shenzhen'
-    ],
-    maxValue: 100,
-    levels: 5,
-    curve: 'curveCardinalClosed',
-    grids: {
-      shape: 'circle'
-    },
-    tooltip: {
-      html: function (d) {
-        return d.axis + ': ' + d.value + ' (' + d.city + ')';
+  d3.json('../data/cloud-index-hangzhou.json', function (data) {
+    d3.radarChart(data, { id: 'radar-chart-default' });
+  });
+  d3.json('../data/cloud-index-cities.json', function (data) {
+    d3.shuffle(data);
+    d3.radarChart(data, {
+      id: 'radar-chart-circular',
+      title: {
+        show: true,
+        text: 'Cloud Indexes of China Cities'
+      },
+      axes: [
+        'Computing power',
+        'Investments',
+        'Big data',
+        'Innovations',
+        'Demands'
+      ],
+      series: [
+        'Hangzhou',
+        'Shenzhen'
+      ],
+      maxValue: 100,
+      levels: 5,
+      curve: 'curveCardinalClosed',
+      grids: {
+        shape: 'circle'
+      },
+      tooltip: {
+        html: function (d) {
+          return d.axis + ': ' + d.value + ' (' + d.city + ')';
+        }
+      },
+      legend: {
+        autoplay: true
       }
-    },
-    legend: {
-      autoplay: true
-    }
+    });
   });
 &lt;/script&gt;
 </code></pre>
@@ -126,55 +115,43 @@
     <script src="./../dist/d3-4.9.1.min.js"></script>
     <script src="./../dist/d3-components-0.0.5.js"></script>
     <script>
-      d3.radarChart([
-        { axis: 'Computing power', value: 90 },
-        { axis: 'Investments', value: 66 },
-        { axis: 'Big data', value: 45 },
-        { axis: 'Innovations', value: 72 },
-        { axis: 'Demands', value: 42 }
-      ], { id: 'radar-chart-default' });
-      d3.radarChart([
-        { axis: 'Innovations', value: 92, city: 'Shenzhen' },
-        { axis: 'Computing power', value: 90, city: 'Hangzhou' },
-        { axis: 'Investments', value: 85, city: 'Shenzhen' },
-        { axis: 'Computing power', value: 78, city: 'Shenzhen' },
-        { axis: 'Innovations', value: 72, city: 'Hangzhou' },
-        { axis: 'Investments', value: 66, city: 'Hangzhou' },
-        { axis: 'Demands', value: 60, city: 'Shenzhen' },
-        { axis: 'Big data', value: 45, city: 'Hangzhou' },
-        { axis: 'Demands', value: 42, city: 'Hangzhou' },
-        { axis: 'Big data', value: 30, city: 'Shenzhen' }
-      ], {
-        id: 'radar-chart-circular',
-        title: {
-          show: true,
-          text: 'Cloud Indexes of China Cities'
-        },
-        axes: [
-          'Computing power',
-          'Investments',
-          'Big data',
-          'Innovations',
-          'Demands'
-        ],
-        series: [
-          'Hangzhou',
-          'Shenzhen'
-        ],
-        maxValue: 100,
-        levels: 5,
-        curve: 'curveCardinalClosed',
-        grids: {
-          shape: 'circle'
-        },
-        tooltip: {
-          html: function (d) {
-            return d.axis + ': ' + d.value + ' (' + d.city + ')';
+      d3.json('../data/cloud-index-hangzhou.json', function (data) {
+        d3.radarChart(data, { id: 'radar-chart-default' });
+      });
+      d3.json('../data/cloud-index-cities.json', function (data) {
+        d3.shuffle(data);
+        d3.radarChart(data, {
+          id: 'radar-chart-circular',
+          title: {
+            show: true,
+            text: 'Cloud Indexes of China Cities'
+          },
+          axes: [
+            'Computing power',
+            'Investments',
+            'Big data',
+            'Innovations',
+            'Demands'
+          ],
+          series: [
+            'Hangzhou',
+            'Shenzhen'
+          ],
+          maxValue: 100,
+          levels: 5,
+          curve: 'curveCardinalClosed',
+          grids: {
+            shape: 'circle'
+          },
+          tooltip: {
+            html: function (d) {
+              return d.axis + ': ' + d.value + ' (' + d.city + ')';
+            }
+          },
+          legend: {
+            autoplay: true
           }
-        },
-        legend: {
-          autoplay: true
-        }
+        });
       });
     </script>
   </body>
