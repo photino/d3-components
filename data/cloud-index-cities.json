@@ -1,0 +1,62 @@
+[
+  {
+    "axis": "Innovations",
+    "value": 92,
+    "city": "Shenzhen",
+    "series": "Shenzhen"
+  },
+  {
+    "axis": "Computing power",
+    "value": 90,
+    "city": "Hangzhou",
+    "series": "Hangzhou"
+  },
+  {
+    "axis": "Investments",
+    "value": 85,
+    "city": "Shenzhen",
+    "series": "Shenzhen"
+  },
+  {
+    "axis": "Computing power",
+    "value": 78,
+    "city": "Shenzhen",
+    "series": "Shenzhen"
+  },
+  {
+    "axis": "Innovations",
+    "value": 72,
+    "city": "Hangzhou",
+    "series": "Hangzhou"
+  },
+  {
+    "axis": "Investments",
+    "value": 66,
+    "city": "Hangzhou",
+    "series": "Hangzhou"
+  },
+  {
+    "axis": "Demands",
+    "value": 60,
+    "city": "Shenzhen",
+    "series": "Shenzhen"
+  },
+  {
+    "axis": "Big data",
+    "value": 45,
+    "city": "Hangzhou",
+    "series": "Hangzhou"
+  },
+  {
+    "axis": "Demands",
+    "value": 42,
+    "city": "Hangzhou",
+    "series": "Hangzhou"
+  },
+  {
+    "axis": "Big data",
+    "value": 30,
+    "city": "Shenzhen",
+    "series": "Shenzhen"
+  }
+]

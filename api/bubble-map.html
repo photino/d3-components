@@ -37,6 +37,7 @@
           <li class="ui-state-active"><a href="./../api/bubble-map.html">Bubble Map</a></li>
           <li><a href="./../api/contour-plot.html">Contour Plot</a></li>
           <li><a href="./../api/terrestrial-globe.html">Terrestrial Globe</a></li>
+          <li><a href="./../api/timeline-diagram.html">Timeline Diagram</a></li>
         </ul>
       </aside>
       <article class="ui-grid-75 ui-mobile-expand">
@@ -83,7 +84,8 @@
             var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
             return server + d.z + '/' + d.y + '/' + d.x;
           }
-        }
+        },
+        wrap: true
       },
       stroke: 'none',
       fill: 'none',
@@ -165,7 +167,8 @@
                 var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
                 return server + d.z + '/' + d.y + '/' + d.x;
               }
-            }
+            },
+            wrap: true
           },
           stroke: 'none',
           fill: 'none',

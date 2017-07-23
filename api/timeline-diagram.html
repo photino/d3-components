@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html id="api/sunburst-chart" lang="en">
+<html id="api/timeline-diagram" lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Sunburst Chart | D3 Components</title>
+    <title>Timeline Diagram | D3 Components</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="keywords" content="Data visualization, D3.js, SVG">
     <meta name="description" content="D3-based visualization components">
@@ -32,50 +32,54 @@
           <li><a href="./../api/line-chart.html">Line Chart</a></li>
           <li><a href="./../api/bubble-chart.html">Bubble Chart</a></li>
           <li><a href="./../api/radar-chart.html">Radar Chart</a></li>
-          <li class="ui-state-active"><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
+          <li><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
           <li><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
           <li><a href="./../api/bubble-map.html">Bubble Map</a></li>
           <li><a href="./../api/contour-plot.html">Contour Plot</a></li>
           <li><a href="./../api/terrestrial-globe.html">Terrestrial Globe</a></li>
-          <li><a href="./../api/timeline-diagram.html">Timeline Diagram</a></li>
+          <li class="ui-state-active"><a href="./../api/timeline-diagram.html">Timeline Diagram</a></li>
         </ul>
       </aside>
       <article class="ui-grid-75 ui-mobile-expand">
-        <h3 class="ui-header-primary"><span>Sunburst Chart</span>
-          <label class="ui-float-right" for="sunburst-chart-src"><i class="ui-zoom-small" data-schema-icon="code"></i></label>
+        <h3 class="ui-header-primary"><span>Timeline Diagram</span>
+          <label class="ui-float-right" for="timeline-diagram-src"><i class="ui-zoom-small" data-schema-icon="code"></i></label>
         </h3>
         <div class="ui-container-grid">
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="sunburst-chart-default"></div>
+            <div id="timeline-diagram-default"></div>
           </div>
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="sunburst-chart-sorted"></div>
+            <div id="timeline-diagram-customized"></div>
           </div>
         </div>
-        <div class="ui-toggle-target ui-skip-large">
-          <input id="sunburst-chart-src" type="checkbox" checked>
+        <div class="ui-toggle-target">
+          <input id="timeline-diagram-src" type="checkbox" checked>
           <div>
-            <pre><code class="language-markup">&lt;div id="sunburst-chart-default"&gt;&lt;/div&gt;
-&lt;div id="sunburst-chart-sorted"&gt;&lt;/div&gt;
+            <pre><code class="language-markup">&lt;div id="timeline-diagram-default"&gt;&lt;/div&gt;
+&lt;div id="timeline-diagram-customized"&gt;&lt;/div&gt;
 
 &lt;script&gt;
-  d3.json('../data/arxiv-categories.json', function (data) {
+  d3.json('../data/historical-web-browsers.json', function (data) {
     d3.shuffle(data);
-    d3.sunburstChart(data, { id: 'sunburst-chart-default' });
-    d3.sunburstChart(data, {
-      id: 'sunburst-chart-sorted',
-      sort: 'descending(count)',
-      donut: {
-        show: true
-      },
-      tooltip: {
-        html: function (d) {
-          var category = d.data.category;
-          var count = d.data.count;
-          var total = (d.parent || d).data.count;
-          var percent = (100 * count / total).toPrecision(3) + '%';
-          return category + ': ' + count + ' (' + percent + ')';
+    d3.timelineDiagram(data, { id: 'timeline-diagram-default' });
+  });
+  d3.json('../data/historical-web-browsers.json', function (data) {
+    d3.shuffle(data);
+    d3.timelineDiagram(data, {
+      id: 'timeline-diagram-customized',
+      domain: ['1994', '2017'],
+      axis: {
+        label: false,
+        ticks: {
+          sizeInner: 6,
+          format: d3.timeFormat('%Y')
         }
+      },
+      connectors: {
+        dx: '2.5%'
+      },
+      knots: {
+        multicolor: true
       }
     });
   });
@@ -97,23 +101,27 @@
     <script src="./../dist/d3-4.9.1.min.js"></script>
     <script src="./../dist/d3-components-0.0.5.js"></script>
     <script>
-      d3.json('../data/arxiv-categories.json', function (data) {
+      d3.json('../data/historical-web-browsers.json', function (data) {
         d3.shuffle(data);
-        d3.sunburstChart(data, { id: 'sunburst-chart-default' });
-        d3.sunburstChart(data, {
-          id: 'sunburst-chart-sorted',
-          sort: 'descending(count)',
-          donut: {
-            show: true
-          },
-          tooltip: {
-            html: function (d) {
-              var category = d.data.category;
-              var count = d.data.count;
-              var total = (d.parent || d).data.count;
-              var percent = (100 * count / total).toPrecision(3) + '%';
-              return category + ': ' + count + ' (' + percent + ')';
+        d3.timelineDiagram(data, { id: 'timeline-diagram-default' });
+      });
+      d3.json('../data/historical-web-browsers.json', function (data) {
+        d3.shuffle(data);
+        d3.timelineDiagram(data, {
+          id: 'timeline-diagram-customized',
+          domain: ['1994', '2017'],
+          axis: {
+            label: false,
+            ticks: {
+              sizeInner: 6,
+              format: d3.timeFormat('%Y')
             }
+          },
+          connectors: {
+            dx: '2.5%'
+          },
+          knots: {
+            multicolor: true
           }
         });
       });
