@@ -1151,6 +1151,7 @@ d3.components.barChart = {
       {
         key: 'series',
         type: 'string',
+        optional: true,
         mappings: [
           'group',
           'type'
@@ -1166,6 +1167,13 @@ d3.components.barChart = {
   paddingMidst: 0,
   align: 0.5,
   framed: false,
+  refline: {
+    show: false,
+    stroke: '#d62728',
+    strokeWidth: 1,
+    strokeDash: [6, 4],
+    threshold: Infinity
+  },
   legend: {
     show: null,
     text: function (d) {
@@ -1217,6 +1225,7 @@ d3.barChart = function (data, options) {
   // Coordinates and scales
   var x = null;
   var y = null;
+  var maxValue = 0;
   if (options.horizontal) {
     x = d3.scaleLinear()
           .rangeRound([0, innerWidth]);
@@ -1279,7 +1288,6 @@ d3.barChart = function (data, options) {
     dispatch.on('init.layout', function (data) {
       var stacked = options.stacked;
       var horizontal = options.horizontal;
-      var maxValue = 0;
       if (stacked) {
         maxValue = d3.max(categories, function (category) {
           return d3.sum(data.filter(function (d) {
@@ -1306,10 +1314,11 @@ d3.barChart = function (data, options) {
       // Rects
       var rect = g.append('g')
                   .attr('class', 'layout')
-                  .selectAll('rect')
+                  .selectAll('.slice')
                   .data(data)
                   .enter()
-                  .append('rect');
+                  .append('rect')
+                  .attr('class', 'slice');
       if (horizontal) {
         var bandwidth = y.bandwidth();
         if (stacked) {
@@ -1384,6 +1393,33 @@ d3.barChart = function (data, options) {
             return d3.color(d.color).darker();
           })
           .attr('fill', color);
+    });
+
+    // Refline
+    dispatch.on('init.refline', function (data) {
+      var refline = options.refline;
+      var threshold = refline.threshold;
+      if (refline.show && maxValue > threshold) {
+        var line = g.select('.layout')
+                    .append('line')
+                    .attr('class', 'refline')
+                    .attr('stroke', refline.stroke)
+                    .attr('stroke-width', refline.strokeWidth)
+                    .attr('stroke-dasharray', refline.strokeDash.join());
+        if (options.horizontal) {
+          var xmin = x(threshold);
+          line.attr('x1', xmin)
+              .attr('y1', 0)
+              .attr('x2', xmin)
+              .attr('y2', innerHeight);
+        } else {
+          var ymin = y(threshold);
+          line.attr('x1', 0)
+              .attr('y1', ymin)
+              .attr('x2', innerWidth)
+              .attr('y2', ymin);
+        }
+      }
     });
 
     // Axes
@@ -2100,6 +2136,7 @@ d3.components.radarChart = {
       {
         key: 'series',
         type: 'string',
+        optional: true,
         mappings: [
           'group',
           'type'
@@ -2616,6 +2653,7 @@ d3.components.choroplethMap = {
       {
         key: 'series',
         type: 'string',
+        optional: true,
         mappings: [
           'group',
           'type'
@@ -3318,6 +3356,7 @@ d3.components.terrestrialGlobe = {
       {
         key: 'series',
         type: 'string',
+        optional: true,
         mappings: [
           'group',
           'type'
@@ -3732,15 +3771,17 @@ d3.timelineDiagram = function (data, options) {
        var idx = i % 2;
        var x = scale(d.date);
        var y = ymax[idx];
-       if (i > 1 && xmax[idx] + 50 > x) {
-         y += 2 * dy + imgHeight;
+       d.width = imgHeight * (d.width / d.height) || imgWidth;
+       d.height = Math.min(d.height || Infinity, imgHeight);
+       if (i > 1 && xmax[idx] + d.width > x) {
+         y += 2 * dy + d.height;
        } else {
          y = dy;
        }
        xmax[idx] = x;
        ymax[idx] = y;
-       d.dx = dx * (y > dy ? y / dy : 1);
-       d.dy = idx ? y : -y;
+       d.dx = d.hasOwnProperty('dx') ? Number(d.dx) : dx * (y > dy ? y / dy : 1);
+       d.dy = d.hasOwnProperty('dy') ? Number(d.dy) : (idx ? y : -y);
        return d3.translate(x, origin[1]);
      });
 
@@ -3766,8 +3807,6 @@ d3.timelineDiagram = function (data, options) {
        return d.img;
      })
      .attr('x', function (d) {
-       d.width = imgHeight * (d.width / d.height) || imgWidth;
-       d.height = Math.min(d.height || Infinity, imgHeight);
        return d.dx - d.width / 2;
      })
      .attr('y', function (d) {

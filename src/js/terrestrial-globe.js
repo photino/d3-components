@@ -32,6 +32,7 @@ d3.components.terrestrialGlobe = {
       {
         key: 'series',
         type: 'string',
+        optional: true,
         mappings: [
           'group',
           'type'

@@ -32,6 +32,7 @@ d3.components.radarChart = {
       {
         key: 'series',
         type: 'string',
+        optional: true,
         mappings: [
           'group',
           'type'

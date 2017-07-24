@@ -71,6 +71,10 @@
       gridY: {
         show: true
       },
+      refline: {
+        show: true,
+        threshold: 2000
+      },
       tooltip: {
         html: function (d) {
           return d.city + ': ' + d.population + ' (' + d.type + ')';
@@ -121,6 +125,10 @@
           horizontal: true,
           gridY: {
             show: true
+          },
+          refline: {
+            show: true,
+            threshold: 2000
           },
           tooltip: {
             html: function (d) {

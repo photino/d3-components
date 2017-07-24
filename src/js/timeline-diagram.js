@@ -196,15 +196,17 @@ d3.timelineDiagram = function (data, options) {
        var idx = i % 2;
        var x = scale(d.date);
        var y = ymax[idx];
-       if (i > 1 && xmax[idx] + 50 > x) {
-         y += 2 * dy + imgHeight;
+       d.width = imgHeight * (d.width / d.height) || imgWidth;
+       d.height = Math.min(d.height || Infinity, imgHeight);
+       if (i > 1 && xmax[idx] + d.width > x) {
+         y += 2 * dy + d.height;
        } else {
          y = dy;
        }
        xmax[idx] = x;
        ymax[idx] = y;
-       d.dx = dx * (y > dy ? y / dy : 1);
-       d.dy = idx ? y : -y;
+       d.dx = d.hasOwnProperty('dx') ? Number(d.dx) : dx * (y > dy ? y / dy : 1);
+       d.dy = d.hasOwnProperty('dy') ? Number(d.dy) : (idx ? y : -y);
        return d3.translate(x, origin[1]);
      });
 
@@ -230,8 +232,6 @@ d3.timelineDiagram = function (data, options) {
        return d.img;
      })
      .attr('x', function (d) {
-       d.width = imgHeight * (d.width / d.height) || imgWidth;
-       d.height = Math.min(d.height || Infinity, imgHeight);
        return d.dx - d.width / 2;
      })
      .attr('y', function (d) {

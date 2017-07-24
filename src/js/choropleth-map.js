@@ -38,6 +38,7 @@ d3.components.choroplethMap = {
       {
         key: 'series',
         type: 'string',
+        optional: true,
         mappings: [
           'group',
           'type'
