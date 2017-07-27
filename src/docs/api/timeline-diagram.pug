@@ -33,6 +33,7 @@ block article
             d3.timelineDiagram(data, {
               id: 'timeline-diagram-customized',
               domain: ['1994', '2017'],
+              scale: 'scaleLinear',
               axis: {
                 label: false,
                 ticks: {
@@ -61,6 +62,7 @@ block append foot
       d3.timelineDiagram(data, {
         id: 'timeline-diagram-customized',
         domain: ['1994', '2017'],
+        scale: 'scaleLinear',
         axis: {
           label: false,
           ticks: {

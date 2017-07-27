@@ -39,6 +39,7 @@ d3.components.timelineDiagram = {
     ]
   },
   sort: 'ascending(date)',
+  scale: 'scaleTime',
   axis: {
     show: true,
     label: true,
@@ -127,17 +128,22 @@ d3.timelineDiagram = function (data, options) {
       return d.date;
     });
   }
+  if (d3.type(options.sort) === 'function') {
+    data.sort(options.sort);
+  }
+  if (options.scale === 'scalePoint') {
+    domain = data.map(function (d) {
+      return d.date;
+    });
+  }
 
   // Scale
   var axis = options.axis;
-  var scale = d3.scaleLinear()
+  var scale = d3[options.scale]()
                 .domain(domain)
                 .rangeRound([0, innerWidth]);
   if (axis.nice) {
     scale.nice();
-  }
-  if (d3.type(options.sort) === 'function') {
-    data.sort(options.sort);
   }
 
   if (renderer === 'svg') {
@@ -158,7 +164,6 @@ d3.timelineDiagram = function (data, options) {
     });
     if (axis.label) {
       var format = d3.timeFormat(axis.format);
-      domain = scale.domain();
       g.append('text')
        .attr('class', 'label')
        .attr('x', startX - fontSize / 2)
