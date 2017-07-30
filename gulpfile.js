@@ -7,7 +7,7 @@ var gulp = require('gulp');
 var header = require('gulp-header');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
-var uglifyJS = require('gulp-uglify');
+var uglify = require('gulp-uglify');
 var ghPages = require('gulp-gh-pages');
 var pug = require('gulp-pug');
 
@@ -34,6 +34,7 @@ gulp.task('concat-js', function () {
       'src/js/choropleth-map.js',
       'src/js/bubble-map.js',
       'src/js/contour-plot.js',
+      'src/js/mosaic-plot.js',
       'src/js/terrestrial-globe.js',
       'src/js/timeline-diagram.js'
     ])
@@ -44,7 +45,7 @@ gulp.task('concat-js', function () {
 
 gulp.task('minify-js', ['concat-js'], function () {
   gulp.src('dist/d3-components-' + version + '.js')
-    .pipe(uglifyJS())
+    .pipe(uglify())
     .pipe(header(banner, {
       version : version
     }))

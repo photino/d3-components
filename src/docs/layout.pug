@@ -1,14 +1,13 @@
 
 block variables
-
-- var locale = 'en'
-- var version = '0.0.5'
-- var appTitle = 'D3 Components'
-- var appKeywords = 'Data visualization, D3.js, SVG'
-- var appDescription = 'D3-based visualization components'
-- var appDocs = '.' + (pageID || '').replace(/[^\/]/g, '').replace(/\//g, '/..')
-- var appDist = appDocs + '/dist'
-- var appIcons = appDocs + '/dist/icons'
+  - const locale = 'en'
+  - const version = '0.0.5'
+  - const appTitle = 'D3 Components'
+  - const appKeywords = 'Data visualization, D3.js, SVG'
+  - const appDescription = 'D3-based visualization components'
+  - const appDocs = '.' + (pageID || '').replace(/[^\/]/g, '').replace(/\//g, '/..')
+  - const appDist = appDocs + '/dist'
+  - const appIcons = appDocs + '/dist/icons'
 
 doctype html
 
@@ -70,5 +69,5 @@ html(id=pageID lang=locale)
         script(src=appIcons + '/brands.js')
         script(src=appIcons + '/devices.js')
         script(src=appIcons + '/editor.js')
-        script(src=appDist + '/d3-4.9.1.min.js')
+        script(src=appDist + '/d3-4.10.0.min.js')
         script(src=appDist + '/d3-components-' + version + '.js')

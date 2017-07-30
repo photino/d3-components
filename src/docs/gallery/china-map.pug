@@ -1,10 +1,10 @@
 extends ../layout
 
-block variables
-  - var pageID = 'gallery/china-map'
-  - var pageTitle = 'Map of China'
-  - var minimal = true
-  - var responsive = true
+block prepend variables
+  - const pageID = 'gallery/china-map'
+  - const pageTitle = 'Map of China'
+  - const minimal = true
+  - const responsive = true
 
 block append head
   style.
@@ -38,7 +38,7 @@ block body
     #container-cities-population: #bar-chart-stacked
     script(src=appDist + '/jquery-3.2.1.min.js')
     script(src=appDist + '/ui-schema-0.4.4.min.js')
-    script(src=appDist + '/d3-4.9.1.min.js')
+    script(src=appDist + '/d3-4.10.0.min.js')
     script(src=appDist + '/d3-components-' + version + '.min.js')
     script(src=appDist + '/d3-scale-chromatic-1.1.0.min.js')
     script(src=appDist + '/d3-tile-0.0.4.min.js')

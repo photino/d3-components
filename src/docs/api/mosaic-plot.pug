@@ -1,0 +1,88 @@
+extends components
+
+block prepend variables
+  - const pageID = 'api/mosaic-plot'
+  - const pageTitle = 'Mosaic Plot'
+  - const prism = true
+
+block article
+  h3.ui-header-primary
+    span= pageTitle
+    label.ui-float-right(for='mosaic-plot-src')
+      i.ui-zoom-small(data-schema-icon='code')
+  .ui-container-grid
+    .ui-grid-50.ui-mobile-expand
+      #mosaic-plot-default
+    .ui-grid-50.ui-mobile-expand
+      #mosaic-plot-customized
+  .ui-toggle-target
+    input#mosaic-plot-src(type='checkbox' checked)
+    div
+      pre: code.language-markup.
+        &lt;div id="mosaic-plot-default"&gt;&lt;/div&gt;
+        &lt;div id="mosaic-plot-customized"&gt;&lt;/div&gt;
+
+        &lt;script&gt;
+          d3.json('../data/titanic-passengers.json', function (data) {
+            d3.mosaicPlot(data, { id: 'mosaic-plot-default' });
+          });
+          d3.json('../data/titanic-passengers.json', function (data) {
+            d3.shuffle(data);
+            d3.mosaicPlot(data, {
+              id: 'mosaic-plot-customized',
+              columns: ['1st', '2nd', '3rd', 'crew'],
+              rows: ['female', 'male'],
+              series: ['no', 'yes'],
+              colorScheme: ['#e2272a', '#00a037'],
+              scaleZ: {
+                paddingMidst: 0.02
+              },
+              labels: {
+                show: true
+              },
+              tooltip: {
+                html: function (d) {
+                  var html = 'class: ' + d.column + '&lt;br/&gt;sex: ' + d.row;
+                  if (d.series) {
+                    html += '&lt;br/&gt;survived: ' + d.series;
+                  }
+                  return html + '&lt;br/&gt;count: ' + d.value;
+                }
+              },
+              stroke: 'currentColor'
+            });
+          });
+        &lt;/script&gt;
+
+block append foot
+  script(src=appDist + '/d3-scale-chromatic-1.1.0.min.js')
+  script.
+    d3.json('../data/titanic-passengers.json', function (data) {
+      d3.mosaicPlot(data, { id: 'mosaic-plot-default' });
+    });
+    d3.json('../data/titanic-passengers.json', function (data) {
+      d3.shuffle(data);
+      d3.mosaicPlot(data, {
+        id: 'mosaic-plot-customized',
+        columns: ['1st', '2nd', '3rd', 'crew'],
+        rows: ['female', 'male'],
+        series: ['no', 'yes'],
+        colorScheme: ['#e2272a', '#00a037'],
+        scaleZ: {
+          paddingMidst: 0.02
+        },
+        labels: {
+          show: true
+        },
+        tooltip: {
+          html: function (d) {
+            var html = 'class: ' + d.column + '<br/>sex: ' + d.row;
+            if (d.series) {
+              html += '<br/>survived: ' + d.series;
+            }
+            return html + '<br/>count: ' + d.value;
+          }
+        },
+        stroke: 'currentColor'
+      });
+    });

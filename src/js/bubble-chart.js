@@ -104,10 +104,10 @@ d3.bubbleChart = function (data, options) {
   var zmax = extentZ[1];
   var x = d3.scaleLinear()
             .domain(options.domainX || [xmin - offsetX[0], xmax + offsetX[1]])
-            .range(options.rangeX || [0, innerWidth]);
+            .rangeRound(options.rangeX || [0, innerWidth]);
   var y = d3.scaleLinear()
             .domain(options.domainY || [ymin - offsetY[0], ymax + offsetY[1]])
-            .range(options.rangeY || [innerHeight, 0])
+            .rangeRound(options.rangeY || [innerHeight, 0])
             .nice();
 
   if (renderer === 'svg') {
@@ -170,7 +170,7 @@ d3.bubbleChart = function (data, options) {
                  if (normalize === 'sqrt') {
                    z = Math.sqrt(z);
                  }
-                 return z * scale + minRadius;
+                 return Math.round(z * scale + minRadius);
                })
                .attr('opacity', opacity)
                .attr('stroke', dots.stroke)

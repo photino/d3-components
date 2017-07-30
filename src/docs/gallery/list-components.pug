@@ -1,9 +1,9 @@
 extends ../layout
 
-block variables
-  - var pageID = 'gallery/list-components'
-  - var pageTitle = 'List of Components'
-  - var minimal = true
+block prepend variables
+  - const pageID = 'gallery/list-components'
+  - const pageTitle = 'List of Components'
+  - const minimal = true
 
 block append head
   style.
@@ -39,7 +39,7 @@ block body
         #contour-plot-customized
     script(src=appDist + '/jquery-3.2.1.min.js')
     script(src=appDist + '/ui-schema-0.4.5.min.js')
-    script(src=appDist + '/d3-4.9.1.min.js')
+    script(src=appDist + '/d3-4.10.0.min.js')
     script(src=appDist + '/d3-components-' + version + '.min.js')
     script(src=appDist + '/d3-scale-chromatic-1.1.0.min.js')
     script(src=appDist + '/d3-tile-0.0.4.min.js')

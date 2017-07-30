@@ -125,6 +125,12 @@ d3.barChart = function (data, options) {
           .rangeRound([innerHeight, 0]);
   }
 
+  // Colors
+  var colors = d3.scaleOrdinal()
+                 .domain(groups)
+                 .range(colorScheme);
+  var color = function (d) { return colors(d.series); };
+
   if (renderer === 'svg') {
     // Create canvas
     var svg = d3.createPlot(chart, options);
@@ -132,8 +138,6 @@ d3.barChart = function (data, options) {
                .attr('transform', d3.translate(margin.left, margin.top));
 
     // Process data
-    var colors = d3.scaleOrdinal(colorScheme);
-    var color = function (d) { return colors(d.series); };
     dispatch.on('init.data', function (data) {
       var labels = d3.set(data, function (d) { return d.category; });
       var series = d3.set(data, function (d) { return d.series; });
@@ -171,10 +175,8 @@ d3.barChart = function (data, options) {
       var horizontal = options.horizontal;
       if (stacked) {
         maxValue = d3.max(categories, function (category) {
-          return d3.sum(data.filter(function (d) {
-            return d.category === category;
-          }), function (d) {
-            return d.value;
+          return d3.sum(data, function (d) {
+            return d.category === category ? d.value : 0;
           });
         });
       } else {
@@ -273,6 +275,7 @@ d3.barChart = function (data, options) {
             d.color = colors(d.series);
             return d3.color(d.color).darker();
           })
+          .attr('stroke-width', strokeWidth)
           .attr('fill', color);
     });
 

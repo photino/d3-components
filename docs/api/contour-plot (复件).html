@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html id="api/radar-chart" lang="en">
+<html id="api/contour-plot" lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Radar Chart | D3 Components</title>
+    <title>Contour Plot | D3 Components</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="keywords" content="Data visualization, D3.js, SVG">
     <meta name="description" content="D3-based visualization components">
@@ -31,72 +31,60 @@
           <li><a href="./../api/pie-chart.html">Pie Chart</a></li>
           <li><a href="./../api/line-chart.html">Line Chart</a></li>
           <li><a href="./../api/bubble-chart.html">Bubble Chart</a></li>
-          <li class="ui-state-active"><a href="./../api/radar-chart.html">Radar Chart</a></li>
+          <li><a href="./../api/radar-chart.html">Radar Chart</a></li>
           <li><a href="./../api/sunburst-chart.html">Sunburst Chart</a></li>
           <li><a href="./../api/choropleth-map.html">Choropleth Map</a></li>
           <li><a href="./../api/bubble-map.html">Bubble Map</a></li>
-          <li><a href="./../api/contour-plot.html">Contour Plot</a></li>
-          <li><a href="./../api/mosaic-plot.html">Mosaic Plot</a></li>
+          <li class="ui-state-active"><a href="./../api/contour-plot.html">Contour Plot</a></li>
           <li><a href="./../api/terrestrial-globe.html">Terrestrial Globe</a></li>
           <li><a href="./../api/timeline-diagram.html">Timeline Diagram</a></li>
         </ul>
       </aside>
       <article class="ui-grid-75 ui-mobile-expand">
-        <h3 class="ui-header-primary"><span>Radar Chart</span>
-          <label class="ui-float-right" for="radar-chart-src"><i class="ui-zoom-small" data-schema-icon="code"></i></label>
+        <h3 class="ui-header-primary"><span>Contour Plot</span>
+          <label class="ui-float-right" for="contour-plot-src"><i class="ui-zoom-small" data-schema-icon="code"></i></label>
         </h3>
         <div class="ui-container-grid">
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="radar-chart-default"></div>
+            <div id="contour-plot-default"></div>
           </div>
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="radar-chart-circular"></div>
+            <div id="contour-plot-customized"></div>
           </div>
         </div>
         <div class="ui-toggle-target">
-          <input id="radar-chart-src" type="checkbox" checked>
+          <input id="contour-plot-src" type="checkbox" checked>
           <div>
-            <pre><code class="language-markup">&lt;div id="radar-chart-default"&gt;&lt;/div&gt;
-&lt;div id="radar-chart-circular"&gt;&lt;/div&gt;
+            <pre><code class="language-markup">&lt;div id="contour-plot-default"&gt;&lt;/div&gt;
+&lt;div id="contour-plot-customized"&gt;&lt;/div&gt;
 
 &lt;script&gt;
-  d3.json('../data/cloud-index-hangzhou.json', function (data) {
-    d3.radarChart(data, { id: 'radar-chart-default' });
-  });
-  d3.json('../data/cloud-index-cities.json', function (data) {
+  d3.json('../data/math-sin-xy.json', function (data) {
     d3.shuffle(data);
-    d3.radarChart(data, {
-      id: 'radar-chart-circular',
-      title: {
-        show: true,
-        text: 'Cloud Indexes of China Cities'
-      },
-      axes: [
-        'Computing power',
-        'Investments',
-        'Big data',
-        'Innovations',
-        'Demands'
-      ],
-      series: [
-        'Hangzhou',
-        'Shenzhen'
-      ],
-      maxValue: 100,
-      levels: 5,
-      curve: 'curveCardinalClosed',
-      grids: {
-        shape: 'circle'
-      },
-      tooltip: {
-        html: function (d) {
-          return d.axis + ': ' + d.value + ' (' + d.city + ')';
-        }
-      },
-      legend: {
-        autoplay: true
+    d3.contourPlot(data, {
+      id: 'contour-plot-default',
+      domainX: [-1, 1],
+      domainY: [-1, 1],
+      contours: {
+        size: [50, 30]
       }
     });
+  });
+  d3.contourPlot(function (x, y) {
+    return Math.sin(x + y) * Math.sin(x - y);
+  }, {
+    id: 'contour-plot-customized',
+    domainX: [-2, 2],
+    domainY: [-2, 2],
+    contours: {
+      number: 12,
+      density: 2,
+      smooth: false,
+      stroke: '#fff'
+    },
+    colorScale: 'scaleSequential',
+    colorScheme: d3.interpolateRdBu,
+    framed: true
   });
 &lt;/script&gt;
 </code></pre>
@@ -113,46 +101,37 @@
     <script src="./../dist/icons/brands.js"></script>
     <script src="./../dist/icons/devices.js"></script>
     <script src="./../dist/icons/editor.js"></script>
-    <script src="./../dist/d3-4.10.0.min.js"></script>
+    <script src="./../dist/d3-4.9.1.min.js"></script>
     <script src="./../dist/d3-components-0.0.5.js"></script>
+    <script src="./../dist/d3-scale-chromatic-1.1.0.min.js"></script>
+    <script src="./../dist/d3-contour-1.1.0.min.js"></script>
     <script>
-      d3.json('../data/cloud-index-hangzhou.json', function (data) {
-        d3.radarChart(data, { id: 'radar-chart-default' });
-      });
-      d3.json('../data/cloud-index-cities.json', function (data) {
+      d3.json('../data/math-sin-xy.json', function (data) {
         d3.shuffle(data);
-        d3.radarChart(data, {
-          id: 'radar-chart-circular',
-          title: {
-            show: true,
-            text: 'Cloud Indexes of China Cities'
-          },
-          axes: [
-            'Computing power',
-            'Investments',
-            'Big data',
-            'Innovations',
-            'Demands'
-          ],
-          series: [
-            'Hangzhou',
-            'Shenzhen'
-          ],
-          maxValue: 100,
-          levels: 5,
-          curve: 'curveCardinalClosed',
-          grids: {
-            shape: 'circle'
-          },
-          tooltip: {
-            html: function (d) {
-              return d.axis + ': ' + d.value + ' (' + d.city + ')';
-            }
-          },
-          legend: {
-            autoplay: true
+        d3.contourPlot(data, {
+          id: 'contour-plot-default',
+          domainX: [-1, 1],
+          domainY: [-1, 1],
+          contours: {
+            size: [50, 30]
           }
         });
+      });
+      d3.contourPlot(function (x, y) {
+        return Math.sin(x + y) * Math.sin(x - y);
+      }, {
+        id: 'contour-plot-customized',
+        domainX: [-2, 2],
+        domainY: [-2, 2],
+        contours: {
+          number: 12,
+          density: 2,
+          smooth: false,
+          stroke: '#fff'
+        },
+        colorScale: 'scaleSequential',
+        colorScheme: d3.interpolateRdBu,
+        framed: true
       });
     </script>
   </body>
