@@ -1,0 +1,32 @@
+[
+  {
+    "class": "1st",
+    "sex": "male",
+    "count": 118
+  },
+  {
+    "class": "1st",
+    "sex": "female",
+    "count": 4
+  },
+  {
+    "class": "2nd",
+    "sex": "male",
+    "count": 154
+  },
+  {
+    "class": "2nd",
+    "sex": "female",
+    "count": 13
+  },
+  {
+    "class": "3rd",
+    "sex": "male",
+    "count": 422
+  },
+  {
+    "class": "3rd",
+    "sex": "female",
+    "count": 106
+  }
+]

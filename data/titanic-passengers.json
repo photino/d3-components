@@ -1,0 +1,98 @@
+[
+  {
+    "class": "1st",
+    "sex": "male",
+    "survived": "no",
+    "count": 118
+  },
+  {
+    "class": "1st",
+    "sex": "male",
+    "survived": "yes",
+    "count": 62
+  },
+  {
+    "class": "1st",
+    "sex": "female",
+    "survived": "no",
+    "count": 4
+  },
+  {
+    "class": "1st",
+    "sex": "female",
+    "survived": "yes",
+    "count": 141
+  },
+  {
+    "class": "2nd",
+    "sex": "male",
+    "survived": "no",
+    "count": 154
+  },
+  {
+    "class": "2nd",
+    "sex": "male",
+    "survived": "yes",
+    "count": 25
+  },
+  {
+    "class": "2nd",
+    "sex": "female",
+    "survived": "no",
+    "count": 13
+  },
+  {
+    "class": "2nd",
+    "sex": "female",
+    "survived": "yes",
+    "count": 93
+  },
+  {
+    "class": "3rd",
+    "sex": "male",
+    "survived": "no",
+    "count": 422
+  },
+  {
+    "class": "3rd",
+    "sex": "male",
+    "survived": "yes",
+    "count": 88
+  },
+  {
+    "class": "3rd",
+    "sex": "female",
+    "survived": "no",
+    "count": 106
+  },
+  {
+    "class": "3rd",
+    "sex": "female",
+    "survived": "yes",
+    "count": 90
+  },
+  {
+    "class": "crew",
+    "sex": "male",
+    "survived": "no",
+    "count": 670
+  },
+  {
+    "class": "crew",
+    "sex": "male",
+    "survived": "yes",
+    "count": 192
+  },
+  {
+    "class": "crew",
+    "sex": "female",
+    "survived": "no",
+    "count": 3
+  },
+  {
+    "class": "crew",
+    "sex": "female",
+    "survived": "yes",
+    "count": 20
+  }
+]
