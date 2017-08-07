@@ -328,9 +328,6 @@ d3.radarChart = function (data, options) {
 
     // Legend
     var legend = options.legend;
-    if (legend.show === null) {
-      legend.show = dataset.length > 1;
-    }
     if (!legend.translation) {
       legend.translation = d3.translate(-width / 2, -height / 2);
     }

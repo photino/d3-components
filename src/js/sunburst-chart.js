@@ -152,7 +152,7 @@ d3.sunburstChart = function (data, options) {
 
     // Create the tooltip
     var tooltip = options.tooltip;
-    tooltip.target = slice;
+    tooltip.target = g.selectAll('.arc');
     d3.setTooltip(chart, tooltip);
   }
 };

@@ -116,14 +116,16 @@ d3.pieChart = function (data, options) {
 
     // Slices
     dispatch.on('init.slices', function (slices) {
-      g.selectAll('.arc')
-       .remove();
-      g.selectAll('.arc')
-       .data(slices)
-       .enter()
-       .append('g')
-       .attr('class', 'arc')
-       .attr('stroke', arcs.stroke);
+      var slice = g.selectAll('.arc')
+                   .data(slices, function (d) {
+                     return d.label;
+                   });
+      slice.exit()
+           .remove();
+      slice.enter()
+           .append('g')
+           .attr('class', 'arc')
+           .attr('stroke', arcs.stroke);
     });
 
     // Arcs

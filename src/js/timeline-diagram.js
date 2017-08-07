@@ -50,6 +50,7 @@ d3.components.timelineDiagram = {
     fill: 'currentColor',
     fontSize: '0.5em',
     domain: {
+      show: true,
       stroke: 'currentColor',
       strokeWidth: 1
     },

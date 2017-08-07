@@ -202,7 +202,7 @@ d3.bubbleChart = function (data, options) {
 
     // Create the tooltip
     var tooltip = options.tooltip;
-    tooltip.target = dot;
+    tooltip.target = g.selectAll('.dot');
     d3.setTooltip(chart, tooltip);
 
   }

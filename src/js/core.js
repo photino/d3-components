@@ -78,7 +78,10 @@ d3.defaultOptions = {
     transform: 'scale(0.85)',
     lineHeight: '1.6em',
     textColor: 'currentColor',
-    disabledTextColor: '#ccc'
+    disabledTextColor: '#ccc',
+    key: function (d, i) {
+      return i;
+    }
   },
   axisX: {
     show: true,
@@ -90,6 +93,7 @@ d3.defaultOptions = {
       padding: 4
     },
     domain: {
+      show: true,
       stroke: 'currentColor',
       strokeWidth: 1
     },
@@ -107,6 +111,7 @@ d3.defaultOptions = {
       padding: 4
     },
     domain: {
+      show: true,
       stroke: 'currentColor',
       strokeWidth: 1
     },
@@ -568,45 +573,61 @@ d3.setAxes = function (container, options) {
   var orientY = axisY.orient || 'left';
   var domainX = axisX.domain;
   var domainY = axisY.domain;
-  var gx = d3.setAxis(options.scaleX, axisX);
-  var gy = d3.setAxis(options.scaleY, axisY);
-  g.selectAll('.axis')
-   .remove();
+  var sx = d3.setAxis(options.scaleX, axisX);
+  var sy = d3.setAxis(options.scaleY, axisY);
   if (options.framed) {
     if (axisX.show) {
-      g.append('g')
-       .attr('class', 'axis axis-x')
-       .attr('transform', d3.translate(0, height))
-       .call(gx);
-      g.append('g')
-       .attr('class', 'axis axis-x')
-       .call(gx.tickFormat(''));
+      var axisBottom = g.select('.axis-bottom');
+      var axisTop = g.select('.axis-top');
+      if (axisBottom.empty()) {
+        axisBottom = g.append('g')
+                      .attr('class', 'axis axis-x axis-bottom');
+      }
+      if (axisTop.empty()) {
+        axisTop = g.append('g')
+                   .attr('class', 'axis axis-x axis-top');
+      }
+      axisBottom.attr('transform', d3.translate(0, height))
+                .call(sx);
+      axisTop.call(sx.tickFormat(''));
     }
     if (axisY.show) {
-      g.append('g')
-       .attr('class', 'axis axis-y')
-       .call(gy);
-      g.append('g')
-       .attr('class', 'axis axis-y')
-       .attr('transform', d3.translate(width, 0))
-       .call(gy.tickFormat(''));
+      var axisLeft = g.select('.axis-left');
+      var axisRight = g.select('.axis-right');
+      if (axisLeft.empty()) {
+        axisLeft = g.append('g')
+                    .attr('class', 'axis axis-y axis-left');
+      }
+      if (axisRight.empty()) {
+        axisRight = g.append('g')
+                     .attr('class', 'axis axis-y axis-right');
+      }
+      axisLeft.call(sy);
+      axisRight.attr('transform', d3.translate(width, 0))
+               .call(sy.tickFormat(''));
     }
   } else {
     if (axisX.show) {
-      var ax = g.append('g')
-                .attr('class', 'axis axis-x')
-                .call(gx);
+      var ax = g.select('.axis-x');
+      if (ax.empty()) {
+        ax = g.append('g')
+              .attr('class', 'axis axis-x');
+      }
       if (orientX === 'bottom') {
         ax.attr('transform', d3.translate(0, height));
       }
+      ax.call(sx);
     }
     if (axisY.show) {
-      var ay = g.append('g')
-                .attr('class', 'axis axis-y')
-                .call(gy);
+      var ay = g.select('.axis-y');
+      if (ay.empty()) {
+        ay = g.append('g')
+              .attr('class', 'axis axis-y');
+      }
       if (orientY === 'right') {
         ay.attr('transform', d3.translate(width, 0));
       }
+      ay.call(sy);
     }
   }
   if (axisX.show) {
@@ -615,6 +636,7 @@ d3.setAxes = function (container, options) {
      .selectAll('text')
      .attr('text-anchor', axisX.textAnchor)
      .attr('transform', axisX.transform)
+     .attr('rotate', axisX.rotate)
      .attr('fill', axisX.fill);
     g.selectAll('.axis-x')
      .selectAll('line')
@@ -623,7 +645,8 @@ d3.setAxes = function (container, options) {
     g.selectAll('.axis-x')
      .select('.domain')
      .attr('stroke', domainX.stroke)
-     .attr('stroke-width', domainX.strokeWidth);
+     .attr('stroke-width', domainX.strokeWidth)
+     .attr('display', domainX.show ? 'block' : 'none');
   }
   if (axisY.show) {
     g.selectAll('.axis-y')
@@ -631,6 +654,7 @@ d3.setAxes = function (container, options) {
      .selectAll('text')
      .attr('text-anchor', axisY.textAnchor)
      .attr('transform', axisY.transform)
+     .attr('rotate', axisY.rotate)
      .attr('fill', axisY.fill);
     g.selectAll('.axis-y')
      .selectAll('line')
@@ -639,52 +663,53 @@ d3.setAxes = function (container, options) {
     g.selectAll('.axis-y')
      .select('.domain')
      .attr('stroke', domainX.stroke)
-     .attr('stroke-width', domainY.strokeWidth);
+     .attr('stroke-width', domainY.strokeWidth)
+     .attr('display', domainY.show ? 'block' : 'none');
   }
 
   // Grid lines
   var gridX = options.gridX || {};
   var gridY = options.gridY || {};
-  g.selectAll('.grid')
-   .remove();
   if (gridX.show) {
-    g.insert('g', ':first-child')
-     .attr('class', 'grid grid-x')
-     .attr('stroke-dasharray', gridX.strokeDash.join())
-     .call(gy.tickSize(-width, 0).tickFormat(''));
-    g.select('.grid-x')
-     .select('.domain')
-     .attr('stroke-width', 0);
-    g.select('.grid-x')
-     .selectAll('.tick')
-     .attr('stroke-width', function () {
-       var transform = d3.select(this)
-                         .attr('transform');
-       var dy = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[2];
-       return (Math.abs(dy) < 1 || Math.abs(dy - height) < 1) ? 0 : null;
-     })
-     .select('line')
-     .attr('stroke', gridX.stroke);
+    var gx = g.select('.grid-x');
+    if (gx.empty()) {
+      gx = g.insert('g', ':first-child')
+            .attr('class', 'grid grid-x');
+    }
+    gx.attr('stroke-dasharray', gridX.strokeDash.join())
+      .call(sy.tickSize(-width, 0).tickFormat(''));
+    gx.select('.domain')
+      .attr('stroke-width', 0);
+    gx.selectAll('.tick')
+      .attr('stroke-width', function () {
+         var transform = d3.select(this)
+                           .attr('transform');
+         var dy = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[2];
+         return (Math.abs(dy) < 1 || Math.abs(dy - height) < 1) ? 0 : null;
+       })
+       .select('line')
+       .attr('stroke', gridX.stroke);
   }
   if (gridY.show) {
-    g.insert('g', ':first-child')
-     .attr('class', 'grid grid-y')
-     .attr('stroke-dasharray', gridY.strokeDash.join())
-     .attr('transform', d3.translate(0, height))
-     .call(gx.tickSize(-height, 0).tickFormat(''));
-    g.select('.grid-y')
-     .select('.domain')
-     .attr('stroke-width', 0);
-    g.select('.grid-y')
-     .selectAll('.tick')
-     .attr('stroke-width', function () {
-       var transform = d3.select(this)
-                         .attr('transform');
-       var dx = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[1];
-       return (Math.abs(dx) < 1 || Math.abs(dx - width) < 1) ? 0 : null;
-     })
-     .select('line')
-     .attr('stroke', gridY.stroke);
+    var gy = g.select('.grid-y');
+    if (gy.empty()) {
+      gy = g.insert('g', ':first-child')
+            .attr('class', 'grid grid-y');
+    }
+    gy.attr('stroke-dasharray', gridY.strokeDash.join())
+      .attr('transform', d3.translate(0, height))
+      .call(sx.tickSize(-height, 0).tickFormat(''));
+    gy.select('.domain')
+      .attr('stroke-width', 0);
+    gy.selectAll('.tick')
+      .attr('stroke-width', function () {
+        var transform = d3.select(this)
+                          .attr('transform');
+        var dx = +transform.replace(/\,?\s+/, ',').split(/[\,\(\)]/)[1];
+        return (Math.abs(dx) < 1 || Math.abs(dx - width) < 1) ? 0 : null;
+      })
+      .select('line')
+      .attr('stroke', gridY.stroke);
   }
 };
 
@@ -697,41 +722,45 @@ d3.setLabels = function (container, options) {
   var labelY = options.labelY;
   var anchorX = labelX.textAnchor;
   var anchorY = labelY.textAnchor;
-  g.selectAll('.label')
-   .remove();
   if (labelX.show) {
+    var lx = g.select('.label-x');
     var tx = 0;
     if (anchorX === 'middle') {
       tx = width / 2;
     } else if (anchorX === 'end') {
       tx = width;
     }
-    g.append('text')
-     .attr('class', 'label label-x')
-     .attr('x', tx)
-     .attr('y', height)
-     .attr('dy', labelX.dy)
-     .attr('transform', labelX.transform)
-     .attr('fill', labelX.fill)
-     .attr('text-anchor', anchorX)
-     .text(labelX.text);
+    if (lx.empty()) {
+      lx = g.append('text')
+            .attr('class', 'label label-x');
+    }
+    lx.attr('x', tx)
+      .attr('y', height)
+      .attr('dy', labelX.dy)
+      .attr('transform', labelX.transform)
+      .attr('fill', labelX.fill)
+      .attr('text-anchor', anchorX)
+      .text(labelX.text);
   }
   if (labelY.show) {
+    var ly = g.select('.label-y');
     var ty = height;
     if (anchorY === 'middle') {
       ty = height / 2;
     } else if (anchorY === 'end') {
       ty = 0;
     }
-    g.append('text')
-     .attr('class', 'label label-y')
-     .attr('x', -ty)
-     .attr('y', 0)
-     .attr('dy', labelY.dy)
-     .attr('transform', labelY.transform)
-     .attr('fill', labelY.fill)
-     .attr('text-anchor', anchorY)
-     .text(labelY.text);
+    if (ly.empty()) {
+      ly = g.append('text')
+            .attr('class', 'label label-y');
+    }
+    ly.attr('x', -ty)
+      .attr('y', 0)
+      .attr('dy', labelY.dy)
+      .attr('transform', labelY.transform)
+      .attr('fill', labelY.fill)
+      .attr('text-anchor', anchorY)
+      .text(labelY.text);
   }
 };
 
@@ -788,9 +817,9 @@ d3.setTooltip = function (chart, options) {
 
 // Set the legend
 d3.setLegend = function (container, options) {
-  container.select('.legend')
-           .remove();
-  if (options.show) {
+  var show = options.show;
+  var data = options.data;
+  if (show || show === null && data.length > 1) {
     var type = options.type;
     var display = options.display;
     var maxWidth = options.maxWidth;
@@ -802,75 +831,97 @@ d3.setLegend = function (container, options) {
     var textColor = options.textColor;
     var disabledTextColor = options.disabledTextColor;
     var lineHeight = options.lineHeight;
-    var item = container.append('g')
+    var legend = container.select('.legend');
+    if (legend.empty()) {
+      legend = container.append('g')
                         .attr('class', 'legend')
                         .attr('transform', options.translation)
-                        .attr('cursor', 'pointer')
-                        .selectAll('.legend-item')
-                        .data(options.data)
-                        .enter()
-                        .append('g')
-                        .attr('class', function (d) {
-                          if (!d.hasOwnProperty('disabled')) {
-                            d.disabled = d.data && d.data.disabled || false;
-                          }
-                          return 'legend-item' + (d.disabled ? ' disabled' : '');
-                        })
-                        .attr('transform', options.transform);
-    if (symbolShape === 'circle') {
-      item.append('circle')
-          .attr('cx', function (d, i) {
-            if (display === 'inline-block') {
-              return maxWidth * (i % columns) + symbolWidth / 2;
-            }
-            return symbolWidth / 2;
-          })
-          .attr('cy', function (d, i) {
-            if (display === 'inline-block') {
-              i = Math.floor(i / columns);
-            }
-            return lineHeight * (i + 1) - symbolHeight / 2;
-          })
-          .attr('r', Math.min(symbolWidth, symbolHeight) / 2);
-    } else if (symbolShape === 'rect') {
-      item.append('rect')
-          .attr('width', symbolWidth)
-          .attr('height', symbolHeight)
-          .attr('x', function (d, i) {
-            if (display === 'inline-block') {
-              return maxWidth * (i % columns);
-            }
-            return 0;
-          })
-          .attr('y', function (d, i) {
-            if (display === 'inline-block') {
-              i = Math.floor(i / columns);
-            }
-            return lineHeight * (i + 1) - symbolHeight;
-          });
+                        .attr('cursor', 'pointer');
+    }
+
+    var items = legend.selectAll('.legend-item')
+                      .data(data, options.key);
+    items.exit()
+         .remove();
+    items.enter()
+         .append('g')
+         .attr('class', function (d) {
+           if (!d.hasOwnProperty('disabled')) {
+             d.disabled = d.data && d.data.disabled || false;
+           }
+           return 'legend-item' + (d.disabled ? ' disabled' : '');
+         })
+         .attr('transform', options.transform);
+
+    var item = container.selectAll('.legend-item');
+    var shape = item.select(symbolShape);
+    if (shape.empty()) {
+      if (symbolShape === 'circle') {
+        item.append('circle')
+            .attr('cx', function (d, i) {
+              if (display === 'inline-block') {
+                return maxWidth * (i % columns) + symbolWidth / 2;
+              }
+              return symbolWidth / 2;
+            })
+            .attr('cy', function (d, i) {
+              if (display === 'inline-block') {
+                i = Math.floor(i / columns);
+              }
+              return lineHeight * (i + 1) - symbolHeight / 2;
+            })
+            .attr('r', Math.min(symbolWidth, symbolHeight) / 2);
+      } else if (symbolShape === 'rect') {
+        item.append('rect')
+            .attr('width', symbolWidth)
+            .attr('height', symbolHeight)
+            .attr('x', function (d, i) {
+              if (display === 'inline-block') {
+                return maxWidth * (i % columns);
+              }
+              return 0;
+            })
+            .attr('y', function (d, i) {
+              if (display === 'inline-block') {
+                i = Math.floor(i / columns);
+              }
+              return lineHeight * (i + 1) - symbolHeight;
+            });
+      }
     }
     item.select(symbolShape)
         .attr('fill', function (d) {
           return d.disabled ? disabledTextColor : d.color;
         });
 
-    item.append('text')
+    var dx = options.dx;
+    var maxTextLength = maxWidth - symbolWidth - dx * 2;
+    var text = item.select('text');
+    if (text.empty()) {
+      item.append('text')
+          .attr('x', function (d, i) {
+            if (display === 'inline-block') {
+              return maxWidth * (i % columns) + symbolWidth;
+            }
+            return symbolWidth;
+          })
+          .attr('y', function (d, i) {
+            if (display === 'inline-block') {
+              i = Math.floor(i / columns);
+            }
+            return lineHeight * (i + 1);
+          })
+          .attr('dx', dx)
+          .attr('lengthAdjust', 'spacingAndGlyphs');
+    }
+    item.select('text')
         .text(options.text)
-        .attr('x', function (d, i) {
-          if (display === 'inline-block') {
-            return maxWidth * (i % columns) + symbolWidth;
-          }
-          return symbolWidth;
-        })
-        .attr('y', function (d, i) {
-          if (display === 'inline-block') {
-            i = Math.floor(i / columns);
-          }
-          return lineHeight * (i + 1);
-        })
-        .attr('dx', options.dx)
         .attr('fill', function (d) {
           return d.disabled ? disabledTextColor : textColor;
+        })
+        .attr('textLength', function (d) {
+          var textLength = d3.select(this).node().getComputedTextLength();
+          return textLength > maxTextLength ? maxTextLength : null;
         });
 
     item.on('click', function (d) {
@@ -1000,21 +1051,8 @@ d3.imageTiles = function (selection, options) {
                        .data(tiles, function (d) {
                          return [d.tx, d.ty, d.z];
                        });
-
-  selection.attr('transform', function () {
-             var s = tiles.scale;
-             var t = tiles.translate;
-             var k = s / tileSize;
-             var r = s % 1 ? Number : Math.round;
-             var x = r(t[0] * s);
-             var y = r(t[1] * s);
-             return 'translate(' + x + ',' + y + ') scale(' + k + ')';
-           })
-           .style('filter', options.filter);
-
   image.exit()
        .remove();
-
   image.enter()
        .append('image')
        .attr('xlink:href', tileImage.href)
@@ -1026,6 +1064,17 @@ d3.imageTiles = function (selection, options) {
        })
        .attr('width', tileSize + 1)
        .attr('height', tileSize + 1);
+
+  selection.attr('transform', function () {
+             var s = tiles.scale;
+             var t = tiles.translate;
+             var k = s / tileSize;
+             var r = s % 1 ? Number : Math.round;
+             var x = r(t[0] * s);
+             var y = r(t[1] * s);
+             return 'translate(' + x + ',' + y + ') scale(' + k + ')';
+           })
+           .style('filter', options.filter);
 
 };
 
@@ -1082,7 +1131,7 @@ d3.parseGeoData = function (map, options) {
         value: undefined
       };
       var matched = dataset.some(function (d) {
-        if (d[key] === property) {
+        if ((d[key] || d.id) === property) {
           feature.data = d;
           return true;
         }

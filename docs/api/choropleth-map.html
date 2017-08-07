@@ -92,23 +92,27 @@
     });
   });
   d3.json('../dist/maps/world.topo.json', function (topojson) {
-    d3.choroplethMap([], {
-      id: 'choropleth-map-topojson',
-      map: {
-        name: 'world',
-        data: topojson,
-        object: 'countries'
-      },
-      tile: {
-        show: true,
-        image: {
-          href: function (d) {
-            var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
-            return server + d.z + '/' + d.y + '/' + d.x;
+    d3.json('../data/world-countries-population.json', function (data) {
+      d3.choroplethMap(data, {
+        id: 'choropleth-map-topojson',
+        map: {
+          name: 'world',
+          data: topojson,
+          object: 'countries',
+          key: 'name'
+        },
+        tile: {
+          show: true,
+          image: {
+            href: function (d) {
+              var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
+              return server + d.z + '/' + d.y + '/' + d.x;
+            }
           }
-        }
-      },
-      coloring: 'topological'
+        },
+        colorScale: 'scaleSequential',
+        colorScheme: d3.interpolateReds
+      });
     });
   });
 &lt;/script&gt;
@@ -164,23 +168,27 @@
         });
       });
       d3.json('../dist/maps/world.topo.json', function (topojson) {
-        d3.choroplethMap([], {
-          id: 'choropleth-map-topojson',
-          map: {
-            name: 'world',
-            data: topojson,
-            object: 'countries'
-          },
-          tile: {
-            show: true,
-            image: {
-              href: function (d) {
-                var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
-                return server + d.z + '/' + d.y + '/' + d.x;
+        d3.json('../data/world-countries-population.json', function (data) {
+          d3.choroplethMap(data, {
+            id: 'choropleth-map-topojson',
+            map: {
+              name: 'world',
+              data: topojson,
+              object: 'countries',
+              key: 'name'
+            },
+            tile: {
+              show: true,
+              image: {
+                href: function (d) {
+                  var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
+                  return server + d.z + '/' + d.y + '/' + d.x;
+                }
               }
-            }
-          },
-          coloring: 'topological'
+            },
+            colorScale: 'scaleSequential',
+            colorScheme: d3.interpolateReds
+          });
         });
       });
     </script>

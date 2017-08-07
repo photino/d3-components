@@ -191,17 +191,23 @@ d3.barChart = function (data, options) {
         x.domain(categories);
         y.domain([0, maxValue]);
       }
-      g.select('.layout')
-       .remove();
+
+      var layout = g.select('.layout');
+      if (layout.empty()) {
+        layout = g.append('g')
+                  .attr('class', 'layout');
+      }
 
       // Rects
-      var rect = g.append('g')
-                  .attr('class', 'layout')
-                  .selectAll('.slice')
-                  .data(data)
-                  .enter()
-                  .append('rect')
-                  .attr('class', 'slice');
+      var rects = layout.selectAll('.slice')
+                        .data(data);
+      rects.exit()
+           .remove();
+      rects.enter()
+           .append('rect')
+           .attr('class', 'slice');
+
+      var rect = layout.selectAll('.slice');
       if (horizontal) {
         var bandwidth = y.bandwidth();
         if (stacked) {
@@ -284,12 +290,15 @@ d3.barChart = function (data, options) {
       var refline = options.refline;
       var threshold = refline.threshold;
       if (refline.show && maxValue > threshold) {
-        var line = g.select('.layout')
-                    .append('line')
-                    .attr('class', 'refline')
-                    .attr('stroke', refline.stroke)
-                    .attr('stroke-width', refline.strokeWidth)
-                    .attr('stroke-dasharray', refline.strokeDash.join());
+        var line = g.select('.refline');
+        if (line.empty()) {
+          line = g.select('.layout')
+                  .append('line')
+                  .attr('class', 'refline');
+        }
+        line.attr('stroke', refline.stroke)
+            .attr('stroke-width', refline.strokeWidth)
+            .attr('stroke-dasharray', refline.strokeDash.join());
         if (options.horizontal) {
           var xmin = x(threshold);
           line.attr('x1', xmin)
@@ -353,9 +362,6 @@ d3.barChart = function (data, options) {
     // Legend
     dispatch.on('finalize.legend', function () {
       var legend = options.legend;
-      if (legend.show === null) {
-        legend.show = dataset.length > 1;
-      }
       if (!legend.translation) {
         legend.translation = d3.translate(-margin.left, -margin.top);
       }
