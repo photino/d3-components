@@ -60,30 +60,54 @@
 &lt;div id="terrestrial-globe-rotation"&gt;&lt;/div&gt;
 
 &lt;script&gt;
-  d3.json('../dist/maps/world.geo.json', function (geojson) {
-    d3.terrestrialGlobe([], {
-      id: 'terrestrial-globe-default',
-      map: {
-        name: 'world',
-        data: geojson,
-        object: 'countries',
-        center: [103.3886, 35.5636]
-      }
-    });
-    d3.terrestrialGlobe([], {
-      id: 'terrestrial-globe-rotation',
-      map: {
-        name: 'world',
-        data: geojson,
-        object: 'countries'
-      },
-      graticules: {
-        show: true
-      },
-      rotation: {
-        autoplay: true,
-        velocity: [0.01, 0.02, 0.03]
-      }
+  d3.json('../dist/maps/world.topo.json', function (topojson) {
+    d3.json('../data/world-countries-population.json', function (data) {
+      d3.terrestrialGlobe(data, {
+        id: 'terrestrial-globe-default',
+        map: {
+          key: 'name',
+          name: 'world',
+          data: topojson,
+          object: 'countries',
+          center: [103.3886, 35.5636]
+        }
+      });
+      d3.terrestrialGlobe([], {
+        id: 'terrestrial-globe-rotation',
+        map: {
+          key: 'name',
+          name: 'world',
+          data: topojson,
+          object: 'countries'
+        },
+        graticules: {
+          show: true
+        },
+        rotation: {
+          autoplay: true,
+          velocity: [0.01, 0.02, 0.03]
+        },
+        regions: {
+          show: false
+        }
+      });
+      d3.choroplethMap(data, {
+        id: 'terrestrial-globe-rotation',
+        standalone: false,
+        map: {
+          key: 'name',
+          name: 'world',
+          data: topojson,
+          object: 'countries',
+          rotate: [-103.3886, -35.5636],
+          scale: 0.5
+        },
+        regions: {
+          stroke: '#fff'
+        },
+        projection: 'geoOrthographic',
+        coloring: 'topological'
+      });
     });
   });
 &lt;/script&gt;
@@ -103,31 +127,56 @@
     <script src="./../dist/icons/editor.js"></script>
     <script src="./../dist/d3-4.10.0.min.js"></script>
     <script src="./../dist/d3-components-0.0.5.js"></script>
+    <script src="./../dist/topojson-2.2.0.min.js"></script>
     <script>
-      d3.json('../dist/maps/world.geo.json', function (geojson) {
-        d3.terrestrialGlobe([], {
-          id: 'terrestrial-globe-default',
-          map: {
-            name: 'world',
-            data: geojson,
-            object: 'countries',
-            center: [103.3886, 35.5636]
-          }
-        });
-        d3.terrestrialGlobe([], {
-          id: 'terrestrial-globe-rotation',
-          map: {
-            name: 'world',
-            data: geojson,
-            object: 'countries'
-          },
-          graticules: {
-            show: true
-          },
-          rotation: {
-            autoplay: true,
-            velocity: [0.01, 0.02, 0.03]
-          }
+      d3.json('../dist/maps/world.topo.json', function (topojson) {
+        d3.json('../data/world-countries-population.json', function (data) {
+          d3.terrestrialGlobe(data, {
+            id: 'terrestrial-globe-default',
+            map: {
+              key: 'name',
+              name: 'world',
+              data: topojson,
+              object: 'countries',
+              center: [103.3886, 35.5636]
+            }
+          });
+          d3.terrestrialGlobe([], {
+            id: 'terrestrial-globe-rotation',
+            map: {
+              key: 'name',
+              name: 'world',
+              data: topojson,
+              object: 'countries'
+            },
+            graticules: {
+              show: true
+            },
+            rotation: {
+              autoplay: true,
+              velocity: [0.01, 0.02, 0.03]
+            },
+            regions: {
+              show: false
+            }
+          });
+          d3.choroplethMap(data, {
+            id: 'terrestrial-globe-rotation',
+            standalone: false,
+            map: {
+              key: 'name',
+              name: 'world',
+              data: topojson,
+              object: 'countries',
+              rotate: [-103.3886, -35.5636],
+              scale: 0.5
+            },
+            regions: {
+              stroke: '#fff'
+            },
+            projection: 'geoOrthographic',
+            coloring: 'topological'
+          });
         });
       });
     </script>
