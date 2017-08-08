@@ -2730,6 +2730,11 @@ d3.components.choroplethMap = {
     precision: 1,
     stroke: '#ccc'
   },
+  regions: {
+    show: true,
+    stroke: '#666',
+    fill: '#fff'
+  },
   tile: {
     show: false,
     zoomable: true,
@@ -2755,8 +2760,6 @@ d3.components.choroplethMap = {
       return d.data.id + ': ' + d.data.value
     }
   },
-  stroke: '#666',
-  fill: '#fff',
   colorScheme: d3.schemeCategory20c
 };
 
@@ -2804,6 +2807,7 @@ d3.choroplethMap = function (data, options) {
     projection = d3[options.projection]()
                    .scale(height * map.scale)
                    .translate(map.translate || [0, 0])
+                   .rotate(map.rotate || [0, 0])
                    .center(map.center);
   }
 
@@ -2891,36 +2895,41 @@ d3.choroplethMap = function (data, options) {
     }
 
     // Regions
-    g.append('g')
-     .attr('class', 'layer')
-     .selectAll('.region')
-     .data(features)
-     .enter()
-     .append('path')
-     .attr('class', 'region')
-     .attr('d', path)
-     .attr('fill', function (d, i) {
-       if (d.color) {
-         return d.color;
-       }
-       if (fill === 'none') {
-         return fill;
-       }
-       if (coloring === 'topological' && neighbors.length) {
-         d.value = (d3.max(neighbors[i], function (n) {
-           return features[n].value;
-         }) | 0) + 1;
-       } else {
-         d.value = d.data.value;
-       }
-       if (d.value === undefined || d.value === null) {
-         return fill;
-       }
-       if (colorScale === 'scaleSequential') {
-         d.value = (d.value - min) / max;
-       }
-       return colors(d.value);
-     });
+    var regions = options.regions;
+    if (regions.show) {
+      var fill = regions.fill;
+      g.append('g')
+       .attr('class', 'layer')
+       .selectAll('.region')
+       .data(features)
+       .enter()
+       .append('path')
+       .attr('class', 'region')
+       .attr('d', path)
+       .attr('stroke', regions.stroke)
+       .attr('fill', function (d, i) {
+         if (d.color) {
+           return d.color;
+         }
+         if (fill === 'none') {
+           return fill;
+         }
+         if (coloring === 'topological' && neighbors.length) {
+           d.value = (d3.max(neighbors[i], function (n) {
+             return features[n].value;
+           }) | 0) + 1;
+         } else {
+           d.value = d.data.value;
+         }
+         if (d.value === undefined || d.value === null) {
+           return fill;
+         }
+         if (colorScale === 'scaleSequential') {
+           d.value = (d.value - min) / max;
+         }
+         return colors(d.value);
+       });
+    }
 
     // Labels
     var labels = options.labels;
@@ -3751,6 +3760,11 @@ d3.components.terrestrialGlobe = {
     precision: 1,
     stroke: '#ccc'
   },
+  regions: {
+    show: true,
+    stroke: '#666',
+    fill: '#fff'
+  },
   tooltip: {
     html: function (d) {
       return d.data.id + ': ' + d.data.value
@@ -3762,8 +3776,6 @@ d3.components.terrestrialGlobe = {
     sensitivity: 0.25,
     velocity: [0.01, 0, 0]
   },
-  stroke: '#666',
-  fill: '#fff',
   colorScheme: d3.schemeCategory20c
 };
 
@@ -3864,36 +3876,41 @@ d3.terrestrialGlobe = function (data, options) {
     }
 
     // Regions
-    g.append('g')
-     .attr('class', 'layer')
-     .selectAll('.region')
-     .data(features)
-     .enter()
-     .append('path')
-     .attr('class', 'region')
-     .attr('d', path)
-     .attr('fill', function (d, i) {
-       if (d.color) {
-         return d.color;
-       }
-       if (fill === 'none') {
-         return fill;
-       }
-       if (coloring === 'topological' && neighbors.length) {
-         d.value = (d3.max(neighbors[i], function (n) {
-           return features[n].value;
-         }) | 0) + 1;
-       } else {
-         d.value = d.data.value;
-       }
-       if (d.value === undefined || d.value === null) {
-         return fill;
-       }
-       if (colorScale === 'scaleSequential') {
-         d.value = (d.value - min) / max;
-       }
-       return colors(d.value);
-     });
+    var regions = options.regions;
+    if (regions.show) {
+      var fill = regions.fill;
+      g.append('g')
+       .attr('class', 'layer')
+       .selectAll('.region')
+       .data(features)
+       .enter()
+       .append('path')
+       .attr('class', 'region')
+       .attr('d', path)
+       .attr('stroke', regions.stroke)
+       .attr('fill', function (d, i) {
+         if (d.color) {
+           return d.color;
+         }
+         if (fill === 'none') {
+           return fill;
+         }
+         if (coloring === 'topological' && neighbors.length) {
+           d.value = (d3.max(neighbors[i], function (n) {
+             return features[n].value;
+           }) | 0) + 1;
+         } else {
+           d.value = d.data.value;
+         }
+         if (d.value === undefined || d.value === null) {
+           return fill;
+         }
+         if (colorScale === 'scaleSequential') {
+           d.value = (d.value - min) / max;
+         }
+         return colors(d.value);
+       });
+    }
 
      // Rotation
      var rotation = options.rotation;
@@ -4160,7 +4177,7 @@ d3.timelineDiagram = function (data, options) {
        ymax[idx] = y;
        d.dx = d.hasOwnProperty('dx') ? Number(d.dx) : dx * (y > dy ? y / dy : 1);
        d.dy = d.hasOwnProperty('dy') ? Number(d.dy) : (idx ? y : -y);
-       return d3.translate(x, origin[1]);
+       return d3.translate(x, startY);
      });
 
     // Connectors
@@ -4227,7 +4244,7 @@ d3.timelineDiagram = function (data, options) {
      })
      .attr('stroke-width', knots.strokeWidth)
      .attr('fill', function (d, i) {
-       return (multicolor ? d.color  || colorScheme[i] : null) || knots.fill;
+       return (multicolor ? d.color || colorScheme[i] : null) || knots.fill;
      });
 
     // Tooltip

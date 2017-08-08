@@ -213,7 +213,7 @@ d3.timelineDiagram = function (data, options) {
        ymax[idx] = y;
        d.dx = d.hasOwnProperty('dx') ? Number(d.dx) : dx * (y > dy ? y / dy : 1);
        d.dy = d.hasOwnProperty('dy') ? Number(d.dy) : (idx ? y : -y);
-       return d3.translate(x, origin[1]);
+       return d3.translate(x, startY);
      });
 
     // Connectors
@@ -280,7 +280,7 @@ d3.timelineDiagram = function (data, options) {
      })
      .attr('stroke-width', knots.strokeWidth)
      .attr('fill', function (d, i) {
-       return (multicolor ? d.color  || colorScheme[i] : null) || knots.fill;
+       return (multicolor ? d.color || colorScheme[i] : null) || knots.fill;
      });
 
     // Tooltip

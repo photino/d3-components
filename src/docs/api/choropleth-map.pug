@@ -60,10 +60,10 @@ block article
               d3.choroplethMap(data, {
                 id: 'choropleth-map-topojson',
                 map: {
+                  key: 'name',
                   name: 'world',
                   data: topojson,
-                  object: 'countries',
-                  key: 'name'
+                  object: 'countries'
                 },
                 tile: {
                   show: true,
@@ -122,10 +122,10 @@ block append foot
         d3.choroplethMap(data, {
           id: 'choropleth-map-topojson',
           map: {
+            key: 'name',
             name: 'world',
             data: topojson,
-            object: 'countries',
-            key: 'name'
+            object: 'countries'
           },
           tile: {
             show: true,

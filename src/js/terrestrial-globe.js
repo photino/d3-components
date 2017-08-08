@@ -55,6 +55,11 @@ d3.components.terrestrialGlobe = {
     precision: 1,
     stroke: '#ccc'
   },
+  regions: {
+    show: true,
+    stroke: '#666',
+    fill: '#fff'
+  },
   tooltip: {
     html: function (d) {
       return d.data.id + ': ' + d.data.value
@@ -66,8 +71,6 @@ d3.components.terrestrialGlobe = {
     sensitivity: 0.25,
     velocity: [0.01, 0, 0]
   },
-  stroke: '#666',
-  fill: '#fff',
   colorScheme: d3.schemeCategory20c
 };
 
@@ -168,36 +171,41 @@ d3.terrestrialGlobe = function (data, options) {
     }
 
     // Regions
-    g.append('g')
-     .attr('class', 'layer')
-     .selectAll('.region')
-     .data(features)
-     .enter()
-     .append('path')
-     .attr('class', 'region')
-     .attr('d', path)
-     .attr('fill', function (d, i) {
-       if (d.color) {
-         return d.color;
-       }
-       if (fill === 'none') {
-         return fill;
-       }
-       if (coloring === 'topological' && neighbors.length) {
-         d.value = (d3.max(neighbors[i], function (n) {
-           return features[n].value;
-         }) | 0) + 1;
-       } else {
-         d.value = d.data.value;
-       }
-       if (d.value === undefined || d.value === null) {
-         return fill;
-       }
-       if (colorScale === 'scaleSequential') {
-         d.value = (d.value - min) / max;
-       }
-       return colors(d.value);
-     });
+    var regions = options.regions;
+    if (regions.show) {
+      var fill = regions.fill;
+      g.append('g')
+       .attr('class', 'layer')
+       .selectAll('.region')
+       .data(features)
+       .enter()
+       .append('path')
+       .attr('class', 'region')
+       .attr('d', path)
+       .attr('stroke', regions.stroke)
+       .attr('fill', function (d, i) {
+         if (d.color) {
+           return d.color;
+         }
+         if (fill === 'none') {
+           return fill;
+         }
+         if (coloring === 'topological' && neighbors.length) {
+           d.value = (d3.max(neighbors[i], function (n) {
+             return features[n].value;
+           }) | 0) + 1;
+         } else {
+           d.value = d.data.value;
+         }
+         if (d.value === undefined || d.value === null) {
+           return fill;
+         }
+         if (colorScale === 'scaleSequential') {
+           d.value = (d.value - min) / max;
+         }
+         return colors(d.value);
+       });
+    }
 
      // Rotation
      var rotation = options.rotation;
