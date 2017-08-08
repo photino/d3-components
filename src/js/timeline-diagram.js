@@ -27,13 +27,13 @@ d3.components.timelineDiagram = {
         ]
       },
       {
-        key: 'img',
+        key: 'image',
         type: 'string',
         mappings: [
           'icon',
-          'image',
-          'picture',
-          'photo'
+          'img',
+          'photo',
+          'picture'
         ]
       }
     ]
@@ -235,7 +235,7 @@ d3.timelineDiagram = function (data, options) {
     g.selectAll('.item')
      .append('image')
      .attr('href', function (d) {
-       return d.img;
+       return d.image;
      })
      .attr('x', function (d) {
        return d.dx - d.width / 2;
