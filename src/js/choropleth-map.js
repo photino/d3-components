@@ -186,7 +186,7 @@ d3.choroplethMap = function (data, options) {
                      var transform = d3.event.transform;
                      tile.scale = transform.k;
                      tile.translate = [transform.x, transform.y];
-                     d3.imageTiles(svg.select('.tile'), tile);
+                     d3.setTiles(svg.select('.tile'), tile);
                      projection.scale(tile.scale / (2 * Math.PI))
                                .translate(tile.translate);
                      g.selectAll('.region')
@@ -256,7 +256,8 @@ d3.choroplethMap = function (data, options) {
            d.value = (d.value - min) / max;
          }
          return colors(d.value);
-       });
+       })
+       .attr('opacity', regions.opacity);
     }
 
     // Labels

@@ -204,7 +204,8 @@ d3.terrestrialGlobe = function (data, options) {
            d.value = (d.value - min) / max;
          }
          return colors(d.value);
-       });
+       })
+       .attr('opacity', regions.opacity);
     }
 
      // Rotation

@@ -455,6 +455,36 @@ d3.extend = function (object1, object2) {
   return object;
 };
 
+// Format template string
+d3.formatString = function (template, data) {
+  var string = String(template);
+  var type = d3.type(data);
+  if (type === 'object') {
+    var placeholder = /\$\{\s*([^\{\}\s]+)\s*\}/g;
+    var matches = string.match(placeholder) || [];
+    matches.forEach(function (str) {
+      var key = str.replace(placeholder, '$1');
+      var value = data[key];
+      if (d3.type(value) === 'object') {
+        var keys = String(key).replace(/\[([^\]]+)\]/g, '.$1').split('.');
+        keys.every(function (key) {
+          if (d3.type(value) === 'object') {
+            if (value.hasOwnProperty(key)) {
+              value = value[key];
+              return true;
+            }
+          }
+          return false;
+        });
+      }
+      string = string.replace(str, function () {
+        return value;
+      });
+    });
+  }
+  return string;
+};
+
 // Generate a translation transform
 d3.translate = function (dx, dy) {
   return 'translate(' + dx + ',' + dy + ')';
@@ -1039,9 +1069,37 @@ d3.triggerAction = function (selection, options) {
 };
 
 // Create image tiles
-d3.imageTiles = function (selection, options) {
+d3.setTiles = function (selection, options) {
   var tileImage = options.image;
   var tileSize = tileImage.size;
+  var tileHref = tileImage.href;
+  if (d3.type(tileHref) === 'object') {
+    var service = d3.mapTiles[tileHref.service] || {};
+    var themes = service.themes || [];
+    if (Array.isArray(themes)) {
+      var token = tileHref.token || service.token;
+      var theme = tileHref.theme || themes[0];
+      var subdomain = tileHref.subdomain;
+      var subdomains = service.subdomains || [];
+      var length = subdomains.length;
+      var url = service.url;
+      tileHref = function (d) {
+        var domain = subdomain;
+        if (length && subdomain === undefined) {
+          domain = subdomains[Math.random() * length | 0];
+        }
+        return d3.formatString(url, {
+          k: token,
+          s: domain,
+          t: theme,
+          x: d.x,
+          y: d.y,
+          z: d.z
+        });
+      };
+    }
+  }
+
   var tiles = d3.tile()
                 .size(options.size)
                 .scale(options.scale)
@@ -1055,7 +1113,7 @@ d3.imageTiles = function (selection, options) {
        .remove();
   image.enter()
        .append('image')
-       .attr('xlink:href', tileImage.href)
+       .attr('xlink:href', tileHref)
        .attr('x', function (d) {
          return d.tx;
        })
@@ -1163,5 +1221,110 @@ d3.mapData = {
     key: 'name',
     center: [103.3886, 35.5636],
     scale: 1.0
+  }
+};
+
+// Built-in map tiles
+d3.mapTiles = {
+  amap: {
+    url: 'http://webrd03.is.autonavi.com/appmaptile?size=1&scale=1&style=8&x=${x}&y=${y}&z=${z}'
+  },
+  geoq: {
+    url: 'https://map.geoq.cn/ArcGIS/rest/services/${t}/MapServer/tile/${z}/${y}/${x}',
+    themes: [
+      'ChinaOnlineCommunity_Mobile',
+      'ChinaOnlineCommunityENG',
+      'ChinaOnlineCommunity',
+      'ChinaOnlineCommunityOnlyENG',
+      'ChinaOnlineStreetCold',
+      'ChinaOnlineStreetColor',
+      'ChinaOnlineStreetGray',
+      'ChinaOnlineStreetPurplishBlue',
+      'ChinaOnlineStreetWarm'
+    ]
+  },
+  google: {
+    url: 'https://google.cn/maps/vt?x=${x}&y=${y}&z=${z}'
+  },
+  mediawiki: {
+    url: 'https://maps.wikimedia.org/${t}/${z}/${x}/${y}.png',
+    themes: [
+      'osm',
+      'osm-intl'
+    ]
+  },
+  openstreetmap: {
+    url: 'https://${s}.tile.openstreetmap.org/${z}/${x}/${y}.png',
+    subdomains: ['a', 'b', 'c']
+  },
+  stamen: {
+    url: 'https://stamen-tiles-${s}.a.ssl.fastly.net/${t}/${z}/${x}/${y}.jpg',
+    subdomains: ['a', 'b', 'c', 'd'],
+    themes: [
+      'terrain',
+      'terrain-labels',
+      'terrain-lines',
+      'terrain-background',
+      'watercolor'
+    ]
+  },
+  geohey: {
+    url: 'https://${s}.geohey.com/s/mapping/${t}/all?z=${z}&x=${x}&y=${y}&ak=${k}',
+    subdomains: ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8'],
+    themes: [
+      'warm',
+      'cool',
+      'midnight',
+      'pencil',
+      'dark',
+      'contrast',
+      'pink',
+      'vision',
+      'adventure',
+      'blue',
+      'light',
+      'fresh',
+      'natural',
+      'admin',
+      'tourism',
+      'river',
+      'chinese'
+    ],
+    token: 'MGUxMmI2ZTk4YTVhNDEzYmJhZDJkNDM3ZWI5ZDAwOGE'
+  },
+  mapbox: {
+    url: 'https://${s}.tiles.mapbox.com/v4/mapbox.${t}/${z}/${x}/${y}.png?access_token=${k}',
+    subdomains: ['a', 'b', 'c', 'd'],
+    themes: [
+      'natural-earth-2',
+      'streets',
+      'light',
+      'dark',
+      'satellite',
+      'streets-satellite',
+      'wheatpaste',
+      'streets-basic',
+      'comic',
+      'outdoors',
+      'run-bike-hike',
+      'pencil',
+      'pirates',
+      'emerald',
+      'high-contrast'
+    ],
+    token: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NDg1bDA1cjYzM280NHJ5NzlvNDMifQ.d6e-nNyBDtmQCVwVNivz7A'
+  },
+  thunderforest: {
+    url: 'https://${s}.tile.thunderforest.com/${t}/${z}/${x}/${y}.png?apikey=${k}',
+    subdomains: ['a', 'b', 'c'],
+    themes: [
+      'cycle',
+      'transport',
+      'landscape',
+      'outdoors',
+      'transport-dark',
+      'spinal-map'
+    ],
+    token: '7c352c8ff1244dd8b732e349e0b0fe8d'
   }
 };

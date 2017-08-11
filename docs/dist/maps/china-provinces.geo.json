@@ -1,0 +1,617 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.8922,
+          28.6765
+        ]
+      },
+      "properties": {
+        "name": "江西省",
+        "adcode": "360000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.6654,
+          34.758
+        ]
+      },
+      "properties": {
+        "name": "河南省",
+        "adcode": "410000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.0657,
+          30.6595
+        ]
+      },
+      "properties": {
+        "name": "四川省",
+        "adcode": "510000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.505,
+          29.5332
+        ]
+      },
+      "properties": {
+        "name": "重庆市",
+        "adcode": "500000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.1322,
+          29.6604
+        ]
+      },
+      "properties": {
+        "name": "西藏自治区",
+        "adcode": "540000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.7135,
+          26.5783
+        ]
+      },
+      "properties": {
+        "name": "贵州省",
+        "adcode": "520000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          123.4291,
+          41.7968
+        ]
+      },
+      "properties": {
+        "name": "辽宁省",
+        "adcode": "210000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.6177,
+          43.7928
+        ]
+      },
+      "properties": {
+        "name": "新疆维吾尔自治区",
+        "adcode": "650000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.0009,
+          36.6758
+        ]
+      },
+      "properties": {
+        "name": "山东省",
+        "adcode": "370000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.4726,
+          31.2317
+        ]
+      },
+      "properties": {
+        "name": "上海市",
+        "adcode": "310000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.5491,
+          22.199
+        ]
+      },
+      "properties": {
+        "name": "澳門特別行政區",
+        "adcode": "820000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.5492,
+          37.857
+        ]
+      },
+      "properties": {
+        "name": "山西省",
+        "adcode": "140000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.1536,
+          30.2875
+        ]
+      },
+      "properties": {
+        "name": "浙江省",
+        "adcode": "330000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.3312,
+          20.032
+        ]
+      },
+      "properties": {
+        "name": "海南省",
+        "adcode": "460000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.3062,
+          26.0753
+        ]
+      },
+      "properties": {
+        "name": "福建省",
+        "adcode": "350000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          101.7789,
+          36.6232
+        ]
+      },
+      "properties": {
+        "name": "青海省",
+        "adcode": "630000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.2782,
+          38.4664
+        ]
+      },
+      "properties": {
+        "name": "宁夏回族自治区",
+        "adcode": "640000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.2986,
+          30.5844
+        ]
+      },
+      "properties": {
+        "name": "湖北省",
+        "adcode": "420000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.8236,
+          36.058
+        ]
+      },
+      "properties": {
+        "name": "甘肃省",
+        "adcode": "620000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.283,
+          31.8612
+        ]
+      },
+      "properties": {
+        "name": "安徽省",
+        "adcode": "340000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.5091,
+          25.0443
+        ]
+      },
+      "properties": {
+        "name": "台湾省",
+        "adcode": "710000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.948,
+          34.2632
+        ]
+      },
+      "properties": {
+        "name": "陕西省",
+        "adcode": "610000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.320,
+          22.824
+        ]
+      },
+      "properties": {
+        "name": "广西壮族自治区",
+        "adcode": "450000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.1902,
+          39.1256
+        ]
+      },
+      "properties": {
+        "name": "天津市",
+        "adcode": "120000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          102.7123,
+          25.0406
+        ]
+      },
+      "properties": {
+        "name": "云南省",
+        "adcode": "530000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.6425,
+          45.757
+        ]
+      },
+      "properties": {
+        "name": "黑龙江省",
+        "adcode": "230000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.2806,
+          23.1252
+        ]
+      },
+      "properties": {
+        "name": "广东省",
+        "adcode": "440000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.9823,
+          28.1941
+        ]
+      },
+      "properties": {
+        "name": "湖南省",
+        "adcode": "430000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.5025,
+          38.0455
+        ]
+      },
+      "properties": {
+        "name": "河北省",
+        "adcode": "130000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.6708,
+          40.8183
+        ]
+      },
+      "properties": {
+        "name": "内蒙古自治区",
+        "adcode": "150000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          125.3245,
+          43.8868
+        ]
+      },
+      "properties": {
+        "name": "吉林省",
+        "adcode": "220000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.7674,
+          32.0415
+        ]
+      },
+      "properties": {
+        "name": "江苏省",
+        "adcode": "320000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.4053,
+          39.905
+        ]
+      },
+      "properties": {
+        "name": "北京市",
+        "adcode": "110000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.1734,
+          22.320
+        ]
+      },
+      "properties": {
+        "name": "香港特別行政區",
+        "adcode": "810000",
+        "level": "province",
+        "parent": {
+          "name": "中华人民共和国"
+        }
+      }
+    }
+  ]
+}

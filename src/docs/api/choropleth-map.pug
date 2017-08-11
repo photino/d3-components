@@ -38,9 +38,9 @@ block article
                   scale: 2048,
                   zoomable: false,
                   image: {
-                    href: function (d) {
-                      var server = 'https://' + ['a', 'b', 'c', 'd'][Math.random() * 4 | 0] + '.tiles.mapbox.com/v3/mapbox.natural-earth-2/'
-                      return server + d.z + '/' + d.x + '/' + d.y + '.png';
+                    href: {
+                      service: 'mapbox',
+                      theme: 'natural-earth-2'
                     }
                   }
                 },
@@ -68,9 +68,9 @@ block article
                 tile: {
                   show: true,
                   image: {
-                    href: function (d) {
-                      var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
-                      return server + d.z + '/' + d.y + '/' + d.x;
+                    href: {
+                      service: 'geoq',
+                      theme: 'ChinaOnlineCommunityOnlyENG'
                     }
                   }
                 },
@@ -100,9 +100,9 @@ block append foot
             scale: 2048,
             zoomable: false,
             image: {
-              href: function (d) {
-                var server = 'https://' + ['a', 'b', 'c', 'd'][Math.random() * 4 | 0] + '.tiles.mapbox.com/v3/mapbox.natural-earth-2/'
-                return server + d.z + '/' + d.x + '/' + d.y + '.png';
+              href: {
+                service: 'mapbox',
+                theme: 'natural-earth-2'
               }
             }
           },
@@ -130,9 +130,9 @@ block append foot
           tile: {
             show: true,
             image: {
-              href: function (d) {
-                var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunityOnlyENG/MapServer/tile/';
-                return server + d.z + '/' + d.y + '/' + d.x;
+              href: {
+                service: 'geoq',
+                theme: 'ChinaOnlineCommunityOnlyENG'
               }
             }
           },

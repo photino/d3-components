@@ -6,12 +6,17 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          121.473701,
-          31.230416
+          117.557964,
+          34.856424
         ]
       },
       "properties": {
-        "name": "上海市"
+        "name": "枣庄市",
+        "adcode": "370400",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
       }
     },
     {
@@ -19,12 +24,17 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          116.407526,
-          39.90403
+          114.075031,
+          32.123274
         ]
       },
       "properties": {
-        "name": "北京市"
+        "name": "信阳市",
+        "adcode": "411500",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
       }
     },
     {
@@ -32,12 +42,17 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          113.264434,
-          23.129162
+          111.194099,
+          34.777338
         ]
       },
       "properties": {
-        "name": "广州市"
+        "name": "三门峡市",
+        "adcode": "411200",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
       }
     },
     {
@@ -45,12 +60,17 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          114.057868,
-          22.543099
+          121.472644,
+          31.231706
         ]
       },
       "properties": {
-        "name": "深圳市"
+        "name": "上海市市辖区",
+        "adcode": "310100",
+        "level": "city",
+        "parent": {
+          "name": "上海市"
+        }
       }
     },
     {
@@ -58,12 +78,17 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          117.200983,
-          39.084158
+          121.397417,
+          31.623587
         ]
       },
       "properties": {
-        "name": "天津市"
+        "name": "上海市郊县",
+        "adcode": "310200",
+        "level": "city",
+        "parent": {
+          "name": "上海市"
+        }
       }
     },
     {
@@ -71,12 +96,17 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          106.551556,
-          29.563009
+          111.134335,
+          37.524366
         ]
       },
       "properties": {
-        "name": "重庆市"
+        "name": "吕梁市",
+        "adcode": "141100",
+        "level": "city",
+        "parent": {
+          "name": "山西省"
+        }
       }
     },
     {
@@ -84,12 +114,17 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          120.585315,
-          31.298886
+          112.434468,
+          34.663041
         ]
       },
       "properties": {
-        "name": "苏州市"
+        "name": "洛阳市",
+        "adcode": "410300",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
       }
     },
     {
@@ -97,12 +132,17 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          104.066541,
-          30.572269
+          106.937265,
+          27.706626
         ]
       },
       "properties": {
-        "name": "成都市"
+        "name": "遵义市",
+        "adcode": "520300",
+        "level": "city",
+        "parent": {
+          "name": "贵州省"
+        }
       }
     },
     {
@@ -110,12 +150,17 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          114.305392,
-          30.593098
+          105.189568,
+          37.514951
         ]
       },
       "properties": {
-        "name": "武汉市"
+        "name": "中卫市",
+        "adcode": "640500",
+        "level": "city",
+        "parent": {
+          "name": "宁夏回族自治区"
+        }
       }
     },
     {
@@ -123,12 +168,6479 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          120.155070,
-          30.274084
+          113.238266,
+          35.23904
         ]
       },
       "properties": {
-        "name": "杭州市"
+        "name": "焦作市",
+        "adcode": "410800",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.883991,
+          35.302616
+        ]
+      },
+      "properties": {
+        "name": "新乡市",
+        "adcode": "410700",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.873946,
+          45.595886
+        ]
+      },
+      "properties": {
+        "name": "克拉玛依市",
+        "adcode": "650200",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          125.145349,
+          42.902692
+        ]
+      },
+      "properties": {
+        "name": "辽源市",
+        "adcode": "220400",
+        "level": "city",
+        "parent": {
+          "name": "吉林省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.55302,
+          43.843577
+        ]
+      },
+      "properties": {
+        "name": "吉林市",
+        "adcode": "220200",
+        "level": "city",
+        "parent": {
+          "name": "吉林省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          125.936501,
+          41.721177
+        ]
+      },
+      "properties": {
+        "name": "通化市",
+        "adcode": "220500",
+        "level": "city",
+        "parent": {
+          "name": "吉林省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.297604,
+          23.474803
+        ]
+      },
+      "properties": {
+        "name": "梧州市",
+        "adcode": "450400",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.316264,
+          32.303627
+        ]
+      },
+      "properties": {
+        "name": "滁州市",
+        "adcode": "341100",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.364238,
+          22.774485
+        ]
+      },
+      "properties": {
+        "name": "汕尾市",
+        "adcode": "441500",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.502461,
+          38.045474
+        ]
+      },
+      "properties": {
+        "name": "石家庄市",
+        "adcode": "130100",
+        "level": "city",
+        "parent": {
+          "name": "河北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.13963,
+          47.848393
+        ]
+      },
+      "properties": {
+        "name": "阿勒泰地区",
+        "adcode": "654300",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.024736,
+          32.980169
+        ]
+      },
+      "properties": {
+        "name": "驻马店市",
+        "adcode": "411700",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.540918,
+          32.999082
+        ]
+      },
+      "properties": {
+        "name": "南阳市",
+        "adcode": "411300",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.000923,
+          36.675807
+        ]
+      },
+      "properties": {
+        "name": "济南市",
+        "adcode": "370100",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.602146,
+          23.0936
+        ]
+      },
+      "properties": {
+        "name": "贵港市",
+        "adcode": "450800",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.489157,
+          30.656037
+        ]
+      },
+      "properties": {
+        "name": "池州市",
+        "adcode": "341700",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.452753,
+          32.204402
+        ]
+      },
+      "properties": {
+        "name": "镇江市",
+        "adcode": "321100",
+        "level": "city",
+        "parent": {
+          "name": "江苏省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.619585,
+          31.299379
+        ]
+      },
+      "properties": {
+        "name": "苏州市",
+        "adcode": "320500",
+        "level": "city",
+        "parent": {
+          "name": "江苏省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          102.187888,
+          38.514238
+        ]
+      },
+      "properties": {
+        "name": "金昌市",
+        "adcode": "620300",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          100.901059,
+          36.959435
+        ]
+      },
+      "properties": {
+        "name": "海北藏族自治州",
+        "adcode": "632200",
+        "level": "city",
+        "parent": {
+          "name": "青海省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          102.10327,
+          36.502916
+        ]
+      },
+      "properties": {
+        "name": "海东市",
+        "adcode": "630200",
+        "level": "city",
+        "parent": {
+          "name": "青海省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.026405,
+          33.575855
+        ]
+      },
+      "properties": {
+        "name": "漯河市",
+        "adcode": "411100",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.649506,
+          29.089524
+        ]
+      },
+      "properties": {
+        "name": "金华市",
+        "adcode": "330700",
+        "level": "city",
+        "parent": {
+          "name": "浙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.285241,
+          36.004561
+        ]
+      },
+      "properties": {
+        "name": "固原市",
+        "adcode": "640400",
+        "level": "city",
+        "parent": {
+          "name": "宁夏回族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.001033,
+          29.987722
+        ]
+      },
+      "properties": {
+        "name": "雅安市",
+        "adcode": "511800",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.107078,
+          36.70925
+        ]
+      },
+      "properties": {
+        "name": "潍坊市",
+        "adcode": "370700",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.461208,
+          35.428588
+        ]
+      },
+      "properties": {
+        "name": "日照市",
+        "adcode": "371100",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.428599,
+          28.661378
+        ]
+      },
+      "properties": {
+        "name": "台州市",
+        "adcode": "331000",
+        "level": "city",
+        "parent": {
+          "name": "浙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          124.370785,
+          43.170344
+        ]
+      },
+      "properties": {
+        "name": "四平市",
+        "adcode": "220300",
+        "level": "city",
+        "parent": {
+          "name": "吉林省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.992811,
+          29.712034
+        ]
+      },
+      "properties": {
+        "name": "九江市",
+        "adcode": "360400",
+        "level": "city",
+        "parent": {
+          "name": "江西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.275162,
+          33.963008
+        ]
+      },
+      "properties": {
+        "name": "宿迁市",
+        "adcode": "321300",
+        "level": "city",
+        "parent": {
+          "name": "江苏省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.041299,
+          35.768234
+        ]
+      },
+      "properties": {
+        "name": "濮阳市",
+        "adcode": "410900",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          98.578363,
+          24.436694
+        ]
+      },
+      "properties": {
+        "name": "德宏傣族景颇族自治州",
+        "adcode": "533100",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.280637,
+          23.125178
+        ]
+      },
+      "properties": {
+        "name": "广州市",
+        "adcode": "440100",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.094942,
+          22.590431
+        ]
+      },
+      "properties": {
+        "name": "江门市",
+        "adcode": "440700",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          98.854304,
+          25.850949
+        ]
+      },
+      "properties": {
+        "name": "怒江傈僳族自治州",
+        "adcode": "533300",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.472529,
+          23.051546
+        ]
+      },
+      "properties": {
+        "name": "肇庆市",
+        "adcode": "441200",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.102773,
+          19.362916
+        ]
+      },
+      "properties": {
+        "name": "屯昌县",
+        "adcode": "469022",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.939152,
+          40.976204
+        ]
+      },
+      "properties": {
+        "name": "承德市",
+        "adcode": "130800",
+        "level": "city",
+        "parent": {
+          "name": "河北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.857461,
+          38.310582
+        ]
+      },
+      "properties": {
+        "name": "沧州市",
+        "adcode": "130900",
+        "level": "city",
+        "parent": {
+          "name": "河北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.582112,
+          29.997117
+        ]
+      },
+      "properties": {
+        "name": "绍兴市",
+        "adcode": "330600",
+        "level": "city",
+        "parent": {
+          "name": "浙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.175393,
+          39.635113
+        ]
+      },
+      "properties": {
+        "name": "唐山市",
+        "adcode": "130200",
+        "level": "city",
+        "parent": {
+          "name": "河北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.618602,
+          44.582962
+        ]
+      },
+      "properties": {
+        "name": "牡丹江市",
+        "adcode": "231000",
+        "level": "city",
+        "parent": {
+          "name": "黑龙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          123.921109,
+          41.875956
+        ]
+      },
+      "properties": {
+        "name": "抚顺市",
+        "adcode": "210400",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          123.770519,
+          41.297909
+        ]
+      },
+      "properties": {
+        "name": "本溪市",
+        "adcode": "210500",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.648962,
+          42.011796
+        ]
+      },
+      "properties": {
+        "name": "阜新市",
+        "adcode": "210900",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          122.106863,
+          30.016028
+        ]
+      },
+      "properties": {
+        "name": "舟山市",
+        "adcode": "330900",
+        "level": "city",
+        "parent": {
+          "name": "浙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.129063,
+          36.194968
+        ]
+      },
+      "properties": {
+        "name": "泰安市",
+        "adcode": "370900",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.135742,
+          41.119269
+        ]
+      },
+      "properties": {
+        "name": "锦州市",
+        "adcode": "210700",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.846743,
+          26.584643
+        ]
+      },
+      "properties": {
+        "name": "六盘水市",
+        "adcode": "520200",
+        "level": "city",
+        "parent": {
+          "name": "贵州省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.977488,
+          26.583352
+        ]
+      },
+      "properties": {
+        "name": "黔东南苗族侗族自治州",
+        "adcode": "522600",
+        "level": "city",
+        "parent": {
+          "name": "贵州省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.047648,
+          36.814939
+        ]
+      },
+      "properties": {
+        "name": "淄博市",
+        "adcode": "370300",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          98.510795,
+          39.744023
+        ]
+      },
+      "properties": {
+        "name": "酒泉市",
+        "adcode": "620900",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.105498,
+          32.503187
+        ]
+      },
+      "properties": {
+        "name": "阿里地区",
+        "adcode": "542500",
+        "level": "city",
+        "parent": {
+          "name": "西藏自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.797851,
+          25.501557
+        ]
+      },
+      "properties": {
+        "name": "曲靖市",
+        "adcode": "530300",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          99.167133,
+          25.111802
+        ]
+      },
+      "properties": {
+        "name": "保山市",
+        "adcode": "530500",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          100.225668,
+          25.589449
+        ]
+      },
+      "properties": {
+        "name": "大理白族自治州",
+        "adcode": "532900",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.984084,
+          33.633891
+        ]
+      },
+      "properties": {
+        "name": "宿州市",
+        "adcode": "341300",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.717216,
+          27.336999
+        ]
+      },
+      "properties": {
+        "name": "昭通市",
+        "adcode": "530600",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          100.08697,
+          23.886567
+        ]
+      },
+      "properties": {
+        "name": "临沧市",
+        "adcode": "530900",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.278179,
+          38.46637
+        ]
+      },
+      "properties": {
+        "name": "银川市",
+        "adcode": "640100",
+        "level": "city",
+        "parent": {
+          "name": "宁夏回族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.153576,
+          30.287459
+        ]
+      },
+      "properties": {
+        "name": "杭州市",
+        "adcode": "330100",
+        "level": "city",
+        "parent": {
+          "name": "浙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.24401,
+          23.36951
+        ]
+      },
+      "properties": {
+        "name": "文山壮族苗族自治州",
+        "adcode": "532600",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.856394,
+          40.755572
+        ]
+      },
+      "properties": {
+        "name": "葫芦岛市",
+        "adcode": "211400",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.552056,
+          24.414141
+        ]
+      },
+      "properties": {
+        "name": "贺州市",
+        "adcode": "451100",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.591544,
+          24.801322
+        ]
+      },
+      "properties": {
+        "name": "韶关市",
+        "adcode": "440200",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.003957,
+          35.022778
+        ]
+      },
+      "properties": {
+        "name": "运城市",
+        "adcode": "140800",
+        "level": "city",
+        "parent": {
+          "name": "山西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.433387,
+          39.331261
+        ]
+      },
+      "properties": {
+        "name": "朔州市",
+        "adcode": "140600",
+        "level": "city",
+        "parent": {
+          "name": "山西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.501218,
+          41.827251
+        ]
+      },
+      "properties": {
+        "name": "铁门关市",
+        "adcode": "659006",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.517973,
+          36.08415
+        ]
+      },
+      "properties": {
+        "name": "临汾市",
+        "adcode": "141000",
+        "level": "city",
+        "parent": {
+          "name": "山西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.11022,
+          24.490474
+        ]
+      },
+      "properties": {
+        "name": "厦门市",
+        "adcode": "350200",
+        "level": "city",
+        "parent": {
+          "name": "福建省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.307428,
+          37.453968
+        ]
+      },
+      "properties": {
+        "name": "德州市",
+        "adcode": "371400",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          102.019988,
+          35.517744
+        ]
+      },
+      "properties": {
+        "name": "黄南藏族自治州",
+        "adcode": "632300",
+        "level": "city",
+        "parent": {
+          "name": "青海省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          100.619542,
+          36.280353
+        ]
+      },
+      "properties": {
+        "name": "海南藏族自治州",
+        "adcode": "632500",
+        "level": "city",
+        "parent": {
+          "name": "青海省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.451176,
+          41.576758
+        ]
+      },
+      "properties": {
+        "name": "朝阳市",
+        "adcode": "211300",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.753669,
+          31.858809
+        ]
+      },
+      "properties": {
+        "name": "巴中市",
+        "adcode": "511900",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.173606,
+          36.54568
+        ]
+      },
+      "properties": {
+        "name": "白银市",
+        "adcode": "620400",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.384182,
+          23.366775
+        ]
+      },
+      "properties": {
+        "name": "红河哈尼族彝族自治州",
+        "adcode": "532500",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.926655,
+          30.926423
+        ]
+      },
+      "properties": {
+        "name": "孝感市",
+        "adcode": "420900",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.508851,
+          37.0682
+        ]
+      },
+      "properties": {
+        "name": "邢台市",
+        "adcode": "130500",
+        "level": "city",
+        "parent": {
+          "name": "河北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.661801,
+          24.510897
+        ]
+      },
+      "properties": {
+        "name": "漳州市",
+        "adcode": "350600",
+        "level": "city",
+        "parent": {
+          "name": "福建省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.066138,
+          29.58708
+        ]
+      },
+      "properties": {
+        "name": "内江市",
+        "adcode": "511000",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.741722,
+          31.46402
+        ]
+      },
+      "properties": {
+        "name": "绵阳市",
+        "adcode": "510700",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.851274,
+          35.497553
+        ]
+      },
+      "properties": {
+        "name": "晋城市",
+        "adcode": "140500",
+        "level": "city",
+        "parent": {
+          "name": "山西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.761263,
+          29.582024
+        ]
+      },
+      "properties": {
+        "name": "乐山市",
+        "adcode": "511100",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.831788,
+          30.048318
+        ]
+      },
+      "properties": {
+        "name": "眉山市",
+        "adcode": "511400",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.641917,
+          30.122211
+        ]
+      },
+      "properties": {
+        "name": "资阳市",
+        "adcode": "512000",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.787916,
+          32.646907
+        ]
+      },
+      "properties": {
+        "name": "十堰市",
+        "adcode": "420300",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          102.221374,
+          31.899792
+        ]
+      },
+      "properties": {
+        "name": "阿坝藏族羌族自治州",
+        "adcode": "513200",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.376173,
+          39.01333
+        ]
+      },
+      "properties": {
+        "name": "石嘴山市",
+        "adcode": "640200",
+        "level": "city",
+        "parent": {
+          "name": "宁夏回族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.388793,
+          18.796216
+        ]
+      },
+      "properties": {
+        "name": "万宁市",
+        "adcode": "469006",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.299121,
+          25.274215
+        ]
+      },
+      "properties": {
+        "name": "桂林市",
+        "adcode": "450300",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.191555,
+          27.718346
+        ]
+      },
+      "properties": {
+        "name": "铜仁市",
+        "adcode": "520600",
+        "level": "city",
+        "parent": {
+          "name": "贵州省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.507906,
+          31.689362
+        ]
+      },
+      "properties": {
+        "name": "马鞍山市",
+        "adcode": "340500",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.782939,
+          33.869338
+        ]
+      },
+      "properties": {
+        "name": "亳州市",
+        "adcode": "341600",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          124.823608,
+          45.118243
+        ]
+      },
+      "properties": {
+        "name": "松原市",
+        "adcode": "220700",
+        "level": "city",
+        "parent": {
+          "name": "吉林省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.670801,
+          40.818311
+        ]
+      },
+      "properties": {
+        "name": "呼和浩特市",
+        "adcode": "150100",
+        "level": "city",
+        "parent": {
+          "name": "内蒙古自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.041075,
+          44.305886
+        ]
+      },
+      "properties": {
+        "name": "石河子市",
+        "adcode": "659001",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.758168,
+          49.215333
+        ]
+      },
+      "properties": {
+        "name": "呼伦贝尔市",
+        "adcode": "150700",
+        "level": "city",
+        "parent": {
+          "name": "内蒙古自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.986373,
+          27.111699
+        ]
+      },
+      "properties": {
+        "name": "吉安市",
+        "adcode": "360800",
+        "level": "city",
+        "parent": {
+          "name": "江西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.008522,
+          33.004049
+        ]
+      },
+      "properties": {
+        "name": "玉树藏族自治州",
+        "adcode": "632700",
+        "level": "city",
+        "parent": {
+          "name": "青海省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.352482,
+          36.103442
+        ]
+      },
+      "properties": {
+        "name": "安阳市",
+        "adcode": "410500",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.090996,
+          43.944018
+        ]
+      },
+      "properties": {
+        "name": "锡林郭勒盟",
+        "adcode": "152500",
+        "level": "city",
+        "parent": {
+          "name": "内蒙古自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          122.070317,
+          46.076268
+        ]
+      },
+      "properties": {
+        "name": "兴安盟",
+        "adcode": "152200",
+        "level": "city",
+        "parent": {
+          "name": "内蒙古自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.706422,
+          38.844814
+        ]
+      },
+      "properties": {
+        "name": "阿拉善盟",
+        "adcode": "152900",
+        "level": "city",
+        "parent": {
+          "name": "内蒙古自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.885148,
+          29.267519
+        ]
+      },
+      "properties": {
+        "name": "日喀则市",
+        "adcode": "540200",
+        "level": "city",
+        "parent": {
+          "name": "西藏自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.132855,
+          29.37029
+        ]
+      },
+      "properties": {
+        "name": "岳阳市",
+        "adcode": "430600",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.490686,
+          36.612273
+        ]
+      },
+      "properties": {
+        "name": "邯郸市",
+        "adcode": "130400",
+        "level": "city",
+        "parent": {
+          "name": "河北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.896866,
+          30.421215
+        ]
+      },
+      "properties": {
+        "name": "潜江市",
+        "adcode": "429005",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.607693,
+          26.900358
+        ]
+      },
+      "properties": {
+        "name": "衡阳市",
+        "adcode": "430400",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.358351,
+          27.98385
+        ]
+      },
+      "properties": {
+        "name": "抚州市",
+        "adcode": "361000",
+        "level": "city",
+        "parent": {
+          "name": "江西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.897971,
+          25.08812
+        ]
+      },
+      "properties": {
+        "name": "黔西南布依族苗族自治州",
+        "adcode": "522300",
+        "level": "city",
+        "parent": {
+          "name": "贵州省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          131.157304,
+          46.643442
+        ]
+      },
+      "properties": {
+        "name": "双鸭山市",
+        "adcode": "230500",
+        "level": "city",
+        "parent": {
+          "name": "黑龙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.649653,
+          33.620357
+        ]
+      },
+      "properties": {
+        "name": "周口市",
+        "adcode": "411600",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.824932,
+          47.353177
+        ]
+      },
+      "properties": {
+        "name": "北屯市",
+        "adcode": "659005",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          130.361634,
+          46.809606
+        ]
+      },
+      "properties": {
+        "name": "佳木斯市",
+        "adcode": "230800",
+        "level": "city",
+        "parent": {
+          "name": "黑龙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          122.841114,
+          45.619026
+        ]
+      },
+      "properties": {
+        "name": "白城市",
+        "adcode": "220800",
+        "level": "city",
+        "parent": {
+          "name": "吉林省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          100.972344,
+          22.777321
+        ]
+      },
+      "properties": {
+        "name": "普洱市",
+        "adcode": "530800",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          99.706463,
+          27.826853
+        ]
+      },
+      "properties": {
+        "name": "迪庆藏族自治州",
+        "adcode": "533400",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          123.18152,
+          41.269402
+        ]
+      },
+      "properties": {
+        "name": "辽阳市",
+        "adcode": "211000",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.508268,
+          18.247872
+        ]
+      },
+      "properties": {
+        "name": "三亚市",
+        "adcode": "460200",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.687697,
+          19.908293
+        ]
+      },
+      "properties": {
+        "name": "临高县",
+        "adcode": "469024",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.975107,
+          21.859222
+        ]
+      },
+      "properties": {
+        "name": "阳江市",
+        "adcode": "441700",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.364977,
+          21.274898
+        ]
+      },
+      "properties": {
+        "name": "湛江市",
+        "adcode": "440800",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.172825,
+          39.713431
+        ]
+      },
+      "properties": {
+        "name": "克孜勒苏柯尔克孜自治州",
+        "adcode": "653000",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.684691,
+          35.54279
+        ]
+      },
+      "properties": {
+        "name": "平凉市",
+        "adcode": "620800",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.736465,
+          37.696495
+        ]
+      },
+      "properties": {
+        "name": "晋中市",
+        "adcode": "140700",
+        "level": "city",
+        "parent": {
+          "name": "山西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.733538,
+          38.41769
+        ]
+      },
+      "properties": {
+        "name": "忻州市",
+        "adcode": "140900",
+        "level": "city",
+        "parent": {
+          "name": "山西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          98.277304,
+          39.786529
+        ]
+      },
+      "properties": {
+        "name": "嘉峪关市",
+        "adcode": "620200",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.549248,
+          37.857014
+        ]
+      },
+      "properties": {
+        "name": "太原市",
+        "adcode": "140100",
+        "level": "city",
+        "parent": {
+          "name": "山西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.295259,
+          40.09031
+        ]
+      },
+      "properties": {
+        "name": "大同市",
+        "adcode": "140200",
+        "level": "city",
+        "parent": {
+          "name": "山西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.583285,
+          37.861188
+        ]
+      },
+      "properties": {
+        "name": "阳泉市",
+        "adcode": "140300",
+        "level": "city",
+        "parent": {
+          "name": "山西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.204251,
+          31.03542
+        ]
+      },
+      "properties": {
+        "name": "荆门市",
+        "adcode": "420800",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          94.362348,
+          29.654693
+        ]
+      },
+      "properties": {
+        "name": "林芝市",
+        "adcode": "540400",
+        "level": "city",
+        "parent": {
+          "name": "西藏自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          102.258746,
+          27.886762
+        ]
+      },
+      "properties": {
+        "name": "凉山彝族自治州",
+        "adcode": "513400",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.589421,
+          24.908853
+        ]
+      },
+      "properties": {
+        "name": "泉州市",
+        "adcode": "350500",
+        "level": "city",
+        "parent": {
+          "name": "福建省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.504962,
+          29.533155
+        ]
+      },
+      "properties": {
+        "name": "重庆市市辖区",
+        "adcode": "500100",
+        "level": "city",
+        "parent": {
+          "name": "重庆市"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.170255,
+          29.291965
+        ]
+      },
+      "properties": {
+        "name": "重庆市郊县",
+        "adcode": "500200",
+        "level": "city",
+        "parent": {
+          "name": "重庆市"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.499023,
+          50.249585
+        ]
+      },
+      "properties": {
+        "name": "黑河市",
+        "adcode": "231100",
+        "level": "city",
+        "parent": {
+          "name": "黑龙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.290843,
+          30.702636
+        ]
+      },
+      "properties": {
+        "name": "宜昌市",
+        "adcode": "420500",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.453974,
+          30.364953
+        ]
+      },
+      "properties": {
+        "name": "仙桃市",
+        "adcode": "429004",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          124.383044,
+          40.124296
+        ]
+      },
+      "properties": {
+        "name": "丹东市",
+        "adcode": "210600",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          100.233026,
+          26.872108
+        ]
+      },
+      "properties": {
+        "name": "丽江市",
+        "adcode": "530700",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          101.546046,
+          25.041988
+        ]
+      },
+      "properties": {
+        "name": "楚雄彝族自治州",
+        "adcode": "532300",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.890593,
+          30.396536
+        ]
+      },
+      "properties": {
+        "name": "鄂州市",
+        "adcode": "420700",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          122.116394,
+          37.509691
+        ]
+      },
+      "properties": {
+        "name": "威海市",
+        "adcode": "371000",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.819729,
+          32.896969
+        ]
+      },
+      "properties": {
+        "name": "阜阳市",
+        "adcode": "341200",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.879365,
+          30.447711
+        ]
+      },
+      "properties": {
+        "name": "黄冈市",
+        "adcode": "421100",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.704441,
+          39.523927
+        ]
+      },
+      "properties": {
+        "name": "廊坊市",
+        "adcode": "131000",
+        "level": "city",
+        "parent": {
+          "name": "河北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.113556,
+          36.191112
+        ]
+      },
+      "properties": {
+        "name": "长治市",
+        "adcode": "140400",
+        "level": "city",
+        "parent": {
+          "name": "山西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.823557,
+          36.058039
+        ]
+      },
+      "properties": {
+        "name": "兰州市",
+        "adcode": "620100",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.66471,
+          37.434564
+        ]
+      },
+      "properties": {
+        "name": "东营市",
+        "adcode": "370500",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.677736,
+          36.214397
+        ]
+      },
+      "properties": {
+        "name": "莱芜市",
+        "adcode": "371200",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.382391,
+          22.521113
+        ]
+      },
+      "properties": {
+        "name": "中山市",
+        "adcode": "442000",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.376451,
+          31.326319
+        ]
+      },
+      "properties": {
+        "name": "芜湖市",
+        "adcode": "340200",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.626294,
+          35.579578
+        ]
+      },
+      "properties": {
+        "name": "定西市",
+        "adcode": "621100",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.724998,
+          34.578529
+        ]
+      },
+      "properties": {
+        "name": "天水市",
+        "adcode": "620500",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.466785,
+          19.246011
+        ]
+      },
+      "properties": {
+        "name": "琼海市",
+        "adcode": "469002",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.635001,
+          26.265444
+        ]
+      },
+      "properties": {
+        "name": "三明市",
+        "adcode": "350400",
+        "level": "city",
+        "parent": {
+          "name": "福建省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.948024,
+          34.263161
+        ]
+      },
+      "properties": {
+        "name": "西安市",
+        "adcode": "610100",
+        "level": "city",
+        "parent": {
+          "name": "陕西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.513228,
+          42.904823
+        ]
+      },
+      "properties": {
+        "name": "延边朝鲜族自治州",
+        "adcode": "222400",
+        "level": "city",
+        "parent": {
+          "name": "吉林省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.229772,
+          23.733766
+        ]
+      },
+      "properties": {
+        "name": "来宾市",
+        "adcode": "451300",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.816576,
+          30.929935
+        ]
+      },
+      "properties": {
+        "name": "铜陵市",
+        "adcode": "340700",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.713478,
+          26.578343
+        ]
+      },
+      "properties": {
+        "name": "贵阳市",
+        "adcode": "520100",
+        "level": "city",
+        "parent": {
+          "name": "贵州省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.517156,
+          26.258219
+        ]
+      },
+      "properties": {
+        "name": "黔南布依族苗族自治州",
+        "adcode": "522700",
+        "level": "city",
+        "parent": {
+          "name": "贵州省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.165862,
+          30.653061
+        ]
+      },
+      "properties": {
+        "name": "天门市",
+        "adcode": "429006",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.28501,
+          27.301693
+        ]
+      },
+      "properties": {
+        "name": "毕节市",
+        "adcode": "520500",
+        "level": "city",
+        "parent": {
+          "name": "贵州省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          102.543907,
+          24.350461
+        ]
+      },
+      "properties": {
+        "name": "玉溪市",
+        "adcode": "530400",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          123.429096,
+          41.796767
+        ]
+      },
+      "properties": {
+        "name": "沈阳市",
+        "adcode": "210100",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.214664,
+          29.29256
+        ]
+      },
+      "properties": {
+        "name": "景德镇市",
+        "adcode": "360200",
+        "level": "city",
+        "parent": {
+          "name": "江西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.34882,
+          16.831039
+        ]
+      },
+      "properties": {
+        "name": "三沙市",
+        "adcode": "460300",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.178459,
+          26.635627
+        ]
+      },
+      "properties": {
+        "name": "南平市",
+        "adcode": "350700",
+        "level": "city",
+        "parent": {
+          "name": "福建省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.633369,
+          30.456398
+        ]
+      },
+      "properties": {
+        "name": "广安市",
+        "adcode": "511600",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.617733,
+          43.792818
+        ]
+      },
+      "properties": {
+        "name": "乌鲁木齐市",
+        "adcode": "650100",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.971185,
+          28.44442
+        ]
+      },
+      "properties": {
+        "name": "上饶市",
+        "adcode": "361100",
+        "level": "city",
+        "parent": {
+          "name": "江西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.753975,
+          19.612986
+        ]
+      },
+      "properties": {
+        "name": "文昌市",
+        "adcode": "469005",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.618622,
+          38.91459
+        ]
+      },
+      "properties": {
+        "name": "大连市",
+        "adcode": "210200",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          102.712251,
+          25.040609
+        ]
+      },
+      "properties": {
+        "name": "昆明市",
+        "adcode": "530100",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.665412,
+          34.757975
+        ]
+      },
+      "properties": {
+        "name": "郑州市",
+        "adcode": "410100",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.930835,
+          27.810834
+        ]
+      },
+      "properties": {
+        "name": "新余市",
+        "adcode": "360500",
+        "level": "city",
+        "parent": {
+          "name": "江西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.915176,
+          32.484882
+        ]
+      },
+      "properties": {
+        "name": "泰州市",
+        "adcode": "321200",
+        "level": "city",
+        "parent": {
+          "name": "江苏省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          122.995632,
+          41.110626
+        ]
+      },
+      "properties": {
+        "name": "鞍山市",
+        "adcode": "210300",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.021265,
+          33.597506
+        ]
+      },
+      "properties": {
+        "name": "淮安市",
+        "adcode": "320800",
+        "level": "city",
+        "parent": {
+          "name": "江苏省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.527082,
+          26.65924
+        ]
+      },
+      "properties": {
+        "name": "宁德市",
+        "adcode": "350900",
+        "level": "city",
+        "parent": {
+          "name": "福建省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.199409,
+          37.986165
+        ]
+      },
+      "properties": {
+        "name": "吴忠市",
+        "adcode": "640300",
+        "level": "city",
+        "parent": {
+          "name": "宁夏回族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.650497,
+          34.437054
+        ]
+      },
+      "properties": {
+        "name": "商丘市",
+        "adcode": "411400",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          101.716007,
+          26.580446
+        ]
+      },
+      "properties": {
+        "name": "攀枝花市",
+        "adcode": "510400",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.99029,
+          39.817179
+        ]
+      },
+      "properties": {
+        "name": "鄂尔多斯市",
+        "adcode": "150600",
+        "level": "city",
+        "parent": {
+          "name": "内蒙古自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.443348,
+          28.889138
+        ]
+      },
+      "properties": {
+        "name": "泸州市",
+        "adcode": "510500",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.398651,
+          31.127991
+        ]
+      },
+      "properties": {
+        "name": "德阳市",
+        "adcode": "510600",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.829757,
+          32.433668
+        ]
+      },
+      "properties": {
+        "name": "广元市",
+        "adcode": "510800",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.773447,
+          29.352765
+        ]
+      },
+      "properties": {
+        "name": "自贡市",
+        "adcode": "510300",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.571331,
+          30.513311
+        ]
+      },
+      "properties": {
+        "name": "遂宁市",
+        "adcode": "510900",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.345478,
+          21.614631
+        ]
+      },
+      "properties": {
+        "name": "防城港市",
+        "adcode": "450600",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.082974,
+          30.795281
+        ]
+      },
+      "properties": {
+        "name": "南充市",
+        "adcode": "511300",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          103.212006,
+          35.599446
+        ]
+      },
+      "properties": {
+        "name": "临夏回族自治州",
+        "adcode": "622900",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.502262,
+          31.209484
+        ]
+      },
+      "properties": {
+        "name": "达州市",
+        "adcode": "511700",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.139998,
+          33.377631
+        ]
+      },
+      "properties": {
+        "name": "盐城市",
+        "adcode": "320900",
+        "level": "city",
+        "parent": {
+          "name": "江苏省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          123.95792,
+          47.342081
+        ]
+      },
+      "properties": {
+        "name": "齐齐哈尔市",
+        "adcode": "230200",
+        "level": "city",
+        "parent": {
+          "name": "黑龙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.48699,
+          30.283114
+        ]
+      },
+      "properties": {
+        "name": "恩施土家族苗族自治州",
+        "adcode": "422800",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.317946,
+          43.92186
+        ]
+      },
+      "properties": {
+        "name": "伊犁哈萨克自治州",
+        "adcode": "654000",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.117582,
+          24.299112
+        ]
+      },
+      "properties": {
+        "name": "梅州市",
+        "adcode": "441400",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          124.711526,
+          52.335262
+        ]
+      },
+      "properties": {
+        "name": "大兴安岭地区",
+        "adcode": "232700",
+        "level": "city",
+        "parent": {
+          "name": "黑龙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.077048,
+          30.220074
+        ]
+      },
+      "properties": {
+        "name": "黄石市",
+        "adcode": "420200",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.341447,
+          34.797049
+        ]
+      },
+      "properties": {
+        "name": "开封市",
+        "adcode": "410200",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          105.932188,
+          26.245544
+        ]
+      },
+      "properties": {
+        "name": "安顺市",
+        "adcode": "520400",
+        "level": "city",
+        "parent": {
+          "name": "贵州省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.979608,
+          34.916582
+        ]
+      },
+      "properties": {
+        "name": "铜川市",
+        "adcode": "610200",
+        "level": "city",
+        "parent": {
+          "name": "陕西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.353656,
+          44.840524
+        ]
+      },
+      "properties": {
+        "name": "双河市",
+        "adcode": "659007",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.132212,
+          29.660361
+        ]
+      },
+      "properties": {
+        "name": "拉萨市",
+        "adcode": "540100",
+        "level": "city",
+        "parent": {
+          "name": "西藏自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          130.975966,
+          45.300046
+        ]
+      },
+      "properties": {
+        "name": "鸡西市",
+        "adcode": "230300",
+        "level": "city",
+        "parent": {
+          "name": "黑龙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.985732,
+          46.746301
+        ]
+      },
+      "properties": {
+        "name": "塔城地区",
+        "adcode": "654200",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.085947,
+          22.547
+        ]
+      },
+      "properties": {
+        "name": "深圳市",
+        "adcode": "440300",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.708463,
+          23.37102
+        ]
+      },
+      "properties": {
+        "name": "汕头市",
+        "adcode": "440500",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.705117,
+          34.333439
+        ]
+      },
+      "properties": {
+        "name": "咸阳市",
+        "adcode": "610400",
+        "level": "city",
+        "parent": {
+          "name": "陕西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.306239,
+          26.075302
+        ]
+      },
+      "properties": {
+        "name": "福州市",
+        "adcode": "350100",
+        "level": "city",
+        "parent": {
+          "name": "福建省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.307718,
+          33.735241
+        ]
+      },
+      "properties": {
+        "name": "平顶山市",
+        "adcode": "410400",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          123.844279,
+          42.290585
+        ]
+      },
+      "properties": {
+        "name": "铁岭市",
+        "adcode": "211200",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.102398,
+          30.867198
+        ]
+      },
+      "properties": {
+        "name": "湖州市",
+        "adcode": "330500",
+        "level": "city",
+        "parent": {
+          "name": "浙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.87263,
+          28.941708
+        ]
+      },
+      "properties": {
+        "name": "衢州市",
+        "adcode": "330800",
+        "level": "city",
+        "parent": {
+          "name": "浙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.549792,
+          29.868388
+        ]
+      },
+      "properties": {
+        "name": "宁波市",
+        "adcode": "330200",
+        "level": "city",
+        "parent": {
+          "name": "浙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.982279,
+          28.19409
+        ]
+      },
+      "properties": {
+        "name": "长沙市",
+        "adcode": "430100",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.691347,
+          29.040225
+        ]
+      },
+      "properties": {
+        "name": "常德市",
+        "adcode": "430700",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.739735,
+          28.314296
+        ]
+      },
+      "properties": {
+        "name": "湘西土家族苗族自治州",
+        "adcode": "433100",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.794664,
+          33.971707
+        ]
+      },
+      "properties": {
+        "name": "淮北市",
+        "adcode": "340600",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.328963,
+          29.832798
+        ]
+      },
+      "properties": {
+        "name": "咸宁市",
+        "adcode": "421200",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.944052,
+          27.82973
+        ]
+      },
+      "properties": {
+        "name": "湘潭市",
+        "adcode": "430300",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.178821,
+          34.600018
+        ]
+      },
+      "properties": {
+        "name": "连云港市",
+        "adcode": "320700",
+        "level": "city",
+        "parent": {
+          "name": "江苏省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          100.242143,
+          34.4736
+        ]
+      },
+      "properties": {
+        "name": "果洛藏族自治州",
+        "adcode": "632600",
+        "level": "city",
+        "parent": {
+          "name": "青海省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.553986,
+          22.224979
+        ]
+      },
+      "properties": {
+        "name": "珠海市",
+        "adcode": "440400",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.355042,
+          28.570066
+        ]
+      },
+      "properties": {
+        "name": "益阳市",
+        "adcode": "430900",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          100.455472,
+          38.932897
+        ]
+      },
+      "properties": {
+        "name": "张掖市",
+        "adcode": "620700",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.49081,
+          36.596537
+        ]
+      },
+      "properties": {
+        "name": "延安市",
+        "adcode": "610600",
+        "level": "city",
+        "parent": {
+          "name": "陕西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.697802,
+          23.746266
+        ]
+      },
+      "properties": {
+        "name": "河源市",
+        "adcode": "441600",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.320004,
+          22.82402
+        ]
+      },
+      "properties": {
+        "name": "南宁市",
+        "adcode": "450100",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.746262,
+          23.046237
+        ]
+      },
+      "properties": {
+        "name": "东莞市",
+        "adcode": "441900",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.044439,
+          22.929801
+        ]
+      },
+      "properties": {
+        "name": "云浮市",
+        "adcode": "445300",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.119254,
+          21.473343
+        ]
+      },
+      "properties": {
+        "name": "��海市",
+        "adcode": "450500",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.469381,
+          35.246531
+        ]
+      },
+      "properties": {
+        "name": "菏泽市",
+        "adcode": "371700",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.122717,
+          23.028762
+        ]
+      },
+      "properties": {
+        "name": "佛山市",
+        "adcode": "440600",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.427839,
+          41.942505
+        ]
+      },
+      "properties": {
+        "name": "白山市",
+        "adcode": "220600",
+        "level": "city",
+        "parent": {
+          "name": "吉林省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.02978,
+          25.091603
+        ]
+      },
+      "properties": {
+        "name": "龙岩市",
+        "adcode": "350800",
+        "level": "city",
+        "parent": {
+          "name": "福建省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.624175,
+          21.967127
+        ]
+      },
+      "properties": {
+        "name": "钦州市",
+        "adcode": "450700",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.175444,
+          18.74758
+        ]
+      },
+      "properties": {
+        "name": "乐东黎族自治县",
+        "adcode": "469027",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.766529,
+          29.236023
+        ]
+      },
+      "properties": {
+        "name": "山南地区",
+        "adcode": "542200",
+        "level": "city",
+        "parent": {
+          "name": "西藏自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.665993,
+          37.735097
+        ]
+      },
+      "properties": {
+        "name": "衡水市",
+        "adcode": "131100",
+        "level": "city",
+        "parent": {
+          "name": "河北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.630825,
+          28.760189
+        ]
+      },
+      "properties": {
+        "name": "宜宾市",
+        "adcode": "511500",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.482331,
+          38.867657
+        ]
+      },
+      "properties": {
+        "name": "保定市",
+        "adcode": "130600",
+        "level": "city",
+        "parent": {
+          "name": "河北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.190182,
+          39.125596
+        ]
+      },
+      "properties": {
+        "name": "天津市市辖区",
+        "adcode": "120100",
+        "level": "city",
+        "parent": {
+          "name": "天津市"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.824898,
+          39.330613
+        ]
+      },
+      "properties": {
+        "name": "天津市郊县",
+        "adcode": "120200",
+        "level": "city",
+        "parent": {
+          "name": "天津市"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.671525,
+          31.744449
+        ]
+      },
+      "properties": {
+        "name": "神农架林区",
+        "adcode": "429021",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          92.060214,
+          31.476004
+        ]
+      },
+      "properties": {
+        "name": "那曲地区",
+        "adcode": "542400",
+        "level": "city",
+        "parent": {
+          "name": "西藏自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          102.911008,
+          34.986354
+        ]
+      },
+      "properties": {
+        "name": "甘南藏族自治州",
+        "adcode": "623000",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.638372,
+          35.734218
+        ]
+      },
+      "properties": {
+        "name": "庆阳市",
+        "adcode": "621000",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.46923,
+          27.237842
+        ]
+      },
+      "properties": {
+        "name": "邵阳市",
+        "adcode": "430500",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.586579,
+          39.942531
+        ]
+      },
+      "properties": {
+        "name": "秦皇岛市",
+        "adcode": "130300",
+        "level": "city",
+        "parent": {
+          "name": "河北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.884091,
+          40.811901
+        ]
+      },
+      "properties": {
+        "name": "张家口市",
+        "adcode": "130700",
+        "level": "city",
+        "parent": {
+          "name": "河北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.074778,
+          44.903258
+        ]
+      },
+      "properties": {
+        "name": "博尔塔拉蒙古自治州",
+        "adcode": "652700",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.989138,
+          39.467664
+        ]
+      },
+      "properties": {
+        "name": "喀什地区",
+        "adcode": "653100",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.265068,
+          41.170712
+        ]
+      },
+      "properties": {
+        "name": "阿克苏地区",
+        "adcode": "652900",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          79.92533,
+          37.110687
+        ]
+      },
+      "properties": {
+        "name": "和田地区",
+        "adcode": "653200",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.526884,
+          44.167401
+        ]
+      },
+      "properties": {
+        "name": "五家渠市",
+        "adcode": "659004",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.63579,
+          43.6832
+        ]
+      },
+      "properties": {
+        "name": "可克达拉市",
+        "adcode": "659008",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.304012,
+          44.014577
+        ]
+      },
+      "properties": {
+        "name": "昌吉回族自治州",
+        "adcode": "652300",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.151737,
+          27.835806
+        ]
+      },
+      "properties": {
+        "name": "株洲市",
+        "adcode": "430200",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.826063,
+          34.022956
+        ]
+      },
+      "properties": {
+        "name": "许昌市",
+        "adcode": "411000",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          101.963815,
+          30.050663
+        ]
+      },
+      "properties": {
+        "name": "甘孜藏族自治州",
+        "adcode": "513300",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          125.3245,
+          43.886841
+        ]
+      },
+      "properties": {
+        "name": "长春市",
+        "adcode": "220100",
+        "level": "city",
+        "parent": {
+          "name": "吉林省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.363228,
+          32.939667
+        ]
+      },
+      "properties": {
+        "name": "蚌埠市",
+        "adcode": "340300",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.114543,
+          41.034126
+        ]
+      },
+      "properties": {
+        "name": "乌兰察布市",
+        "adcode": "150900",
+        "level": "city",
+        "parent": {
+          "name": "内蒙古自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.053351,
+          19.260968
+        ]
+      },
+      "properties": {
+        "name": "昌江黎族自治县",
+        "adcode": "469026",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          122.06957,
+          41.124484
+        ]
+      },
+      "properties": {
+        "name": "盘锦市",
+        "adcode": "211100",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.029273,
+          32.6903
+        ]
+      },
+      "properties": {
+        "name": "安康市",
+        "adcode": "610900",
+        "level": "city",
+        "parent": {
+          "name": "陕西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.370785,
+          37.374663
+        ]
+      },
+      "properties": {
+        "name": "海西蒙古族藏族自治州",
+        "adcode": "632800",
+        "level": "city",
+        "parent": {
+          "name": "青海省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.405285,
+          39.904989
+        ]
+      },
+      "properties": {
+        "name": "北京市市辖区",
+        "adcode": "110100",
+        "level": "city",
+        "parent": {
+          "name": "北京市"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          79.077978,
+          39.867316
+        ]
+      },
+      "properties": {
+        "name": "图木舒克市",
+        "adcode": "659003",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.018329,
+          32.647574
+        ]
+      },
+      "properties": {
+        "name": "淮南市",
+        "adcode": "340400",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.576782,
+          19.517486
+        ]
+      },
+      "properties": {
+        "name": "儋州市",
+        "adcode": "460400",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.840405,
+          40.658168
+        ]
+      },
+      "properties": {
+        "name": "包头市",
+        "adcode": "150200",
+        "level": "city",
+        "parent": {
+          "name": "内蒙古自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.921786,
+          28.451993
+        ]
+      },
+      "properties": {
+        "name": "丽水市",
+        "adcode": "331100",
+        "level": "city",
+        "parent": {
+          "name": "浙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.672111,
+          28.000575
+        ]
+      },
+      "properties": {
+        "name": "温州市",
+        "adcode": "330300",
+        "level": "city",
+        "parent": {
+          "name": "浙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.956806,
+          42.275317
+        ]
+      },
+      "properties": {
+        "name": "赤峰市",
+        "adcode": "150400",
+        "level": "city",
+        "parent": {
+          "name": "内蒙古自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.825563,
+          39.673734
+        ]
+      },
+      "properties": {
+        "name": "乌海市",
+        "adcode": "150300",
+        "level": "city",
+        "parent": {
+          "name": "内蒙古自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.033838,
+          28.238638
+        ]
+      },
+      "properties": {
+        "name": "鹰潭市",
+        "adcode": "360600",
+        "level": "city",
+        "parent": {
+          "name": "江西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.750865,
+          30.762653
+        ]
+      },
+      "properties": {
+        "name": "嘉兴市",
+        "adcode": "330400",
+        "level": "city",
+        "parent": {
+          "name": "浙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.043551,
+          30.50883
+        ]
+      },
+      "properties": {
+        "name": "安庆市",
+        "adcode": "340800",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.298572,
+          30.584355
+        ]
+      },
+      "properties": {
+        "name": "武汉市",
+        "adcode": "420100",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.757995,
+          30.945667
+        ]
+      },
+      "properties": {
+        "name": "宣城市",
+        "adcode": "341800",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.37377,
+          31.717497
+        ]
+      },
+      "properties": {
+        "name": "随州市",
+        "adcode": "421300",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.416959,
+          40.757402
+        ]
+      },
+      "properties": {
+        "name": "巴彦淖尔市",
+        "adcode": "150800",
+        "level": "city",
+        "parent": {
+          "name": "内蒙古自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          122.263119,
+          43.617429
+        ]
+      },
+      "properties": {
+        "name": "通辽市",
+        "adcode": "150500",
+        "level": "city",
+        "parent": {
+          "name": "内蒙古自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.839996,
+          19.03557
+        ]
+      },
+      "properties": {
+        "name": "琼中黎族苗族自治县",
+        "adcode": "469030",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.007147,
+          19.737095
+        ]
+      },
+      "properties": {
+        "name": "澄迈县",
+        "adcode": "469023",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.283042,
+          31.86119
+        ]
+      },
+      "properties": {
+        "name": "合肥市",
+        "adcode": "340100",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.507676,
+          31.752889
+        ]
+      },
+      "properties": {
+        "name": "六安市",
+        "adcode": "341500",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.317325,
+          29.709239
+        ]
+      },
+      "properties": {
+        "name": "黄山市",
+        "adcode": "341000",
+        "level": "city",
+        "parent": {
+          "name": "安徽省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.899396,
+          47.724775
+        ]
+      },
+      "properties": {
+        "name": "伊春市",
+        "adcode": "230700",
+        "level": "city",
+        "parent": {
+          "name": "黑龙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.23813,
+          30.326857
+        ]
+      },
+      "properties": {
+        "name": "荆州市",
+        "adcode": "421000",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.516662,
+          18.776921
+        ]
+      },
+      "properties": {
+        "name": "五指山市",
+        "adcode": "469001",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.349235,
+          19.684966
+        ]
+      },
+      "properties": {
+        "name": "定安县",
+        "adcode": "469021",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.285884,
+          40.541914
+        ]
+      },
+      "properties": {
+        "name": "阿拉尔市",
+        "adcode": "659002",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.452606,
+          19.224584
+        ]
+      },
+      "properties": {
+        "name": "白沙黎族自治县",
+        "adcode": "469025",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          101.778916,
+          36.623178
+        ]
+      },
+      "properties": {
+        "name": "西宁市",
+        "adcode": "630100",
+        "level": "city",
+        "parent": {
+          "name": "青海省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.037218,
+          18.505006
+        ]
+      },
+      "properties": {
+        "name": "陵水黎族自治县",
+        "adcode": "469028",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.632301,
+          23.661701
+        ]
+      },
+      "properties": {
+        "name": "潮州市",
+        "adcode": "445100",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.14487,
+          34.369315
+        ]
+      },
+      "properties": {
+        "name": "宝鸡市",
+        "adcode": "610300",
+        "level": "city",
+        "parent": {
+          "name": "陕西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.502882,
+          34.499381
+        ]
+      },
+      "properties": {
+        "name": "渭南市",
+        "adcode": "610500",
+        "level": "city",
+        "parent": {
+          "name": "陕西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          130.277487,
+          47.332085
+        ]
+      },
+      "properties": {
+        "name": "鹤岗市",
+        "adcode": "230400",
+        "level": "city",
+        "parent": {
+          "name": "黑龙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.028621,
+          33.077668
+        ]
+      },
+      "properties": {
+        "name": "汉中市",
+        "adcode": "610700",
+        "level": "city",
+        "parent": {
+          "name": "陕西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.939776,
+          33.868319
+        ]
+      },
+      "properties": {
+        "name": "商洛市",
+        "adcode": "611000",
+        "level": "city",
+        "parent": {
+          "name": "陕西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.653789,
+          19.10198
+        ]
+      },
+      "properties": {
+        "name": "东方市",
+        "adcode": "469007",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.642464,
+          45.756967
+        ]
+      },
+      "properties": {
+        "name": "哈尔滨市",
+        "adcode": "230100",
+        "level": "city",
+        "parent": {
+          "name": "黑龙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.33119,
+          20.031971
+        ]
+      },
+      "properties": {
+        "name": "海口市",
+        "adcode": "460100",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.929379,
+          33.388598
+        ]
+      },
+      "properties": {
+        "name": "陇南市",
+        "adcode": "621200",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.852186,
+          27.622946
+        ]
+      },
+      "properties": {
+        "name": "萍乡市",
+        "adcode": "360300",
+        "level": "city",
+        "parent": {
+          "name": "江西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.892151,
+          28.676493
+        ]
+      },
+      "properties": {
+        "name": "南昌市",
+        "adcode": "360100",
+        "level": "city",
+        "parent": {
+          "name": "江西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.150969,
+          41.768552
+        ]
+      },
+      "properties": {
+        "name": "巴音郭楞蒙古自治州",
+        "adcode": "652800",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.741193,
+          38.290162
+        ]
+      },
+      "properties": {
+        "name": "榆林市",
+        "adcode": "610800",
+        "level": "city",
+        "parent": {
+          "name": "陕西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.355733,
+          23.543778
+        ]
+      },
+      "properties": {
+        "name": "揭阳市",
+        "adcode": "445200",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          89.184078,
+          42.947613
+        ]
+      },
+      "properties": {
+        "name": "吐鲁番市",
+        "adcode": "650400",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.919229,
+          21.659751
+        ]
+      },
+      "properties": {
+        "name": "茂名市",
+        "adcode": "440900",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          93.51316,
+          42.833248
+        ]
+      },
+      "properties": {
+        "name": "哈密地区",
+        "adcode": "652200",
+        "level": "city",
+        "parent": {
+          "name": "新疆维吾尔自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.295444,
+          35.748236
+        ]
+      },
+      "properties": {
+        "name": "鹤壁市",
+        "adcode": "410600",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.97824,
+          27.550082
+        ]
+      },
+      "properties": {
+        "name": "怀化市",
+        "adcode": "431200",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.479921,
+          29.127401
+        ]
+      },
+      "properties": {
+        "name": "张家界市",
+        "adcode": "430800",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.608019,
+          26.434516
+        ]
+      },
+      "properties": {
+        "name": "永州市",
+        "adcode": "431100",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.008497,
+          27.728136
+        ]
+      },
+      "properties": {
+        "name": "娄底市",
+        "adcode": "431300",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.032067,
+          25.793589
+        ]
+      },
+      "properties": {
+        "name": "郴州市",
+        "adcode": "431000",
+        "level": "city",
+        "parent": {
+          "name": "湖南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          125.11272,
+          46.590734
+        ]
+      },
+      "properties": {
+        "name": "大庆市",
+        "adcode": "230600",
+        "level": "city",
+        "parent": {
+          "name": "黑龙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.99293,
+          46.637393
+        ]
+      },
+      "properties": {
+        "name": "绥化市",
+        "adcode": "231200",
+        "level": "city",
+        "parent": {
+          "name": "黑龙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.590047,
+          35.090378
+        ]
+      },
+      "properties": {
+        "name": "济源市",
+        "adcode": "419001",
+        "level": "city",
+        "parent": {
+          "name": "河南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          117.184811,
+          34.261792
+        ]
+      },
+      "properties": {
+        "name": "徐州市",
+        "adcode": "320300",
+        "level": "city",
+        "parent": {
+          "name": "江苏省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.767413,
+          32.041544
+        ]
+      },
+      "properties": {
+        "name": "南京市",
+        "adcode": "320100",
+        "level": "city",
+        "parent": {
+          "name": "江苏省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.301663,
+          31.574729
+        ]
+      },
+      "properties": {
+        "name": "无锡市",
+        "adcode": "320200",
+        "level": "city",
+        "parent": {
+          "name": "江苏省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.864608,
+          32.016212
+        ]
+      },
+      "properties": {
+        "name": "南通市",
+        "adcode": "320600",
+        "level": "city",
+        "parent": {
+          "name": "江苏省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.421003,
+          32.393159
+        ]
+      },
+      "properties": {
+        "name": "扬州市",
+        "adcode": "321000",
+        "level": "city",
+        "parent": {
+          "name": "江苏省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          131.015584,
+          45.771266
+        ]
+      },
+      "properties": {
+        "name": "七台河市",
+        "adcode": "230900",
+        "level": "city",
+        "parent": {
+          "name": "黑龙江省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.007558,
+          25.431011
+        ]
+      },
+      "properties": {
+        "name": "莆田市",
+        "adcode": "350300",
+        "level": "city",
+        "parent": {
+          "name": "福建省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.051227,
+          23.685022
+        ]
+      },
+      "properties": {
+        "name": "清远市",
+        "adcode": "441800",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          106.616285,
+          23.897742
+        ]
+      },
+      "properties": {
+        "name": "百色市",
+        "adcode": "451000",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.70245,
+          18.636371
+        ]
+      },
+      "properties": {
+        "name": "保亭黎族苗族自治县",
+        "adcode": "469029",
+        "level": "city",
+        "parent": {
+          "name": "海南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.940278,
+          25.85097
+        ]
+      },
+      "properties": {
+        "name": "赣州市",
+        "adcode": "360700",
+        "level": "city",
+        "parent": {
+          "name": "江西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.391136,
+          27.8043
+        ]
+      },
+      "properties": {
+        "name": "宜春市",
+        "adcode": "360900",
+        "level": "city",
+        "parent": {
+          "name": "江西省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.154393,
+          22.63136
+        ]
+      },
+      "properties": {
+        "name": "玉林市",
+        "adcode": "450900",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.980367,
+          36.456013
+        ]
+      },
+      "properties": {
+        "name": "聊城市",
+        "adcode": "371500",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          108.062105,
+          24.695899
+        ]
+      },
+      "properties": {
+        "name": "河池市",
+        "adcode": "451200",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          102.634697,
+          37.929996
+        ]
+      },
+      "properties": {
+        "name": "武威市",
+        "adcode": "620600",
+        "level": "city",
+        "parent": {
+          "name": "甘肃省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.587245,
+          35.415393
+        ]
+      },
+      "properties": {
+        "name": "济宁市",
+        "adcode": "370800",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.355173,
+          36.082982
+        ]
+      },
+      "properties": {
+        "name": "青岛市",
+        "adcode": "370200",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.016974,
+          37.383542
+        ]
+      },
+      "properties": {
+        "name": "滨州市",
+        "adcode": "371600",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107.353926,
+          22.404108
+        ]
+      },
+      "properties": {
+        "name": "崇左市",
+        "adcode": "451400",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          109.411703,
+          24.314617
+        ]
+      },
+      "properties": {
+        "name": "柳州市",
+        "adcode": "450200",
+        "level": "city",
+        "parent": {
+          "name": "广西壮族自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.946973,
+          31.772752
+        ]
+      },
+      "properties": {
+        "name": "常州市",
+        "adcode": "320400",
+        "level": "city",
+        "parent": {
+          "name": "江苏省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.412599,
+          23.079404
+        ]
+      },
+      "properties": {
+        "name": "惠州市",
+        "adcode": "441300",
+        "level": "city",
+        "parent": {
+          "name": "广东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          97.178452,
+          31.136875
+        ]
+      },
+      "properties": {
+        "name": "昌都市",
+        "adcode": "540300",
+        "level": "city",
+        "parent": {
+          "name": "西藏自治区"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          100.797941,
+          22.001724
+        ]
+      },
+      "properties": {
+        "name": "西双版纳傣族自治州",
+        "adcode": "532800",
+        "level": "city",
+        "parent": {
+          "name": "云南省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          118.326443,
+          35.065282
+        ]
+      },
+      "properties": {
+        "name": "临沂市",
+        "adcode": "371300",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.391382,
+          37.539297
+        ]
+      },
+      "properties": {
+        "name": "烟台市",
+        "adcode": "370600",
+        "level": "city",
+        "parent": {
+          "name": "山东省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          122.235151,
+          40.667432
+        ]
+      },
+      "properties": {
+        "name": "营口市",
+        "adcode": "210800",
+        "level": "city",
+        "parent": {
+          "name": "辽宁省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          104.065735,
+          30.659462
+        ]
+      },
+      "properties": {
+        "name": "成都市",
+        "adcode": "510100",
+        "level": "city",
+        "parent": {
+          "name": "四川省"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.144146,
+          32.042426
+        ]
+      },
+      "properties": {
+        "name": "襄阳市",
+        "adcode": "420600",
+        "level": "city",
+        "parent": {
+          "name": "湖北省"
+        }
       }
     }
   ]
