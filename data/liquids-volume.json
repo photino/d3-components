@@ -1,0 +1,14 @@
+[
+  {
+    "name": "oil",
+    "value": 0.75
+  },
+  {
+    "name": "water",
+    "value": 0.6
+  },
+  {
+    "name": "salt",
+    "value": 0.4
+  }
+]
