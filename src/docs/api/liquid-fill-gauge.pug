@@ -1,0 +1,66 @@
+
+extends components
+
+block prepend variables
+  - const pageID = 'api/liquid-fill-gauge'
+  - const pageTitle = 'Liquid Fill Gauge'
+  - const prism = true
+
+block article
+  h3.ui-header-primary
+    span= pageTitle
+    label.ui-float-right(for='liquid-fill-gauge-src')
+      i.ui-zoom-small(data-schema-icon='code')
+  .ui-container-grid
+    .ui-grid-50.ui-mobile-expand
+      #liquid-fill-gauge-default
+    .ui-grid-50.ui-mobile-expand
+      #liquid-fill-gauge-customized
+  .ui-toggle-target.ui-skip-large
+    input#liquid-fill-gauge-src(type='checkbox' checked)
+    div
+      pre: code.language-markup.
+        &lt;div id="liquid-fill-gauge-default"&gt;&lt;/div&gt;
+        &lt;div id="liquid-fill-gauge-customized"&gt;&lt;/div&gt;
+
+        &lt;script&gt;
+          d3.json('../data/liquids-volume.json', function (data) {
+            d3.liquidFillGauge(data, { id: 'liquid-fill-gauge-default' });
+          });
+          d3.json('../data/liquids-volume.json', function (data) {
+            d3.shuffle(data);
+            d3.liquidFillGauge(data, {
+              id: 'liquid-fill-gauge-customized',
+              sort: 'descending(value)',
+              frame: {
+                shape: 'rect',
+                round: 0.3
+              },
+              wave: {
+                peaks: 3,
+                asynchrony: 0
+              }
+            });
+          });
+        &lt;/script&gt;
+
+block append foot
+  script.
+    d3.json('../data/liquids-volume.json', function (data) {
+      d3.liquidFillGauge(data, { id: 'liquid-fill-gauge-default' });
+    });
+    d3.json('../data/liquids-volume.json', function (data) {
+      d3.shuffle(data);
+      d3.liquidFillGauge(data, {
+        id: 'liquid-fill-gauge-customized',
+        sort: 'descending(value)',
+        frame: {
+          shape: 'rect',
+          round: 0.3
+        },
+        wave: {
+          peaks: 3,
+          asynchrony: 0
+        }
+      });
+    });

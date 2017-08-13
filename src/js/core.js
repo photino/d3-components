@@ -216,7 +216,7 @@ d3.parseData = function (plot, data) {
     });
 
     // Set up field mapping
-    if (schema.type === 'object') {
+    if (schema.type === 'object' && schema.mapping !== false) {
       var entries = schema.entries;
       data = data.map(function (d) {
         var keys = Object.keys(d);
@@ -916,7 +916,9 @@ d3.setLegend = function (container, options) {
                 i = Math.floor(i / columns);
               }
               return lineHeight * (i + 1) - symbolHeight;
-            });
+            })
+            .attr('rx', options.rx)
+            .attr('ry', options.ry);
       }
     }
     item.select(symbolShape)
