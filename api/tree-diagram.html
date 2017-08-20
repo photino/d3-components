@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html id="api/timeline-diagram" lang="en">
+<html id="api/tree-diagram" lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Timeline Diagram | D3 Components</title>
+    <title>Tree Diagram | D3 Components</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="keywords" content="Data visualization, D3.js, SVG">
     <meta name="description" content="D3-based visualization components">
@@ -38,52 +38,51 @@
           <li><a href="./../api/contour-plot.html">Contour Plot</a></li>
           <li><a href="./../api/mosaic-plot.html">Mosaic Plot</a></li>
           <li><a href="./../api/terrestrial-globe.html">Terrestrial Globe</a></li>
-          <li><a href="./../api/tree-diagram.html">Tree Diagram</a></li>
-          <li class="ui-state-active"><a href="./../api/timeline-diagram.html">Timeline Diagram</a></li>
+          <li class="ui-state-active"><a href="./../api/tree-diagram.html">Tree Diagram</a></li>
+          <li><a href="./../api/timeline-diagram.html">Timeline Diagram</a></li>
           <li><a href="./../api/liquid-fill-gauge.html">Liquid Fill Gauge</a></li>
         </ul>
       </aside>
       <article class="ui-grid-75 ui-mobile-expand">
-        <h3 class="ui-header-primary"><span>Timeline Diagram</span>
-          <label class="ui-float-right" for="timeline-diagram-src"><i class="ui-zoom-small" data-schema-icon="code"></i></label>
+        <h3 class="ui-header-primary"><span>Tree Diagram</span>
+          <label class="ui-float-right" for="tree-diagram-src"><i class="ui-zoom-small" data-schema-icon="code"></i></label>
         </h3>
         <div class="ui-container-grid">
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="timeline-diagram-default"></div>
+            <div id="tree-diagram-default"></div>
           </div>
           <div class="ui-grid-50 ui-mobile-expand">
-            <div id="timeline-diagram-customized"></div>
+            <div id="tree-diagram-customized"></div>
           </div>
         </div>
         <div class="ui-toggle-target">
-          <input id="timeline-diagram-src" type="checkbox" checked>
+          <input id="tree-diagram-src" type="checkbox" checked>
           <div>
-            <pre><code class="language-markup">&lt;div id="timeline-diagram-default"&gt;&lt;/div&gt;
-&lt;div id="timeline-diagram-customized"&gt;&lt;/div&gt;
+            <pre><code class="language-markup">&lt;div id="tree-diagram-default"&gt;&lt;/div&gt;
+&lt;div id="tree-diagram-customized"&gt;&lt;/div&gt;
 
 &lt;script&gt;
-  d3.json('../data/historical-web-browsers.json', function (data) {
+  d3.json('../data/frontend-libraries.json', function (data) {
     d3.shuffle(data);
-    d3.timelineDiagram(data, { id: 'timeline-diagram-default' });
+    d3.treeDiagram(data, { id: 'tree-diagram-default' });
   });
-  d3.json('../data/historical-web-browsers.json', function (data) {
+  d3.json('../data/frontend-libraries.json', function (data) {
     d3.shuffle(data);
-    d3.timelineDiagram(data, {
-      id: 'timeline-diagram-customized',
-      domain: ['1994', '2017'],
-      scale: 'scaleLinear',
-      axis: {
-        label: false,
-        ticks: {
-          sizeInner: 6,
-          format: d3.timeFormat('%Y')
+    d3.treeDiagram(data, {
+      id: 'tree-diagram-customized',
+      hierarchy: {
+        root: false,
+        collapsed: true,
+        successive: true,
+        separation: function (a, b) {
+          return 1;
         }
       },
-      connectors: {
-        dx: '2.5%'
+      vertices: {
+        radius: '0.75%'
       },
-      dots: {
-        multicolor: true
+      images: {
+        show: true
       }
     });
   });
@@ -105,28 +104,27 @@
     <script src="./../dist/d3-4.10.0.min.js"></script>
     <script src="./../dist/d3-components-0.0.5.js"></script>
     <script>
-      d3.json('../data/historical-web-browsers.json', function (data) {
+      d3.json('../data/frontend-libraries.json', function (data) {
         d3.shuffle(data);
-        d3.timelineDiagram(data, { id: 'timeline-diagram-default' });
+        d3.treeDiagram(data, { id: 'tree-diagram-default' });
       });
-      d3.json('../data/historical-web-browsers.json', function (data) {
+      d3.json('../data/frontend-libraries.json', function (data) {
         d3.shuffle(data);
-        d3.timelineDiagram(data, {
-          id: 'timeline-diagram-customized',
-          domain: ['1994', '2017'],
-          scale: 'scaleLinear',
-          axis: {
-            label: false,
-            ticks: {
-              sizeInner: 6,
-              format: d3.timeFormat('%Y')
+        d3.treeDiagram(data, {
+          id: 'tree-diagram-customized',
+          hierarchy: {
+            root: false,
+            collapsed: true,
+            successive: true,
+            separation: function (a, b) {
+              return 1;
             }
           },
-          connectors: {
-            dx: '2.5%'
+          vertices: {
+            radius: '0.75%'
           },
-          dots: {
-            multicolor: true
+          images: {
+            show: true
           }
         });
       });

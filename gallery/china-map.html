@@ -63,15 +63,17 @@
             scale: 5120,
             zoomable: false,
             image: {
-              href: function (d) {
-                var server = 'https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/';
-                return server + d.z + '/' + d.y + '/' + d.x;
+              href: {
+                service: 'geoq',
+                theme: 'ChinaOnlineStreetPurplishBlue'
               }
             },
             wrap: true
           },
-          stroke: 'none',
-          fill: 'none',
+          regions: {
+            stroke: 'none',
+            fill: 'none'
+          },
           tooltip: {
             show: false
           }
