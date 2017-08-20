@@ -1,0 +1,78 @@
+
+extends components
+
+block prepend variables
+  - const pageID = 'api/tree-diagram'
+  - const pageTitle = 'Tree Diagram'
+  - const prism = true
+
+block article
+  h3.ui-header-primary
+    span= pageTitle
+    label.ui-float-right(for='tree-diagram-src')
+      i.ui-zoom-small(data-schema-icon='code')
+  .ui-container-grid
+    .ui-grid-50.ui-mobile-expand
+      #tree-diagram-default
+    .ui-grid-50.ui-mobile-expand
+      #tree-diagram-customized
+  .ui-toggle-target
+    input#tree-diagram-src(type='checkbox' checked)
+    div
+      pre: code.language-markup.
+        &lt;div id="tree-diagram-default"&gt;&lt;/div&gt;
+        &lt;div id="tree-diagram-customized"&gt;&lt;/div&gt;
+
+        &lt;script&gt;
+          d3.json('../data/frontend-libraries.json', function (data) {
+            d3.shuffle(data);
+            d3.treeDiagram(data, { id: 'tree-diagram-default' });
+          });
+          d3.json('../data/frontend-libraries.json', function (data) {
+            d3.shuffle(data);
+            d3.treeDiagram(data, {
+              id: 'tree-diagram-customized',
+              hierarchy: {
+                root: false,
+                collapsed: true,
+                successive: true,
+                separation: function (a, b) {
+                  return 1;
+                }
+              },
+              vertices: {
+                radius: '0.75%'
+              },
+              images: {
+                show: true
+              }
+            });
+          });
+        &lt;/script&gt;
+
+block append foot
+  script.
+    d3.json('../data/frontend-libraries.json', function (data) {
+      d3.shuffle(data);
+      d3.treeDiagram(data, { id: 'tree-diagram-default' });
+    });
+    d3.json('../data/frontend-libraries.json', function (data) {
+      d3.shuffle(data);
+      d3.treeDiagram(data, {
+        id: 'tree-diagram-customized',
+        hierarchy: {
+          root: false,
+          collapsed: true,
+          successive: true,
+          separation: function (a, b) {
+            return 1;
+          }
+        },
+        vertices: {
+          radius: '0.75%'
+        },
+        images: {
+          show: true
+        }
+      });
+    });

@@ -247,7 +247,7 @@ d3.liquidFillGauge = function (data, options) {
     var liquid = g.selectAll('.liquid');
     liquid.call(generator, liquidRadius)
           .attr('fill', function (d, i) {
-            return colorScheme[i];
+            return d.color || colorScheme[i];
           })
           .attr('clip-path', function (d, i) {
             return 'url(#' + clipId + '-' + i + ')';

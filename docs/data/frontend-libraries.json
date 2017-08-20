@@ -1,0 +1,48 @@
+[
+  {
+    "name": "Frontend Libraries",
+    "category": "",
+    "value": 1684
+  },
+  {
+    "name": "UI",
+    "category": "Frontend Libraries",
+    "value": 1090
+  },
+  {
+    "name": "MVC",
+    "category": "Frontend Libraries",
+    "value": 326
+  },
+  {
+    "name": "Bootstrap",
+    "category": "UI",
+    "value": 257,
+    "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Boostrap_logo.svg/478px-Boostrap_logo.svg.jpg",
+    "width": 478,
+    "height": 480
+  },
+  {
+    "name": "Foundation",
+    "category": "UI",
+    "value": 199
+  },
+  {
+    "name": "AngularJS",
+    "category": "MVC",
+    "value": 135
+  },
+  {
+    "name": "React",
+    "category": "MVC",
+    "value": 20,
+    "icon": "https://upload.wikimedia.org/wikipedia/en/thumb/a/a7/React-icon.svg/320px-React-icon.svg.jpg",
+    "width": 320,
+    "height": 226
+  },
+  {
+    "name": "Vue.js",
+    "category": "MVC",
+    "value": 17
+  }
+]

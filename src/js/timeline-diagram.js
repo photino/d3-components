@@ -32,6 +32,7 @@ d3.components.timelineDiagram = {
         mappings: [
           'icon',
           'img',
+          'logo',
           'photo',
           'picture'
         ]
@@ -74,7 +75,7 @@ d3.components.timelineDiagram = {
     stroke: 'currentColor',
     strokeWidth: 1
   },
-  knots: {
+  dots: {
     radius: '0.5%',
     stroke: '#1f77b4',
     strokeWidth: 1,
@@ -266,21 +267,21 @@ d3.timelineDiagram = function (data, options) {
        return d.text;
      });
 
-    // Knots
-    var knots = options.knots;
-    var multicolor = knots.multicolor;
+    // dots
+    var dots = options.dots;
+    var multicolor = dots.multicolor;
     g.selectAll('.item')
      .append('circle')
      .attr('class', 'knot')
      .attr('cx', 0)
      .attr('cy', 0)
-     .attr('r', knots.radius)
+     .attr('r', dots.radius)
      .attr('stroke', function (d, i) {
-       return (multicolor ? d.color || colorScheme[i] : null) || knots.stroke;
+       return (multicolor ? d.color || colorScheme[i] : null) || dots.stroke;
      })
-     .attr('stroke-width', knots.strokeWidth)
+     .attr('stroke-width', dots.strokeWidth)
      .attr('fill', function (d, i) {
-       return (multicolor ? d.color || colorScheme[i] : null) || knots.fill;
+       return (multicolor ? d.color || colorScheme[i] : null) || dots.fill;
      });
 
     // Tooltip

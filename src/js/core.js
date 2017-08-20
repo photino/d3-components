@@ -794,57 +794,6 @@ d3.setLabels = function (container, options) {
   }
 };
 
-// Set the tooltip
-d3.setTooltip = function (chart, options) {
-  if (options.show) {
-    var tooltip = d3.select('#' + options.id);
-    var lineHeight = parseInt(tooltip.style('line-height'));
-    var target = options.target;
-    var effect = options.effect;
-    target.on('mouseover', function (d, i) {
-      var position = d3.mouse(chart);
-      var left = position[0];
-      var top = position[1];
-      tooltip.attr('class', 'tooltip')
-             .style('display', 'block')
-             .html(options.html(d, i));
-      if (isNaN(left) || isNaN(top)) {
-        var offsetX = parseInt(tooltip.style('width')) / 2;
-        var offsetY = parseInt(tooltip.style('height')) + lineHeight / 6;
-        position = d3.getPosition(this, chart);
-        left = position.left + position.width / 2 - offsetX;
-        top = position.top + position.height / 2 - offsetY;
-      }
-      tooltip.style('left', left + 'px')
-             .style('top', top + 'px');
-      if (effect === 'darker') {
-        d3.select(this)
-          .attr('fill', d3.color(d.color).darker());
-      }
-    })
-    .on('mousemove', function (d) {
-      var position = d3.mouse(chart);
-      var offsetX = parseInt(tooltip.style('width')) / 2;
-      var offsetY = parseInt(tooltip.style('height')) + lineHeight / 6;
-      tooltip.style('left', (position[0] - offsetX) + 'px')
-             .style('top', (position[1] - offsetY) + 'px');
-    })
-    .on('mouseout', function (d) {
-      tooltip.style('display', 'none');
-      if (effect === 'darker') {
-        d3.select(this)
-          .attr('fill', d.color);
-      }
-    });
-    if (options.autoplay) {
-      target.call(d3.triggerAction, d3.extend({
-        event: 'mouseover',
-        carousel: true
-      }, options.carousel));
-    }
-  }
-};
-
 // Set the legend
 d3.setLegend = function (container, options) {
   var show = options.show;
@@ -977,6 +926,113 @@ d3.setLegend = function (container, options) {
         carousel: true
       }, options.carousel));
     }
+  }
+};
+
+// Set the tooltip
+d3.setTooltip = function (chart, options) {
+  if (options.show) {
+    var tooltip = d3.select('#' + options.id);
+    var lineHeight = parseInt(tooltip.style('line-height'));
+    var target = options.target;
+    var effect = options.effect;
+    target.on('mouseover', function (d, i) {
+      var position = d3.mouse(chart);
+      var left = position[0];
+      var top = position[1];
+      tooltip.attr('class', 'tooltip')
+             .style('display', 'block')
+             .html(options.html(d, i));
+      if (isNaN(left) || isNaN(top)) {
+        var offsetX = parseInt(tooltip.style('width')) / 2;
+        var offsetY = parseInt(tooltip.style('height')) + lineHeight / 6;
+        position = d3.getPosition(this, chart);
+        left = position.left + position.width / 2 - offsetX;
+        top = position.top + position.height / 2 - offsetY;
+      }
+      tooltip.style('left', left + 'px')
+             .style('top', top + 'px');
+      if (effect === 'darker') {
+        d3.select(this)
+          .attr('fill', d3.color(d.color).darker());
+      }
+    })
+    .on('mousemove', function (d) {
+      var position = d3.mouse(chart);
+      var offsetX = parseInt(tooltip.style('width')) / 2;
+      var offsetY = parseInt(tooltip.style('height')) + lineHeight / 6;
+      tooltip.style('left', (position[0] - offsetX) + 'px')
+             .style('top', (position[1] - offsetY) + 'px');
+    })
+    .on('mouseout', function (d) {
+      tooltip.style('display', 'none');
+      if (effect === 'darker') {
+        d3.select(this)
+          .attr('fill', d.color);
+      }
+    });
+    if (options.autoplay) {
+      target.call(d3.triggerAction, d3.extend({
+        event: 'mouseover',
+        carousel: true
+      }, options.carousel));
+    }
+  }
+};
+
+// Set arrows
+d3.setArrows = function (chart, options) {
+  var arrow = options.arrow;
+  if (arrow.show) {
+    var svg = d3.select(chart)
+                .select('svg');
+
+    // Defs
+    var defs = svg.select('defs');
+    if (defs.empty()) {
+      defs = svg.insert('defs', ':first-child');
+    }
+
+    // Marker
+    var markerSize = arrow.size;
+    var markerRef = markerSize / 2;
+    var markerStrokeWidth = arrow.strokeWidth;
+    var markerId = chart.id + '-arrow';
+    var marker = defs.select('.arrow');
+    if (marker.empty()) {
+      marker = defs.append('marker')
+                   .attr('class', 'arrow')
+                   .attr('markerUnits', 'strokeWidth')
+                   .attr('orient', 'auto');
+    }
+    marker.attr('id', markerId)
+          .attr('markerWidth', markerSize)
+          .attr('markerHeight', markerSize)
+          .attr('viewBox', '0 0 ' + markerSize + ' ' + markerSize)
+          .attr('refX', markerRef)
+          .attr('refY', markerRef);
+
+    // Path
+    var path = marker.select('path');
+    if (path.empty()) {
+      path = marker.append('path');
+    }
+    path.attr('stroke', arrow.stroke)
+        .attr('strokeWidth', markerStrokeWidth)
+        .attr('fill', arrow.fill)
+        .attr('d', function () {
+          var d = d3.path();
+          var markerStart = 2 * markerStrokeWidth;
+          var markerLength = markerSize - markerStart;
+
+          d.moveTo(markerStart, markerStart);
+          d.lineTo(markerLength, markerRef);
+          d.lineTo(markerStart, markerLength);
+          d.lineTo(markerRef, markerRef);
+          d.lineTo(markerStart, markerStart);
+          return d.toString();
+        });
+    options.path.attr('marker-end', 'url(#' + markerId + ')');
   }
 };
 
@@ -1149,7 +1205,7 @@ d3.parseGeoData = function (map, options) {
   if (type === 'object') {
     if (data.hasOwnProperty('features')) {
       features = data.features;
-    } else if (window.topojson) {
+    } else if (d3.type(topojson) === 'object') {
       if (map.object) {
         var object = data.objects[map.object];
         features = topojson.feature(data, object).features;
@@ -1217,19 +1273,19 @@ d3.parseGeoData = function (map, options) {
 d3.mapData = {
   world: {
     center: [0, 0],
-    scale: 1.0
+    scale: 1
   },
   china: {
     key: 'name',
     center: [103.3886, 35.5636],
-    scale: 1.0
+    scale: 1
   }
 };
 
 // Built-in map tiles
 d3.mapTiles = {
   amap: {
-    url: 'http://webrd03.is.autonavi.com/appmaptile?size=1&scale=1&style=8&x=${x}&y=${y}&z=${z}'
+    url: 'https://webrd03.is.autonavi.com/appmaptile?size=1&scale=1&style=8&x=${x}&y=${y}&z=${z}'
   },
   geoq: {
     url: 'https://map.geoq.cn/ArcGIS/rest/services/${t}/MapServer/tile/${z}/${y}/${x}',

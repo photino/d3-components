@@ -36,6 +36,7 @@ gulp.task('concat-js', function () {
       'src/js/contour-plot.js',
       'src/js/mosaic-plot.js',
       'src/js/terrestrial-globe.js',
+      'src/js/tree-diagram.js',
       'src/js/timeline-diagram.js',
       'src/js/liquid-fill-gauge.js'
     ])
