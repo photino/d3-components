@@ -51,7 +51,7 @@ d3.components.choroplethMap = {
   coloring: 'ordinal',
   colorScale: 'scaleOrdinal',
   zoomable: false,
-  scaleExtent: [1, 12],
+  scaleExtent: [1, 24],
   graticules: {
     show: false,
     step: [10, 10],
@@ -67,7 +67,7 @@ d3.components.choroplethMap = {
     show: false,
     zoomable: true,
     scale: 512,
-    scaleExtent: [512, 262144],
+    scaleExtent: [512, 16777216],
     image: {
       size: 256
     }

@@ -1,0 +1,133 @@
+extends ../layout
+
+block prepend variables
+  - const pageID = 'gallery/map-tiles'
+  - const pageTitle = 'List of Map Tiles'
+  - const minimal = true
+
+block append head
+  style.
+    html {
+      font-size: 20px;
+    }
+    body {
+      background-color: #00192e;
+      color: #fff;
+    }
+    #container-china-map {
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+block body
+  body
+    select#map-tile.ui-fixed-top.ui-theme-dark(name='tile')
+      optgroup(label='amap')
+        option(value='amap.default') default
+      optgroup(label='geoq')
+        option(value='geoq.ChinaOnlineCommunity_Mobile') community (mobile)
+        option(value='geoq.ChinaOnlineCommunityENG') community (ENG)
+        option(value='geoq.ChinaOnlineCommunity') community
+        option(value='geoq.ChinaOnlineStreetGray') gray
+        option(value='geoq.ChinaOnlineStreetPurplishBlue' selected) purplish blue
+      optgroup(label='google')
+        option(value='google.default') default
+      optgroup(label='geohey')
+        option(value='geohey.warm') warm
+        option(value='geohey.cool') cool
+        option(value='geohey.midnight') midnight
+        option(value='geohey.pencil') pencil
+        option(value='geohey.dark') dark
+        option(value='geohey.contrast') contrast
+        option(value='geohey.pink') pink
+        option(value='geohey.vision') vision
+        option(value='geohey.adventure') adventure
+        option(value='geohey.blue') blue
+        option(value='geohey.light') light
+        option(value='geohey.fresh') fresh
+        option(value='geohey.natural') natural
+        option(value='geohey.admin') admin
+        option(value='geohey.tourism') tourism
+        option(value='geohey.river') river
+        option(value='geohey.chinese') chinese
+      optgroup(label='mapbox')
+        option(value='mapbox.natural-earth-2') natural-earth-2
+        option(value='mapbox.streets') streets
+        option(value='mapbox.light') light
+        option(value='mapbox.dark') dark
+        option(value='mapbox.satellite') satellite
+        option(value='mapbox.streets-satellite') streets-satellite
+        option(value='mapbox.wheatpaste') wheatpaste
+        option(value='mapbox.streets-basic') streets-basic
+        option(value='mapbox.comic') comic
+        option(value='mapbox.outdoors') outdoors
+        option(value='mapbox.run-bike-hike') run-bike-hike
+        option(value='mapbox.pencil') pencil
+        option(value='mapbox.pirates') pirates
+        option(value='mapbox.emerald') emerald
+        option(value='mapbox.high-contrast') high-contrast
+      optgroup(label='mediawiki')
+        option(value='mediawiki.osm') osm
+        option(value='mediawiki.osm-intl') osm-intl
+      optgroup(label='openstreetmap')
+        option(value='openstreetmap.default') default
+      optgroup(label='stamen')
+        option(value='stamen.terrain') terrain
+        option(value='stamen.terrain-labels') terrain-labels
+        option(value='stamen.terrain-lines') terrain-lines
+        option(value='stamen.terrain-background') terrain-background
+        option(value='stamen.watercolor') watercolor
+      optgroup(label='thunderforest')
+        option(value='thunderforest.cycle') cycle
+        option(value='thunderforest.transport') transport
+        option(value='thunderforest.landscape') landscape
+        option(value='thunderforest.outdoors') outdoors
+        option(value='thunderforest.transport-dark') transport-dark
+        option(value='thunderforest.spinal-map') spinal-map
+    #container-china-map: #choropleth-map
+    script(src=appDist + '/jquery-3.2.1.min.js')
+    script(src=appDist + '/ui-schema-0.4.4.min.js')
+    script(src=appDist + '/d3-4.10.0.min.js')
+    script(src=appDist + '/d3-components-' + version + '.min.js')
+    script(src=appDist + '/d3-scale-chromatic-1.1.0.min.js')
+    script(src=appDist + '/d3-tile-0.0.4.min.js')
+    script(src=appDist + '/d3-contour-1.1.0.min.js')
+    script.
+      $(function () {
+        $('#map-tile').on('change', function () {
+          var tile = $(this).val().split('.');
+          $('#choropleth-map').empty();
+          d3.json('../dist/maps/china.geo.json', function (provinces) {
+            d3.choroplethMap([], {
+              id: 'choropleth-map',
+              map: {
+                name: 'china',
+                data: provinces,
+                center: [100, 30]
+              },
+              tile: {
+                show: true,
+                scale: 5120,
+                zoomable: true,
+                image: {
+                  href: {
+                    service: tile[0],
+                    theme: tile[1]
+                  }
+                },
+                wrap: true
+              },
+              regions: {
+                stroke: 'none',
+                fill: 'none'
+              },
+              tooltip: {
+                show: false
+              }
+            });
+          });
+        });
+        $('#map-tile').change();
+      });

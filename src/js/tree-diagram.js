@@ -158,9 +158,14 @@ d3.treeDiagram = function (data, options) {
       return false;
     });
     data.forEach(function (d) {
-      var collapsed = d.parent && d.parent !== parent;
-      d.collapsed = !collapsed;
-      d.display = collapsed ? 'none' : 'block';
+      if (d.parent) {
+        var collapsed = d.parent === parent;
+        d.collapsed = collapsed;
+        d.display = collapsed ? 'block' : 'none';
+      } else {
+        d.collapsed = false;
+        d.display = 'block';
+      }
     });
   }
 
@@ -180,8 +185,8 @@ d3.treeDiagram = function (data, options) {
       links.enter()
            .append('path')
            .attr('class', 'link')
-           .attr('d', path)
            .merge(links)
+           .attr('d', path)
            .attr('stroke', curves.stroke)
            .attr('stroke-width', curves.strokeWidth)
            .attr('fill', curves.fill)

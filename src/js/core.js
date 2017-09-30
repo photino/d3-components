@@ -1293,12 +1293,8 @@ d3.mapTiles = {
       'ChinaOnlineCommunity_Mobile',
       'ChinaOnlineCommunityENG',
       'ChinaOnlineCommunity',
-      'ChinaOnlineCommunityOnlyENG',
-      'ChinaOnlineStreetCold',
-      'ChinaOnlineStreetColor',
       'ChinaOnlineStreetGray',
-      'ChinaOnlineStreetPurplishBlue',
-      'ChinaOnlineStreetWarm'
+      'ChinaOnlineStreetPurplishBlue'
     ]
   },
   google: {
