@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html id="gallery/map-tiles" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>List of Map Tiles | D3 Components</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="Data visualization, D3.js, SVG">
+    <meta name="description" content="D3-based visualization components">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./../dist/ui-schema-0.4.5.min.css" media="all">
+    <style>
+      html {
+        font-size: 20px;
+      }
+      body {
+        background-color: #00192e;
+        color: #fff;
+      }
+      #container-china-map {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <select class="ui-fixed-top ui-theme-dark" id="map-tile" name="tile">
+      <optgroup label="amap">
+        <option value="amap.default">default</option>
+      </optgroup>
+      <optgroup label="geoq">
+        <option value="geoq.ChinaOnlineCommunity_Mobile">community (mobile)</option>
+        <option value="geoq.ChinaOnlineCommunityENG">community (ENG)</option>
+        <option value="geoq.ChinaOnlineCommunity">community</option>
+        <option value="geoq.ChinaOnlineStreetGray">gray</option>
+        <option value="geoq.ChinaOnlineStreetPurplishBlue" selected>purplish blue</option>
+      </optgroup>
+      <optgroup label="google">
+        <option value="google.default">default</option>
+      </optgroup>
+      <optgroup label="geohey">
+        <option value="geohey.warm">warm</option>
+        <option value="geohey.cool">cool</option>
+        <option value="geohey.midnight">midnight</option>
+        <option value="geohey.pencil">pencil</option>
+        <option value="geohey.dark">dark</option>
+        <option value="geohey.contrast">contrast</option>
+        <option value="geohey.pink">pink</option>
+        <option value="geohey.vision">vision</option>
+        <option value="geohey.adventure">adventure</option>
+        <option value="geohey.blue">blue</option>
+        <option value="geohey.light">light</option>
+        <option value="geohey.fresh">fresh</option>
+        <option value="geohey.natural">natural</option>
+        <option value="geohey.admin">admin</option>
+        <option value="geohey.tourism">tourism</option>
+        <option value="geohey.river">river</option>
+        <option value="geohey.chinese">chinese</option>
+      </optgroup>
+      <optgroup label="mapbox">
+        <option value="mapbox.natural-earth-2">natural-earth-2</option>
+        <option value="mapbox.streets">streets</option>
+        <option value="mapbox.light">light</option>
+        <option value="mapbox.dark">dark</option>
+        <option value="mapbox.satellite">satellite</option>
+        <option value="mapbox.streets-satellite">streets-satellite</option>
+        <option value="mapbox.wheatpaste">wheatpaste</option>
+        <option value="mapbox.streets-basic">streets-basic</option>
+        <option value="mapbox.comic">comic</option>
+        <option value="mapbox.outdoors">outdoors</option>
+        <option value="mapbox.run-bike-hike">run-bike-hike</option>
+        <option value="mapbox.pencil">pencil</option>
+        <option value="mapbox.pirates">pirates</option>
+        <option value="mapbox.emerald">emerald</option>
+        <option value="mapbox.high-contrast">high-contrast</option>
+      </optgroup>
+      <optgroup label="mediawiki">
+        <option value="mediawiki.osm">osm</option>
+        <option value="mediawiki.osm-intl">osm-intl</option>
+      </optgroup>
+      <optgroup label="openstreetmap">
+        <option value="openstreetmap.default">default</option>
+      </optgroup>
+      <optgroup label="stamen">
+        <option value="stamen.terrain">terrain</option>
+        <option value="stamen.terrain-labels">terrain-labels</option>
+        <option value="stamen.terrain-lines">terrain-lines</option>
+        <option value="stamen.terrain-background">terrain-background</option>
+        <option value="stamen.watercolor">watercolor</option>
+      </optgroup>
+      <optgroup label="thunderforest">
+        <option value="thunderforest.cycle">cycle</option>
+        <option value="thunderforest.transport">transport</option>
+        <option value="thunderforest.landscape">landscape</option>
+        <option value="thunderforest.outdoors">outdoors</option>
+        <option value="thunderforest.transport-dark">transport-dark</option>
+        <option value="thunderforest.spinal-map">spinal-map</option>
+      </optgroup>
+    </select>
+    <div id="container-china-map">
+      <div id="choropleth-map"></div>
+    </div>
+    <script src="./../dist/jquery-3.2.1.min.js"></script>
+    <script src="./../dist/ui-schema-0.4.4.min.js"></script>
+    <script src="./../dist/d3-4.10.0.min.js"></script>
+    <script src="./../dist/d3-components-0.0.5.min.js"></script>
+    <script src="./../dist/d3-scale-chromatic-1.1.0.min.js"></script>
+    <script src="./../dist/d3-tile-0.0.4.min.js"></script>
+    <script src="./../dist/d3-contour-1.1.0.min.js"></script>
+    <script>
+      $(function () {
+        $('#map-tile').on('change', function () {
+          var tile = $(this).val().split('.');
+          $('#choropleth-map').empty();
+          d3.json('../dist/maps/china.geo.json', function (provinces) {
+            d3.choroplethMap([], {
+              id: 'choropleth-map',
+              map: {
+                name: 'china',
+                data: provinces,
+                center: [100, 30]
+              },
+              tile: {
+                show: true,
+                scale: 5120,
+                zoomable: true,
+                image: {
+                  href: {
+                    service: tile[0],
+                    theme: tile[1]
+                  }
+                },
+                wrap: true
+              },
+              regions: {
+                stroke: 'none',
+                fill: 'none'
+              },
+              tooltip: {
+                show: false
+              }
+            });
+          });
+        });
+        $('#map-tile').change();
+      });
+    </script>
+  </body>
+</html>

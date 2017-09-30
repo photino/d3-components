@@ -1293,12 +1293,8 @@ d3.mapTiles = {
       'ChinaOnlineCommunity_Mobile',
       'ChinaOnlineCommunityENG',
       'ChinaOnlineCommunity',
-      'ChinaOnlineCommunityOnlyENG',
-      'ChinaOnlineStreetCold',
-      'ChinaOnlineStreetColor',
       'ChinaOnlineStreetGray',
-      'ChinaOnlineStreetPurplishBlue',
-      'ChinaOnlineStreetWarm'
+      'ChinaOnlineStreetPurplishBlue'
     ]
   },
   google: {
@@ -2944,7 +2940,7 @@ d3.components.choroplethMap = {
   coloring: 'ordinal',
   colorScale: 'scaleOrdinal',
   zoomable: false,
-  scaleExtent: [1, 12],
+  scaleExtent: [1, 24],
   graticules: {
     show: false,
     step: [10, 10],
@@ -2960,7 +2956,7 @@ d3.components.choroplethMap = {
     show: false,
     zoomable: true,
     scale: 512,
-    scaleExtent: [512, 262144],
+    scaleExtent: [512, 16777216],
     image: {
       size: 256
     }
@@ -4345,9 +4341,14 @@ d3.treeDiagram = function (data, options) {
       return false;
     });
     data.forEach(function (d) {
-      var collapsed = d.parent && d.parent !== parent;
-      d.collapsed = !collapsed;
-      d.display = collapsed ? 'none' : 'block';
+      if (d.parent) {
+        var collapsed = d.parent === parent;
+        d.collapsed = collapsed;
+        d.display = collapsed ? 'block' : 'none';
+      } else {
+        d.collapsed = false;
+        d.display = 'block';
+      }
     });
   }
 
@@ -4367,8 +4368,8 @@ d3.treeDiagram = function (data, options) {
       links.enter()
            .append('path')
            .attr('class', 'link')
-           .attr('d', path)
            .merge(links)
+           .attr('d', path)
            .attr('stroke', curves.stroke)
            .attr('stroke-width', curves.strokeWidth)
            .attr('fill', curves.fill)
