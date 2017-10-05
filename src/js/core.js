@@ -868,6 +868,40 @@ d3.setLegend = function (container, options) {
             })
             .attr('rx', options.rx)
             .attr('ry', options.ry);
+      } else if (symbolShape === 'icon') {
+        var icon = d3.icon()
+                     .size([symbolWidth, symbolHeight]);
+        item.selectAll('.icon')
+            .data(function (d, i) {
+              var iconX = 0;
+              var iconY = 0;
+              if (display === 'inline-block') {
+                iconX = maxWidth * (i % columns);
+                i = Math.floor(i / columns);
+              }
+              iconY = lineHeight * (i + 1) - symbolHeight;
+              return icon.x(iconX)
+                         .y(iconY)
+                         .color(d.color)([d.icon || d.data.icon]);
+            })
+            .enter()
+            .append('g')
+            .attr('class', 'icon')
+            .attr('transform', function (d) {
+              return d.transform;
+            })
+            .selectAll('path')
+            .data(function (d) {
+              return d.shapes;
+            })
+            .enter()
+            .append('path')
+            .attr('d', function (d) {
+              return d.path;
+            })
+            .attr('fill', function (d) {
+              return d.color;
+            });
       }
     }
     item.select(symbolShape)
@@ -914,9 +948,10 @@ d3.setLegend = function (container, options) {
       }
       var item = d3.select(this)
                    .classed('disabled', d.disabled);
-      item.select(symbolShape)
+      var shape = symbolShape === 'icon' ? 'path' : symbolShape;
+      item.selectAll(shape)
           .attr('fill', d.disabled ? disabledTextColor : d.color);
-      item.select('text')
+      item.selectAll('text')
           .attr('fill', d.disabled ? disabledTextColor : textColor);
       options.onclick(d);
     });
@@ -1382,3 +1417,120 @@ d3.mapTiles = {
     token: '7c352c8ff1244dd8b732e349e0b0fe8d'
   }
 };
+
+// Icon generator
+d3.icon = function () {
+  var iconX = 0;
+  var iconY = 0;
+  var iconSize = [32, 32];
+  var iconColor = [];
+
+  function icon (data) {
+    return [].concat(data).map(function (d, i) {
+      // Preprocess data
+      if (d3.type(d) === 'string') {
+        var icon = d3.icons[d];
+        d = d3.type(icon) === 'string' ? d3.icons[icon] : icon;
+      }
+      if (d3.type(d) === 'array' && d.length >= 3) {
+        d = {
+          width: d[0],
+          height: d[1],
+          path: d[2],
+          color: d[3]
+        };
+      }
+
+      var x = d3.type(iconX) === 'function' ? iconX(d, i) : iconX;
+      var y = d3.type(iconY) === 'function' ? iconY(d, i) : iconY;
+      var tx = x - (d.x || 0);
+      var ty = y - (d.y || 0);
+      var size = d3.type(iconSize) === 'function' ? iconSize(d, i) : iconSize;
+      var sx = size[0] / (d.width || 1);
+      var sy = size[1] / (d.height || 1);
+      var path = [].concat(d.path);
+      var length = path.length;
+      var color = d.color;
+      var colorType = d3.type(color);
+      var colors = d3.type(iconColor) === 'function' ? [].concat(iconColor(d, i)) : iconColor;
+      if (colors.length === 0) {
+        if (colorType === 'array') {
+          colors = color;
+        } else if (colorType === 'string') {
+          colors = Array.apply(null, Array(length)).map(function () { return color; });
+        }
+      }
+      if (colors.length === 1 && length > 1) {
+        color = colors.pop();
+        colors = Array.apply(null, Array(length)).map(function () { return color; });
+      }
+      return {
+        data: d,
+        shapes: path.map(function (d, i) {
+          return {
+            path: d,
+            color: colors[i]
+          };
+        }),
+        transform: d3.formatString('translate(${x},${y}) scale(${k})', {
+          x: tx,
+          y: ty,
+          k: Math.max(sx, sy)
+        })
+      };
+    });
+  };
+
+  icon.x = function (x) {
+    var type = d3.type(x);
+    if (type === 'undefined') {
+      return iconX;
+    }
+    if (type === 'function' || type === 'number') {
+      iconX = x;
+    }
+    return icon;
+  };
+
+  icon.y = function (y) {
+    var type = d3.type(y);
+    if (type === 'undefined') {
+      return iconY;
+    }
+    if (type === 'function' || type === 'number') {
+      iconY = y;
+    }
+    return icon;
+  };
+
+  icon.size = function (size) {
+    var type = d3.type(size);
+    if (type === 'undefined') {
+      return iconSize;
+    }
+    if (type === 'function' || type === 'array') {
+      iconSize = size;
+    } else if (type === 'number') {
+      iconSize = [size, size];
+    }
+    return icon;
+  };
+
+  icon.color = function (color) {
+    var type = d3.type(color);
+    if (type === 'undefined') {
+      return iconColor;
+    }
+    if (type === 'function' || type === 'array') {
+      iconColor = color;
+    } else if (type === 'string') {
+      iconColor = [color];
+    }
+    return icon;
+  };
+
+  return icon;
+};
+
+// Built-in icons
+d3.icons = d3.extend({}, schema && schema.icons);

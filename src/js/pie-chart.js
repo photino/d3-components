@@ -131,12 +131,16 @@ d3.pieChart = function (data, options) {
     // Arcs
     dispatch.on('update.arcs', function (slice) {
       var colors = d3.scaleOrdinal(colorScheme);
-      slice.append('path')
-           .attr('d', arc)
-           .attr('fill', function (d) {
-             d.color = colors(d.data.label);
-             return d.color;
-           });
+      var path = slice.select('path');
+      if (path.empty) {
+        path = slice.append('path');
+      }
+      path.attr('d', arc)
+          .attr('fill', function (d) {
+            d.label = d.data.label;
+            d.color = colors(d.label);
+            return d.color;
+          });
     });
 
     // Labels
@@ -144,24 +148,27 @@ d3.pieChart = function (data, options) {
       var labels = options.labels;
       if (labels.show) {
         var centroidRatio = labels.centroidRatio;
-        slice.append('text')
-             .attr('class', 'label')
-             .attr('x', function (d) {
-               return arc.centroid(d)[0] * centroidRatio;
-             })
-             .attr('y', function (d) {
-               return arc.centroid(d)[1] * centroidRatio;
-             })
-             .attr('dy', labels.dy)
-             .attr('fill', labels.fill)
-             .attr('stroke', labels.stroke)
-             .attr('text-anchor', 'middle')
-             .text(labels.text)
-             .style('display', function (d) {
-               var angle = d.endAngle - d.startAngle;
-               return angle < labels.minAngle ? 'none' : 'block';
-             })
-             .call(d3.wrapText, labels);
+        var text = slice.select('text');
+        if (text.empty) {
+          text = slice.append('text')
+                      .attr('class', 'label');
+        }
+        text.attr('x', function (d) {
+              return arc.centroid(d)[0] * centroidRatio;
+            })
+            .attr('y', function (d) {
+              return arc.centroid(d)[1] * centroidRatio;
+            })
+            .attr('dy', labels.dy)
+            .attr('fill', labels.fill)
+            .attr('stroke', labels.stroke)
+            .attr('text-anchor', 'middle')
+            .text(labels.text)
+            .style('display', function (d) {
+              var angle = d.endAngle - d.startAngle;
+              return angle < labels.minAngle ? 'none' : 'block';
+            })
+            .call(d3.wrapText, labels);
       }
     });
 
@@ -181,7 +188,7 @@ d3.pieChart = function (data, options) {
       }
       legend.data = slices;
       legend.onclick = function (d) {
-        var label = d.data.label;
+        var label = d.label;
         var disabled = d.data.disabled;
         data.some(function (d) {
           if (d.label === label) {
@@ -190,7 +197,8 @@ d3.pieChart = function (data, options) {
           }
           return false;
         });
-        dispatch.call('init', this, pie(data));
+        slices = pie(data);
+        dispatch.call('init', this, slices);
         dispatch.call('update', this, g.selectAll('.arc'));
       };
       d3.setLegend(g, legend);

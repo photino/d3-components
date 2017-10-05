@@ -1,26 +1,32 @@
 [
   {
     "browser": "Chrome",
-    "percentage": 0.4707
+    "percentage": 0.4707,
+    "icon": "chrome"
   },
   {
     "browser": "Firefox",
-    "percentage": 0.1543
+    "percentage": 0.1543,
+    "icon": "firefox"
   },
   {
     "browser": "IE",
-    "percentage": 0.1106
+    "percentage": 0.1106,
+    "icon": "ie"
   },
   {
     "browser": "Opera",
-    "percentage": 0.0217
+    "percentage": 0.0217,
+    "icon": "opera"
   },
   {
     "browser": "Others",
-    "percentage": 0.038
+    "percentage": 0.038,
+    "icon": "browser"
   },
   {
     "browser": "Safari",
-    "percentage": 0.2047
+    "percentage": 0.2047,
+    "icon": "safari"
   }
 ]
