@@ -11,21 +11,21 @@ d3.components.mosaicPlot = {
       {
         key: 'column',
         type: 'string',
-        mappings: [
+        aliases: [
           'category'
         ]
       },
       {
         key: 'row',
         type: 'string',
-        mappings: [
+        aliases: [
           'year'
         ]
       },
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
@@ -34,11 +34,11 @@ d3.components.mosaicPlot = {
       {
         key: 'series',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'group',
           'type'
-        ]
+        ],
+        optional: true
       }
     ]
   },

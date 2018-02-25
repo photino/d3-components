@@ -15,7 +15,7 @@ d3.components.terrestrialGlobe = {
       {
         key: 'id',
         type: 'string',
-        mappings: [
+        aliases: [
           'country',
           'nation'
         ]
@@ -23,7 +23,7 @@ d3.components.terrestrialGlobe = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
@@ -32,11 +32,11 @@ d3.components.terrestrialGlobe = {
       {
         key: 'series',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'group',
           'type'
-        ]
+        ],
+        optional: true
       }
     ]
   },

@@ -14,7 +14,7 @@ d3.components.radarChart = {
       {
         key: 'axis',
         type: 'string',
-        mappings: [
+        aliases: [
           'category',
           'label',
           'name'
@@ -23,7 +23,7 @@ d3.components.radarChart = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
@@ -32,11 +32,11 @@ d3.components.radarChart = {
       {
         key: 'series',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'group',
           'type'
-        ]
+        ],
+        optional: true
       }
     ]
   },

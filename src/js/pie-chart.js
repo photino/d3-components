@@ -12,7 +12,7 @@ d3.components.pieChart = {
       {
         key: 'label',
         type: 'string',
-        mappings: [
+        aliases: [
           'category',
           'name'
         ]
@@ -20,7 +20,7 @@ d3.components.pieChart = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'

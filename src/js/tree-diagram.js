@@ -12,38 +12,38 @@ d3.components.treeDiagram = {
       {
         key: 'label',
         type: 'string',
-        mappings: [
+        aliases: [
           'name'
         ]
       },
       {
         key: 'parent',
         type: 'string',
-        mappings: [
+        aliases: [
           'category'
         ]
       },
       {
         key: 'value',
         type: 'number',
-        optional: true,
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
-        ]
+        ],
+        optional: true
       },
       {
         key: 'image',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'icon',
           'img',
           'logo',
           'photo',
           'picture'
-        ]
+        ],
+        optional: true
       }
     ]
   },

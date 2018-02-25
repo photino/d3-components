@@ -215,57 +215,83 @@ d3.parseData = function (plot, data) {
       return d;
     });
 
-    // Set up field mapping
-    if (schema.type === 'object' && schema.mapping !== false) {
-      var entries = schema.entries;
-      data = data.map(function (d) {
-        var keys = Object.keys(d);
-        entries.forEach(function (entry) {
-          var key = entry.key;
-          var type = entry.type;
-          var mapping = null;
-          if (d.hasOwnProperty(key)) {
-            if (key === hierarchy && type === 'array') {
-              d[hierarchy] = d3.parseData(plot, d[hierarchy]);
-            }
-            keys.splice(keys.indexOf(key), 1);
-            mapping = key;
-          } else {
-            var mappings = entry.mappings || [];
-            mappings.some(function (m) {
-              var i = keys.indexOf(m);
-              if (i !== -1) {
-                keys.splice(i, 1);
-                mapping = m;
+    // Set up field mappings
+    if (schema.type === 'object') {
+      if (Array.isArray(schema.mappings)) {
+        var entries = schema.entries;
+        var mappings = schema.mappings;
+        var keys = Object.keys(mappings);
+        data.forEach(function (d) {
+          keys.forEach(function (key) {
+            var mapping = mappings[key];
+            entries.some(function (entry) {
+              if (entry.key === key) {
+                var type = entry.type;
+                var value = d[mapping];
+                if (type === 'string') {
+                  value = String(value);
+                } else if (type === 'number') {
+                  value = Number(value);
+                } else if (type === 'date') {
+                  value = new Date(value);
+                }
+                d[key] = value;
                 return true;
               }
               return false;
             });
-            if (mapping === null) {
-              keys.some(function (k) {
-                if (d3.type(d[k]) === type) {
-                  keys.splice(keys.indexOf(k), 1);
-                  mapping = k;
+          });
+        });
+      } else {
+        var entries = schema.entries;
+        data.forEach(function (d) {
+          var keys = Object.keys(d);
+          entries.forEach(function (entry) {
+            var key = entry.key;
+            var type = entry.type;
+            var mapping = null;
+            if (d.hasOwnProperty(key)) {
+              if (key === hierarchy && type === 'array') {
+                d[hierarchy] = d3.parseData(plot, d[hierarchy]);
+              }
+              keys.splice(keys.indexOf(key), 1);
+              mapping = key;
+            } else {
+              var aliases = entry.aliases || [];
+              aliases.some(function (alias) {
+                var i = keys.indexOf(alias);
+                if (i !== -1) {
+                  keys.splice(i, 1);
+                  mapping = alias;
                   return true;
                 }
                 return false;
               });
+              if (mapping === null) {
+                keys.some(function (k) {
+                  if (d3.type(d[k]) === type) {
+                    keys.splice(keys.indexOf(k), 1);
+                    mapping = k;
+                    return true;
+                  }
+                  return false;
+                });
+              }
             }
-          }
-          if (mapping) {
-            var value = d[mapping];
-            if (type === 'string') {
-              value = String(value);
-            } else if (type === 'number') {
-              value = Number(value);
-            } else if (type === 'date') {
-              value = new Date(value);
+            if (mapping) {
+              var value = d[mapping];
+              if (type === 'string') {
+                value = String(value);
+              } else if (type === 'number') {
+                value = Number(value);
+              } else if (type === 'date') {
+                value = new Date(value);
+              }
+              d[key] = value;
             }
-            d[key] = value;
-          }
+          });
         });
-        return d;
-      });
+      }
     }
     return [].concat.apply([], data);
   } else if (type === 'object') {
@@ -1240,7 +1266,7 @@ d3.parseGeoData = function (map, options) {
   if (type === 'object') {
     if (data.hasOwnProperty('features')) {
       features = data.features;
-    } else if (d3.type(topojson) === 'object') {
+    } else if (typeof topojson === 'object') {
       if (map.object) {
         var object = data.objects[map.object];
         features = topojson.feature(data, object).features;
@@ -1533,4 +1559,4 @@ d3.icon = function () {
 };
 
 // Built-in icons
-d3.icons = d3.extend({}, schema && schema.icons);
+d3.icons = d3.extend({}, typeof schema === 'object' ? schema.icons : {});

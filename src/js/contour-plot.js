@@ -13,7 +13,7 @@ d3.components.contourPlot = {
       {
         key: 'x',
         type: 'number',
-        mappings: [
+        aliases: [
           'lng',
           'longitude'
         ]
@@ -21,7 +21,7 @@ d3.components.contourPlot = {
       {
         key: 'y',
         type: 'number',
-        mappings: [
+        aliases: [
           'lat',
           'latitude'
         ]
@@ -29,7 +29,7 @@ d3.components.contourPlot = {
       {
         key: 'z',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio',

@@ -13,7 +13,7 @@ d3.components.lineChart = {
       {
         key: 'x',
         type: 'number',
-        mappings: [
+        aliases: [
           'year',
           'name'
         ]
@@ -21,7 +21,7 @@ d3.components.lineChart = {
       {
         key: 'y',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio',

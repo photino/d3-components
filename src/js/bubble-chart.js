@@ -11,7 +11,7 @@ d3.components.bubbleChart = {
       {
         key: 'x',
         type: 'number',
-        mappings: [
+        aliases: [
           'category',
           'name',
           'year'
@@ -20,14 +20,14 @@ d3.components.bubbleChart = {
       {
         key: 'y',
         type: 'number',
-        mappings: [
+        aliases: [
           'count'
         ]
       },
       {
         key: 'z',
         type: 'number',
-        mappings: []
+        aliases: []
       }
     ]
   },

@@ -12,7 +12,7 @@ d3.components.timelineDiagram = {
       {
         key: 'date',
         type: 'date',
-        mappings: [
+        aliases: [
           'time',
           'year'
         ]
@@ -20,7 +20,7 @@ d3.components.timelineDiagram = {
       {
         key: 'text',
         type: 'string',
-        mappings: [
+        aliases: [
           'content',
           'info',
           'name'
@@ -29,7 +29,7 @@ d3.components.timelineDiagram = {
       {
         key: 'image',
         type: 'string',
-        mappings: [
+        aliases: [
           'icon',
           'img',
           'logo',

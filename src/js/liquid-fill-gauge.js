@@ -12,16 +12,16 @@ d3.components.liquidFillGauge = {
       {
         key: 'name',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'category',
           'label'
-        ]
+        ],
+        optional: true
       },
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'percentage',
           'ratio'
         ]

@@ -215,57 +215,83 @@ d3.parseData = function (plot, data) {
       return d;
     });
 
-    // Set up field mapping
-    if (schema.type === 'object' && schema.mapping !== false) {
-      var entries = schema.entries;
-      data = data.map(function (d) {
-        var keys = Object.keys(d);
-        entries.forEach(function (entry) {
-          var key = entry.key;
-          var type = entry.type;
-          var mapping = null;
-          if (d.hasOwnProperty(key)) {
-            if (key === hierarchy && type === 'array') {
-              d[hierarchy] = d3.parseData(plot, d[hierarchy]);
-            }
-            keys.splice(keys.indexOf(key), 1);
-            mapping = key;
-          } else {
-            var mappings = entry.mappings || [];
-            mappings.some(function (m) {
-              var i = keys.indexOf(m);
-              if (i !== -1) {
-                keys.splice(i, 1);
-                mapping = m;
+    // Set up field mappings
+    if (schema.type === 'object') {
+      if (Array.isArray(schema.mappings)) {
+        var entries = schema.entries;
+        var mappings = schema.mappings;
+        var keys = Object.keys(mappings);
+        data.forEach(function (d) {
+          keys.forEach(function (key) {
+            var mapping = mappings[key];
+            entries.some(function (entry) {
+              if (entry.key === key) {
+                var type = entry.type;
+                var value = d[mapping];
+                if (type === 'string') {
+                  value = String(value);
+                } else if (type === 'number') {
+                  value = Number(value);
+                } else if (type === 'date') {
+                  value = new Date(value);
+                }
+                d[key] = value;
                 return true;
               }
               return false;
             });
-            if (mapping === null) {
-              keys.some(function (k) {
-                if (d3.type(d[k]) === type) {
-                  keys.splice(keys.indexOf(k), 1);
-                  mapping = k;
+          });
+        });
+      } else {
+        var entries = schema.entries;
+        data.forEach(function (d) {
+          var keys = Object.keys(d);
+          entries.forEach(function (entry) {
+            var key = entry.key;
+            var type = entry.type;
+            var mapping = null;
+            if (d.hasOwnProperty(key)) {
+              if (key === hierarchy && type === 'array') {
+                d[hierarchy] = d3.parseData(plot, d[hierarchy]);
+              }
+              keys.splice(keys.indexOf(key), 1);
+              mapping = key;
+            } else {
+              var aliases = entry.aliases || [];
+              aliases.some(function (alias) {
+                var i = keys.indexOf(alias);
+                if (i !== -1) {
+                  keys.splice(i, 1);
+                  mapping = alias;
                   return true;
                 }
                 return false;
               });
+              if (mapping === null) {
+                keys.some(function (k) {
+                  if (d3.type(d[k]) === type) {
+                    keys.splice(keys.indexOf(k), 1);
+                    mapping = k;
+                    return true;
+                  }
+                  return false;
+                });
+              }
             }
-          }
-          if (mapping) {
-            var value = d[mapping];
-            if (type === 'string') {
-              value = String(value);
-            } else if (type === 'number') {
-              value = Number(value);
-            } else if (type === 'date') {
-              value = new Date(value);
+            if (mapping) {
+              var value = d[mapping];
+              if (type === 'string') {
+                value = String(value);
+              } else if (type === 'number') {
+                value = Number(value);
+              } else if (type === 'date') {
+                value = new Date(value);
+              }
+              d[key] = value;
             }
-            d[key] = value;
-          }
+          });
         });
-        return d;
-      });
+      }
     }
     return [].concat.apply([], data);
   } else if (type === 'object') {
@@ -1240,7 +1266,7 @@ d3.parseGeoData = function (map, options) {
   if (type === 'object') {
     if (data.hasOwnProperty('features')) {
       features = data.features;
-    } else if (d3.type(topojson) === 'object') {
+    } else if (typeof topojson === 'object') {
       if (map.object) {
         var object = data.objects[map.object];
         features = topojson.feature(data, object).features;
@@ -1533,7 +1559,7 @@ d3.icon = function () {
 };
 
 // Built-in icons
-d3.icons = d3.extend({}, schema && schema.icons);
+d3.icons = d3.extend({}, typeof schema === 'object' ? schema.icons : {});
 
 /*!
  * Bar Chart
@@ -1551,7 +1577,7 @@ d3.components.barChart = {
       {
         key: 'category',
         type: 'string',
-        mappings: [
+        aliases: [
           'label',
           'name'
         ]
@@ -1559,7 +1585,7 @@ d3.components.barChart = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'frequency',
           'percentage',
@@ -1569,11 +1595,11 @@ d3.components.barChart = {
       {
         key: 'series',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'group',
           'type'
-        ]
+        ],
+        optional: true
       }
     ]
   },
@@ -1940,7 +1966,7 @@ d3.components.pieChart = {
       {
         key: 'label',
         type: 'string',
-        mappings: [
+        aliases: [
           'category',
           'name'
         ]
@@ -1948,7 +1974,7 @@ d3.components.pieChart = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
@@ -2155,7 +2181,7 @@ d3.components.lineChart = {
       {
         key: 'x',
         type: 'number',
-        mappings: [
+        aliases: [
           'year',
           'name'
         ]
@@ -2163,7 +2189,7 @@ d3.components.lineChart = {
       {
         key: 'y',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio',
@@ -2342,7 +2368,7 @@ d3.components.bubbleChart = {
       {
         key: 'x',
         type: 'number',
-        mappings: [
+        aliases: [
           'category',
           'name',
           'year'
@@ -2351,14 +2377,14 @@ d3.components.bubbleChart = {
       {
         key: 'y',
         type: 'number',
-        mappings: [
+        aliases: [
           'count'
         ]
       },
       {
         key: 'z',
         type: 'number',
-        mappings: []
+        aliases: []
       }
     ]
   },
@@ -2555,7 +2581,7 @@ d3.components.radarChart = {
       {
         key: 'axis',
         type: 'string',
-        mappings: [
+        aliases: [
           'category',
           'label',
           'name'
@@ -2564,7 +2590,7 @@ d3.components.radarChart = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
@@ -2573,11 +2599,11 @@ d3.components.radarChart = {
       {
         key: 'series',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'group',
           'type'
-        ]
+        ],
+        optional: true
       }
     ]
   },
@@ -2903,7 +2929,7 @@ d3.components.sunburstChart = {
       {
         key: 'label',
         type: 'string',
-        mappings: [
+        aliases: [
           'category',
           'name'
         ]
@@ -2911,7 +2937,7 @@ d3.components.sunburstChart = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
@@ -3062,7 +3088,7 @@ d3.components.choroplethMap = {
       {
         key: 'id',
         type: 'string',
-        mappings: [
+        aliases: [
           'adcode',
           'city',
           'code',
@@ -3078,7 +3104,7 @@ d3.components.choroplethMap = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
@@ -3087,11 +3113,11 @@ d3.components.choroplethMap = {
       {
         key: 'series',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'group',
           'type'
-        ]
+        ],
+        optional: true
       }
     ]
   },
@@ -3390,7 +3416,7 @@ d3.components.bubbleMap = {
       {
         key: 'id',
         type: 'string',
-        mappings: [
+        aliases: [
           'adcode',
           'city',
           'code',
@@ -3405,7 +3431,7 @@ d3.components.bubbleMap = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
@@ -3414,7 +3440,7 @@ d3.components.bubbleMap = {
       {
         key: 'lng',
         type: 'number',
-        mappings: [
+        aliases: [
           'lon',
           'longitude'
         ]
@@ -3422,7 +3448,7 @@ d3.components.bubbleMap = {
       {
         key: 'lat',
         type: 'number',
-        mappings: [
+        aliases: [
           'latitude'
         ]
       }
@@ -3593,7 +3619,7 @@ d3.components.contourPlot = {
       {
         key: 'x',
         type: 'number',
-        mappings: [
+        aliases: [
           'lng',
           'longitude'
         ]
@@ -3601,7 +3627,7 @@ d3.components.contourPlot = {
       {
         key: 'y',
         type: 'number',
-        mappings: [
+        aliases: [
           'lat',
           'latitude'
         ]
@@ -3609,7 +3635,7 @@ d3.components.contourPlot = {
       {
         key: 'z',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio',
@@ -3779,21 +3805,21 @@ d3.components.mosaicPlot = {
       {
         key: 'column',
         type: 'string',
-        mappings: [
+        aliases: [
           'category'
         ]
       },
       {
         key: 'row',
         type: 'string',
-        mappings: [
+        aliases: [
           'year'
         ]
       },
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
@@ -3802,11 +3828,11 @@ d3.components.mosaicPlot = {
       {
         key: 'series',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'group',
           'type'
-        ]
+        ],
+        optional: true
       }
     ]
   },
@@ -4098,7 +4124,7 @@ d3.components.terrestrialGlobe = {
       {
         key: 'id',
         type: 'string',
-        mappings: [
+        aliases: [
           'country',
           'nation'
         ]
@@ -4106,7 +4132,7 @@ d3.components.terrestrialGlobe = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
@@ -4115,11 +4141,11 @@ d3.components.terrestrialGlobe = {
       {
         key: 'series',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'group',
           'type'
-        ]
+        ],
+        optional: true
       }
     ]
   },
@@ -4355,38 +4381,38 @@ d3.components.treeDiagram = {
       {
         key: 'label',
         type: 'string',
-        mappings: [
+        aliases: [
           'name'
         ]
       },
       {
         key: 'parent',
         type: 'string',
-        mappings: [
+        aliases: [
           'category'
         ]
       },
       {
         key: 'value',
         type: 'number',
-        optional: true,
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
-        ]
+        ],
+        optional: true
       },
       {
         key: 'image',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'icon',
           'img',
           'logo',
           'photo',
           'picture'
-        ]
+        ],
+        optional: true
       }
     ]
   },
@@ -4730,7 +4756,7 @@ d3.components.timelineDiagram = {
       {
         key: 'date',
         type: 'date',
-        mappings: [
+        aliases: [
           'time',
           'year'
         ]
@@ -4738,7 +4764,7 @@ d3.components.timelineDiagram = {
       {
         key: 'text',
         type: 'string',
-        mappings: [
+        aliases: [
           'content',
           'info',
           'name'
@@ -4747,7 +4773,7 @@ d3.components.timelineDiagram = {
       {
         key: 'image',
         type: 'string',
-        mappings: [
+        aliases: [
           'icon',
           'img',
           'logo',
@@ -5024,16 +5050,16 @@ d3.components.liquidFillGauge = {
       {
         key: 'name',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'category',
           'label'
-        ]
+        ],
+        optional: true
       },
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'percentage',
           'ratio'
         ]

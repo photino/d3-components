@@ -13,7 +13,7 @@ d3.components.choroplethMap = {
       {
         key: 'id',
         type: 'string',
-        mappings: [
+        aliases: [
           'adcode',
           'city',
           'code',
@@ -29,7 +29,7 @@ d3.components.choroplethMap = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
@@ -38,11 +38,11 @@ d3.components.choroplethMap = {
       {
         key: 'series',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'group',
           'type'
-        ]
+        ],
+        optional: true
       }
     ]
   },

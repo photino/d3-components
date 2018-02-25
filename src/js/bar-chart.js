@@ -14,7 +14,7 @@ d3.components.barChart = {
       {
         key: 'category',
         type: 'string',
-        mappings: [
+        aliases: [
           'label',
           'name'
         ]
@@ -22,7 +22,7 @@ d3.components.barChart = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'frequency',
           'percentage',
@@ -32,11 +32,11 @@ d3.components.barChart = {
       {
         key: 'series',
         type: 'string',
-        optional: true,
-        mappings: [
+        aliases: [
           'group',
           'type'
-        ]
+        ],
+        optional: true
       }
     ]
   },

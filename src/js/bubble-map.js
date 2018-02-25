@@ -11,7 +11,7 @@ d3.components.bubbleMap = {
       {
         key: 'id',
         type: 'string',
-        mappings: [
+        aliases: [
           'adcode',
           'city',
           'code',
@@ -26,7 +26,7 @@ d3.components.bubbleMap = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
@@ -35,7 +35,7 @@ d3.components.bubbleMap = {
       {
         key: 'lng',
         type: 'number',
-        mappings: [
+        aliases: [
           'lon',
           'longitude'
         ]
@@ -43,7 +43,7 @@ d3.components.bubbleMap = {
       {
         key: 'lat',
         type: 'number',
-        mappings: [
+        aliases: [
           'latitude'
         ]
       }

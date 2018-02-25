@@ -13,7 +13,7 @@ d3.components.sunburstChart = {
       {
         key: 'label',
         type: 'string',
-        mappings: [
+        aliases: [
           'category',
           'name'
         ]
@@ -21,7 +21,7 @@ d3.components.sunburstChart = {
       {
         key: 'value',
         type: 'number',
-        mappings: [
+        aliases: [
           'count',
           'percentage',
           'ratio'
